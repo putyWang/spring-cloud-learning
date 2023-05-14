@@ -1,0 +1,15 @@
+server:
+  port: 8083
+spring:
+  application:
+    name: auth-server
+  cloud:
+    nacos:
+      discovery:
+        server-addr: ${REGISTER_HOST:192.168.1.2}:${REGISTER_PORT:8848}
+      config:
+        server-addr: ${REGISTER_HOST:192.168.1.2}:${REGISTER_PORT:8848}
+        file-extension: yml
+    sentinel:
+      transport:
+        dashboard: ${SENTINEL_DASHBOARD_HOST:192.16.1.2}:${SENTINEL_DASHBOARD_PORT:8021}

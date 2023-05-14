@@ -1,0 +1,21 @@
+gate:
+  token:
+    salt: token
+
+knife4j:
+  enable: true
+
+jetcache:
+  remote:
+    default:
+      type: redis
+      keyConvertor: fastjson
+      poolConfig:
+        minIdle: 1
+        maxIdle: 2
+        maxTotal: 3
+      host: 192.168.1.2
+      port: 6379
+  local:
+    default:
+      type: linkedhashmap

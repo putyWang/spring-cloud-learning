@@ -4,12 +4,22 @@ spring:
   application:
     name: gateway-server
   cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+    routes: # 路由数组[路由 就是指定当请求满足什么条件的时候转到哪个微服务]
+      - id: system # 当前路由的标识, 要求唯一(任意)
+        uri: lb://temp # lb指的是从nacos中按照名称获取微服务,并遵循负载均衡策略
+        order: -1 #排序，越小匹配优先级越高
+        predicates:
+          - Path=/index # 当请求路径满足Path指定的规则时,才进行路由转发,/user为服务的servlet.context-path名称
     nacos:
       discovery:
-        server-addr: ${REGISTER_HOST:192.168.1.2}:${REGISTER_PORT:8848}
+        server-addr: ${REGISTER_HOST:192.168.3.51}:${REGISTER_PORT:8848}
       config:
-        server-addr: ${REGISTER_HOST:192.168.1.2}:${REGISTER_PORT:8848}
+        server-addr: ${REGISTER_HOST:192.168.3.51}:${REGISTER_PORT:8848}
         file-extension: yml
     sentinel:
       transport:
-        dashboard: ${SENTINEL_DASHBOARD_HOST:192.16.1.2}:${SENTINEL_DASHBOARD_PORT:8021}
+        dashboard: ${SENTINEL_DASHBOARD_HOST:192.168.3.51}:${SENTINEL_DASHBOARD_PORT:8021}

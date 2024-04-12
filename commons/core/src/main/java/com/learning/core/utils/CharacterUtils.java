@@ -5,7 +5,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class CharacterUtils {
-    private static Logger logger = LoggerFactory.getLogger(CharacterUtils.class);
     public static final char SPACE = ' ';
     private static final char DBC_CHAR_START = '!';
     private static final char DBC_CHAR_END = '~';
@@ -22,12 +21,14 @@ public class CharacterUtils {
     private static final char SBC_CHAR_UPPERCASE_END = 'Ｚ';
     private static final char SBC_CHAR_LOWERCASE_START = 'ａ';
     private static final char SBC_CHAR_LOWERCASE_END = 'ｚ';
+    private static Logger logger = LoggerFactory.getLogger(CharacterUtils.class);
 
     public CharacterUtils() {
     }
 
     /**
      * 判断对象是否为字符
+     *
      * @param value
      * @return
      */
@@ -37,6 +38,7 @@ public class CharacterUtils {
 
     /**
      * 判断字符对象是否为英文数字
+     *
      * @param value
      * @return
      */
@@ -46,6 +48,7 @@ public class CharacterUtils {
 
     /**
      * 判断字符是否为英文字符
+     *
      * @param value
      * @return
      */
@@ -55,6 +58,7 @@ public class CharacterUtils {
 
     /**
      * 判断字符是否为大写英文字符
+     *
      * @param value
      * @return
      */
@@ -64,6 +68,7 @@ public class CharacterUtils {
 
     /**
      * 判断字符是否为小写英文字符
+     *
      * @param value
      * @return
      */
@@ -73,15 +78,17 @@ public class CharacterUtils {
 
     /**
      * 判断字符是否为空
+     *
      * @param value
      * @return
      */
     public static boolean isBlank(char value) {
-        return isBlank((int)value);
+        return isBlank((int) value);
     }
 
     /**
      * 判断字符二进制编码是否为空
+     *
      * @param value
      * @return
      */
@@ -91,6 +98,7 @@ public class CharacterUtils {
 
     /**
      * 将字符转化为字符串
+     *
      * @param c
      * @return
      */
@@ -100,6 +108,7 @@ public class CharacterUtils {
 
     /**
      * 半角字符串转换为全角字符串
+     *
      * @param src
      * @return
      */
@@ -126,6 +135,7 @@ public class CharacterUtils {
 
     /**
      * 全角字符串转换为半角字符串(不包含数字)
+     *
      * @param src
      * @return
      */
@@ -136,9 +146,9 @@ public class CharacterUtils {
             StringBuilder buf = new StringBuilder(src.length());
             char[] ca = src.toCharArray();
 
-            for(char c : ca) {
+            for (char c : ca) {
                 if (c >= SBC_CHAR_START && c <= SBC_CHAR_END) {
-                    buf.append((char)(c - 'ﻠ'));
+                    buf.append((char) (c - 'ﻠ'));
                 } else if (c == SBC_SPACE) {
                     buf.append(DBC_SPACE);
                 } else {
@@ -152,6 +162,7 @@ public class CharacterUtils {
 
     /**
      * 全角字符串转换为半角字符串(包含数字)
+     *
      * @param src
      * @return
      */
@@ -162,13 +173,13 @@ public class CharacterUtils {
             StringBuilder buf = new StringBuilder(src.length());
             char[] ca = src.toCharArray();
 
-            for(char c : ca) {
+            for (char c : ca) {
                 if (c >= SBC_NUMBER_START && c <= SBC_NUMBER_END) {
-                    buf.append((char)(c - 'ﻠ'));
+                    buf.append((char) (c - 'ﻠ'));
                 } else if (c >= SBC_CHAR_LOWERCASE_START && c <= SBC_CHAR_LOWERCASE_END) {
-                    buf.append((char)(c - 'ﻠ'));
+                    buf.append((char) (c - 'ﻠ'));
                 } else if (c >= SBC_CHAR_UPPERCASE_START && c <= SBC_CHAR_UPPERCASE_END) {
-                    buf.append((char)(c - 'ﻠ'));
+                    buf.append((char) (c - 'ﻠ'));
                 } else {
                     buf.append(c);
                 }

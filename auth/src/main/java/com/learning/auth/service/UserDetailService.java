@@ -1,6 +1,6 @@
 package com.learning.auth.service;
 
-import com.learning.core.holder.UserContext;
+import com.learning.core.model.UserContext;
 import com.learning.auth.entity.LearningUser;
 import com.learning.auth.service.feignService.SystemService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,7 +11,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 
 @Configuration

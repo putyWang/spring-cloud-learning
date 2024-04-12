@@ -10,6 +10,7 @@ public class MD5Utils {
 
     /**
      * 转化为长度为32的Md5加密字符串
+     *
      * @param str
      * @return
      */
@@ -22,7 +23,7 @@ public class MD5Utils {
                 StringBuffer buf = new StringBuffer("");
                 byte[] mds = md.digest();
 
-                for(byte value : mds) {
+                for (byte value : mds) {
                     int i = value;
                     if (value < 0) {
                         i = value + 256;
@@ -46,6 +47,7 @@ public class MD5Utils {
 
     /**
      * 转化为长度为16的Md5加密字符串
+     *
      * @param str
      * @return
      */
@@ -56,6 +58,7 @@ public class MD5Utils {
 
     /**
      * 分字符进行MD5加密
+     *
      * @param dataStr
      * @return
      */
@@ -66,7 +69,7 @@ public class MD5Utils {
             byte[] s = m.digest();
             StringBuilder result = new StringBuilder();
 
-            for(int i = 0; i < s.length; ++i) {
+            for (int i = 0; i < s.length; ++i) {
                 result.append(Integer.toHexString(255 & s[i] | -256).substring(6));
             }
 
@@ -79,6 +82,7 @@ public class MD5Utils {
 
     /**
      * 使用116对字符串进行编码
+     *
      * @param inStr
      * @return
      */
@@ -89,8 +93,8 @@ public class MD5Utils {
 
         char[] a = inStr.toCharArray();
 
-        for(int i = 0; i < a.length; ++i) {
-            a[i] = (char)(a[i] ^ 116);
+        for (int i = 0; i < a.length; ++i) {
+            a[i] = (char) (a[i] ^ 116);
         }
 
         return new String(a);
@@ -98,6 +102,7 @@ public class MD5Utils {
 
     /**
      * 使用116对字符串进行解码
+     *
      * @param inStr
      * @return
      */
@@ -107,8 +112,8 @@ public class MD5Utils {
         } else {
             char[] a = inStr.toCharArray();
 
-            for(int i = 0; i < a.length; ++i) {
-                a[i] = (char)(a[i] ^ 116);
+            for (int i = 0; i < a.length; ++i) {
+                a[i] = (char) (a[i] ^ 116);
             }
 
             return new String(a);

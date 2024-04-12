@@ -4,6 +4,7 @@ public interface TokenUtil {
 
     /**
      * 解密token
+     *
      * @param token
      * @param salt
      * @return
@@ -15,6 +16,7 @@ public interface TokenUtil {
 
     /**
      * 解密token
+     *
      * @param uuid
      * @param salt
      * @return

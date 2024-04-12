@@ -1,0 +1,77 @@
+gate:
+  token:
+    salt: token
+
+knife4j:
+  enable: true
+
+jetcache:
+  remote:
+    default:
+      type: redis
+      keyConvertor: fastjson
+      poolConfig:
+        minIdle: 1
+        maxIdle: 2
+        maxTotal: 3
+      host: 192.168.1.2
+      port: 6379
+  local:
+    default:
+      type: linkedhashmap
+
+#  分库分表 配置
+spring:
+  shardingsphere:
+    datasource:
+      # 配置数据库名称
+      names: system
+      # 配置具体数据库连接信息
+      sys:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://192.168.3.51:3306/system
+        username: root
+        password: 123456
+    sharding:
+      tables:
+        # 配置多个逻辑表
+        sys_user:
+          # 配置 主键 列、及类型
+          key-generator:
+            column: id
+            type: SNOWFLAKE
+            props:
+              max.vibration.offset: 4
+          # 配置 数据库 表规则
+          actual-data-nodes: system.sys_user
+          # 分库策略（具体某张表的）
+#          database-strategy:
+#            standard:
+#              sharding-column: id
+#              precise-algorithm-class-name: com.learning.temp.strategy.TableShardingAlgorithm
+#          # 分表策略
+#          table-strategy:
+#            inline:
+#              sharding-column: id
+#              algorithm-expression: project_$->{id % 2}
+
+      # 默认的 分库策略（针对所有表）
+      #defaultDatabaseStrategy:
+      #  inline:
+      #    shardingColumn: create_user_id
+      #    algorithmExpression: db$->{create_user_id % 2 + 1}
+      # 配置默认数据源
+      defaultDataSourceName: db1
+    # 配置 是否打印SQL
+    props:
+      sql.show: true
+  # 解决一个bean映射到多张表问题
+  main:
+    allow-bean-definition-overriding: true
+  shiro:
+    auth:
+      ignore: login
+    redis:
+      host: 192.168.3.51
+      port: 6379

@@ -1,10 +1,10 @@
-
-package com.learning.core.holder;
+package com.learning.core.model;
 
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * 用户信息类
@@ -19,14 +19,9 @@ public class UserContext implements Serializable {
     private Long userId = 0L;
 
     /**
-     * 用户名
+     * 账户名
      */
-    private String username;
-
-    /**
-     * 用户密码
-     */
-    private String password;
+    private String account;
 
     /**
      * 真实名字
@@ -41,15 +36,7 @@ public class UserContext implements Serializable {
     /**
      * 用户角色集合
      */
-    private List<String> roles;
-
-    /**
-     * 用户权限集合
-     */
-    private Set<String> authorities;
-
-
-    private List<String> menus;
+    private List<RoleModel> roles;
 
     /**
      * 机构代码
@@ -62,11 +49,12 @@ public class UserContext implements Serializable {
     private String sysCode;
 
     /**
-     * 本地信息对象
+     * 0-禁用，1-启用
      */
-    private Locale locale;
-    private Integer type;
-    private String tenantCode;
+    private Integer status;
+
+    /**
+     * 脱敏配置
+     */
     private HashMap<Long, List<String>> desensitiseMap = new HashMap();
-    private Map<String, Object> params = new HashMap();
 }

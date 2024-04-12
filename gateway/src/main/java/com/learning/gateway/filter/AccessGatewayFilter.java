@@ -4,32 +4,31 @@ import com.alibaba.fastjson.JSONObject;
 import com.alicp.jetcache.Cache;
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.CreateCache;
-import com.learning.core.cache.RedisCache;
-import com.learning.core.holder.UserContext;
+import com.learning.core.model.UserContext;
 import com.learning.core.utils.StringUtils;
 import com.learning.core.utils.TokenUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
 import org.springframework.cloud.gateway.filter.GlobalFilter;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.core.Ordered;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
+import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.Set;
 
 /**
  * 请求url权限校验
  */
-@Configuration
+@Component
 @Slf4j
-public class AccessGatewayFilter implements GlobalFilter {
+public class AccessGatewayFilter implements GlobalFilter, Ordered {
 
     private static final String X_CLIENT_TOKEN_USER = "x-client-token-user";
     private static final String TOKEN = "token";
@@ -38,17 +37,16 @@ public class AccessGatewayFilter implements GlobalFilter {
     @CreateCache(area = "default", name = "user.permission.", expire = -1, cacheType = CacheType.REMOTE)
     private Cache<String, Object> cache;
 
-    /**
-     * 不需要网关签权的url配置(/oauth,/open)
-     * 默认/oauth开头是不需要的
-     */
-    @Value("${gate.ignore.authentication.startWith}")
+    @Value("${gate.login.url:/login}")
+    private String loginUrl = "/login";
+
+    @Value("${gate.ignore.authentication.startWith:/oauth}")
     private String ignoreUrls = "/oauth";
 
     /**
      * token 加密盐
      */
-    @Value("${gate.token.salt}")
+    @Value("${gate.token.salt:token}")
     private String salt = "token";
 
     /**
@@ -105,7 +103,7 @@ public class AccessGatewayFilter implements GlobalFilter {
      * @return
      */
     private boolean ignoreAuthentication(String url) {
-        return Arrays.stream(ignoreUrls.split(",")).anyMatch(ignoreUrl -> url.trim().matches(StringUtils.trim(ignoreUrl)));
+        return url.equals(loginUrl) ? true : Arrays.stream(ignoreUrls.split(",")).anyMatch(ignoreUrl -> url.trim().matches(StringUtils.trim(ignoreUrl)));
     }
 
     /**
@@ -129,5 +127,10 @@ public class AccessGatewayFilter implements GlobalFilter {
         }
 
         return false;
+    }
+
+    @Override
+    public int getOrder() {
+        return 2;
     }
 }

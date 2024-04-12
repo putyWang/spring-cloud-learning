@@ -1,6 +1,6 @@
 package com.learning.auth.service.feignService;
 
-import com.learning.core.holder.UserContext;
+import com.learning.core.model.UserContext;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @FeignClient(value = "system")
 public interface SystemService {
 
-    @RequestMapping(value = "/user/{userName}",method = RequestMethod.GET)
+    @RequestMapping(value = "/user/lopin/{userName}",method = RequestMethod.GET)
     UserContext getUserByName(@PathVariable("userName") String userName);
 }

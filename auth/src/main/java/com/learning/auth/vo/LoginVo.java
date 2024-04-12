@@ -1,6 +1,6 @@
 package com.learning.auth.vo;
 
-import com.learning.core.holder.UserContext;
+import com.learning.core.model.UserContext;
 import lombok.Data;
 
 @Data

@@ -1,6 +1,9 @@
 gate:
   token:
     salt: token
+  ignore:
+    authentication:
+      startWith: /index
 
 knife4j:
   enable: true

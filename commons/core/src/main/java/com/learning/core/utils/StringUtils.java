@@ -13,23 +13,25 @@ import java.util.*;
  * 字符串工具类
  */
 public final class StringUtils {
-    private static Logger logger = LoggerFactory.getLogger(StringUtils.class);
     public static final String EMPTY_STRING = "";
     public static final char DEFAULT_DELIMITER_CHAR = ',';
     public static final char DEFAULT_QUOTE_CHAR = '"';
+    public static final String COMMA = ",";
+    private static Logger logger = LoggerFactory.getLogger(StringUtils.class);
 
     public StringUtils() {
     }
 
     /**
      * 判断字符串是否为空
+     *
      * @param str
      * @return
      */
     public static boolean isBlank(CharSequence str) {
 
         if (null != str) {
-            for(int i = 0; i < str.length(); ++i) {
+            for (int i = 0; i < str.length(); ++i) {
                 if (!CharacterUtils.isBlank(str.charAt(i))) {
 
                     return false;
@@ -42,14 +44,15 @@ public final class StringUtils {
 
     /**
      * 判断字符串是否由数字组成
+     *
      * @param str
      * @return
      */
-    public static boolean isNumeric (CharSequence str) {
+    public static boolean isNumeric(CharSequence str) {
 
         if (null != str) {
-            for(int i = 0; i < str.length(); ++i) {
-                if (! Character.isDigit(str.charAt(i))) {
+            for (int i = 0; i < str.length(); ++i) {
+                if (!Character.isDigit(str.charAt(i))) {
 
                     return false;
                 }
@@ -61,6 +64,7 @@ public final class StringUtils {
 
     /**
      * 判断字符串是否不为空
+     *
      * @param str
      * @return
      */
@@ -70,6 +74,7 @@ public final class StringUtils {
 
     /**
      * 判断CharSequence是否存在空对象
+     *
      * @param css
      * @return
      */
@@ -79,6 +84,7 @@ public final class StringUtils {
 
     /**
      * 判断两个字符串是否相等（不忽略大小写）
+     *
      * @param s1
      * @param s2
      * @return
@@ -89,6 +95,7 @@ public final class StringUtils {
 
     /**
      * 判断两个字符串是否相等（ignoreCase表示是否忽略大小写）
+     *
      * @param s1
      * @param s2
      * @return
@@ -105,6 +112,7 @@ public final class StringUtils {
 
     /**
      * 去除字符串两端空格
+     *
      * @param str
      * @return
      */
@@ -114,6 +122,7 @@ public final class StringUtils {
 
     /**
      * 去除字符串前部空格
+     *
      * @param value
      * @return
      */
@@ -123,6 +132,7 @@ public final class StringUtils {
 
     /**
      * 去除字符串后端空格
+     *
      * @param value
      * @return
      */
@@ -132,6 +142,7 @@ public final class StringUtils {
 
     /**
      * 去除字符串两端空格
+     *
      * @param value
      * @return
      */
@@ -141,6 +152,7 @@ public final class StringUtils {
 
     /**
      * 去除字符串端头空格（mode <= 0时去除前端，mode >= 0时去除后端）
+     *
      * @param value
      * @return
      */
@@ -152,13 +164,13 @@ public final class StringUtils {
             int start = 0;
             int end = len;
             if (mode <= 0) {
-                while(start < end && CharacterUtils.isBlank(value.charAt(start))) {
+                while (start < end && CharacterUtils.isBlank(value.charAt(start))) {
                     ++start;
                 }
             }
 
             if (mode >= 0) {
-                while(start < end && CharacterUtils.isBlank(value.charAt(end - 1))) {
+                while (start < end && CharacterUtils.isBlank(value.charAt(end - 1))) {
                     --end;
                 }
             }
@@ -169,6 +181,7 @@ public final class StringUtils {
 
     /**
      * 判断字符串是否为空
+     *
      * @param str
      * @return
      */
@@ -178,6 +191,7 @@ public final class StringUtils {
 
     /**
      * 判断字符串是否包含v
+     *
      * @param str
      * @return
      */
@@ -191,6 +205,7 @@ public final class StringUtils {
 
     /**
      * 判断字符串是否包含字符串searchStr
+     *
      * @param str
      * @param searchStr
      * @return
@@ -201,6 +216,7 @@ public final class StringUtils {
 
     /**
      * 判断strs中是否包含str（忽略大小写）
+     *
      * @param str
      * @param strs
      * @return
@@ -208,7 +224,7 @@ public final class StringUtils {
     public static boolean inStringIgnoreCase(String str, String... strs) {
         if (str != null && strs != null) {
 
-            for(String s : strs) {
+            for (String s : strs) {
                 if (str.equalsIgnoreCase(trim(s))) {
                     return true;
                 }
@@ -220,6 +236,7 @@ public final class StringUtils {
 
     /**
      * 判断str是否以suffix结尾（忽略大小写）
+     *
      * @param str
      * @param suffix
      * @return
@@ -230,6 +247,7 @@ public final class StringUtils {
 
     /**
      * 判断str是否以c结尾
+     *
      * @param str
      * @param c
      * @return
@@ -240,6 +258,7 @@ public final class StringUtils {
 
     /**
      * 判断str是否以suffix结尾（isIgnoreCase表示是否忽略大小写）
+     *
      * @param str
      * @param suffix
      * @return
@@ -254,6 +273,7 @@ public final class StringUtils {
 
     /**
      * 保证string后缀为suffix且只出现一次
+     *
      * @param string
      * @param suffix
      * @return
@@ -264,6 +284,7 @@ public final class StringUtils {
 
     /**
      * 若str以remove结尾，移除remove，其余情况不变
+     *
      * @param str
      * @param remove
      * @return
@@ -279,6 +300,7 @@ public final class StringUtils {
 
     /**
      * 将逗号拼接字符串转List
+     *
      * @param str
      * @return
      */
@@ -293,6 +315,7 @@ public final class StringUtils {
 
     /**
      * 若str不包含appendStr，将appendStr接到str尾部，否则将otherwise接到str尾部
+     *
      * @param str
      * @param appendStr
      * @param otherwise
@@ -307,7 +330,8 @@ public final class StringUtils {
     }
 
     /**
-     *  若str不以suffix结尾，将suffix接到str尾部
+     * 若str不以suffix结尾，将suffix接到str尾部
+     *
      * @param str
      * @param suffix
      * @param appendStr
@@ -319,6 +343,7 @@ public final class StringUtils {
 
     /**
      * 将拼接到collection中的String中
+     *
      * @param collection
      * @param str
      * @return
@@ -326,7 +351,7 @@ public final class StringUtils {
     public static String join(Collection<String> collection, String str) {
         StringBuffer stringBuffer = new StringBuffer();
 
-        for(Iterator<String> it = collection.iterator(); it.hasNext(); stringBuffer.append((String)it.next())) {
+        for (Iterator<String> it = collection.iterator(); it.hasNext(); stringBuffer.append((String) it.next())) {
             if (stringBuffer.length() != 0) {
                 stringBuffer.append(str);
             }
@@ -337,6 +362,7 @@ public final class StringUtils {
 
     /**
      * 拼接字符数组中的所有元素
+     *
      * @param elements
      * @return
      */
@@ -344,7 +370,7 @@ public final class StringUtils {
         Validate.notEmpty(elements, "element not empty", new Object[0]);
         StringBuilder sb = new StringBuilder(elements.length);
 
-        for(CharSequence element : elements) {
+        for (CharSequence element : elements) {
             sb.append(element);
         }
 
@@ -353,6 +379,7 @@ public final class StringUtils {
 
     /**
      * 判断jsonStr是否为合法json字符串
+     *
      * @param jsonStr
      * @return
      */
@@ -374,6 +401,7 @@ public final class StringUtils {
 
     /**
      * 判断jsonStr是否为合法数组json字符串
+     *
      * @param jsonStr
      * @return
      */
@@ -392,6 +420,7 @@ public final class StringUtils {
 
     /**
      * 为特殊字符添加转义
+     *
      * @param str
      * @return
      */
@@ -401,7 +430,6 @@ public final class StringUtils {
     }
 
     /**
-     *
      * @param jsonObject
      * @return
      */
@@ -420,21 +448,22 @@ public final class StringUtils {
 
     /**
      * 替换str中相关子字符串
-     * @param str 原字符串
-     * @param replaced 被替换的子串
+     *
+     * @param str       原字符串
+     * @param replaced  被替换的子串
      * @param replacing 用于替换的子串
      * @return 替换后的字符串
      */
-    public static String replace (String str, String replaced, String replacing) {
+    public static String replace(String str, String replaced, String replacing) {
 
-        return org.apache.commons.lang3.StringUtils.replace(str,replaced,replacing);
+        return org.apache.commons.lang3.StringUtils.replace(str, replaced, replacing);
     }
 
     public static JSONObject valueToStringValue(JSONObject jsonObject) {
         Iterator keys = jsonObject.keySet().iterator();
 
-        while(keys.hasNext()) {
-            String key = (String)keys.next();
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
             String value = jsonObject.getString(key).trim();
 
             try {
@@ -447,7 +476,7 @@ public final class StringUtils {
                     JSONArray jsonArray = JSONArray.parseArray(value);
                     JSONArray transformJsonArray = new JSONArray();
 
-                    for(int i = 0; i < jsonArray.size(); ++i) {
+                    for (int i = 0; i < jsonArray.size(); ++i) {
                         JSONObject second = jsonArray.getJSONObject(i);
                         JSONObject transSecond = valueToStringValue(second);
                         transformJsonArray.add(transSecond);
@@ -465,6 +494,7 @@ public final class StringUtils {
 
     /**
      * 通过数字型字符串value和乘法对key进行深化处理
+     *
      * @param key
      * @param value
      * @return
@@ -480,7 +510,7 @@ public final class StringUtils {
             }
             //判断字符串是否与"-?\d+\.\d+"匹配(-可能出现，一次数字（0-9），. ，数字（0-9）至少出现一次:小数)
             if (value.matches("-?\\d+\\.\\d+")) {
-                returnValue = String.valueOf(Float.parseFloat(value) * (float)multiple);
+                returnValue = String.valueOf(Float.parseFloat(value) * (float) multiple);
             }
             //判断字符串是否与"-?\d+"匹配(-可能出现一次，数字（0-9）至少出现一次:整数)
             else if (value.matches("-?\\d+")) {
@@ -495,6 +525,7 @@ public final class StringUtils {
 
     /**
      * 通过数字型字符串value和除法对key进行深化处理
+     *
      * @param key
      * @param value
      * @return
@@ -510,7 +541,7 @@ public final class StringUtils {
             }
             //判断字符串是否与"-?\d+\.\d+"匹配(-可能出现，一次数字（0-9），. ，数字（0-9）至少出现一次:小数)
             if (value.matches("-?\\d+\\.\\d+")) {
-                returnValue = String.valueOf(Float.parseFloat(value) / (float)multiple);
+                returnValue = String.valueOf(Float.parseFloat(value) / (float) multiple);
             }
             //判断字符串是否与"-?\d+"匹配(-可能出现一次，数字（0-9）至少出现一次:整数)
             else if (value.matches("-?\\d+")) {
@@ -525,6 +556,7 @@ public final class StringUtils {
 
     /**
      * 替换jsonObject中的key
+     *
      * @param jsonObject
      * @param oriKey
      * @param desKey
@@ -548,6 +580,7 @@ public final class StringUtils {
 
     /**
      * 替换map中的key
+     *
      * @param map
      * @param oriKey
      * @param desKey
@@ -571,9 +604,9 @@ public final class StringUtils {
         HashMap<String, Object> returnMap = new HashMap();
         Iterator var2 = map.entrySet().iterator();
 
-        while(var2.hasNext()) {
-            Map.Entry<String, Object> entry = (Map.Entry)var2.next();
-            String key = (String)entry.getKey();
+        while (var2.hasNext()) {
+            Map.Entry<String, Object> entry = (Map.Entry) var2.next();
+            String key = (String) entry.getKey();
             Object value = entry.getValue();
             if (value != null) {
                 returnMap.put(key, value);
@@ -588,7 +621,7 @@ public final class StringUtils {
 
         try {
             if (level >= 1) {
-                for(int i = 1; i <= level; ++i) {
+                for (int i = 1; i <= level; ++i) {
                     if (i == level) {
                         someValue = json.getString(someKey);
                         return someValue;
@@ -599,7 +632,7 @@ public final class StringUtils {
                     int var7 = strings.length;
                     int var8 = 0;
 
-                    while(var8 < var7) {
+                    while (var8 < var7) {
                         String string = var6[var8];
 
                         try {
@@ -625,7 +658,7 @@ public final class StringUtils {
             Iterator keys = jsonObject.keySet().iterator();
 
             try {
-                while(keys.hasNext()) {
+                while (keys.hasNext()) {
                     String key = keys.next().toString();
                     String value = jsonObject.getString(key);
                     list.add(value);
@@ -635,7 +668,7 @@ public final class StringUtils {
             }
         }
 
-        return (String[])list.toArray(new String[0]);
+        return (String[]) list.toArray(new String[0]);
     }
 
     public static String etlJsonStr(String jsonStr) {
@@ -654,7 +687,7 @@ public final class StringUtils {
                 } else {
                     JSONArray returnJsonArray = JSONArray.parseArray(jsonStr);
 
-                    for(int i = 0; i < returnJsonArray.size(); ++i) {
+                    for (int i = 0; i < returnJsonArray.size(); ++i) {
                         returnJsonArray.add(i, etlJsonStr(returnJsonArray.getString(i)));
                     }
 
@@ -675,9 +708,9 @@ public final class StringUtils {
     public static void etlJsonObject(JSONObject jsonObject) {
         Iterator var1 = jsonObject.keySet().iterator();
 
-        while(true) {
-            while(var1.hasNext()) {
-                String s = (String)var1.next();
+        while (true) {
+            while (var1.hasNext()) {
+                String s = (String) var1.next();
                 String key = CharacterUtils.qj2bjCharNumber(s);
                 String value = CharacterUtils.qj2bjCharNumber(jsonObject.getString(key));
                 if ("null".equals(value)) {
@@ -690,7 +723,7 @@ public final class StringUtils {
                 } else {
                     JSONArray jsonArray = JSONArray.parseArray(value);
 
-                    for(int i = 0; i < jsonArray.size(); ++i) {
+                    for (int i = 0; i < jsonArray.size(); ++i) {
                         jsonArray.set(i, etlJsonStr(jsonArray.getString(i)));
                     }
 
@@ -708,7 +741,7 @@ public final class StringUtils {
             Iterator keys = jsonObject.keySet().iterator();
 
             try {
-                while(keys.hasNext()) {
+                while (keys.hasNext()) {
                     String key = keys.next().toString();
                     String value = jsonObject.getString(key);
                     returnMap.put(key, "null".equals(value) ? "" : value);
@@ -726,7 +759,7 @@ public final class StringUtils {
         String[] var3 = params;
         int var4 = params.length;
 
-        for(int var5 = 0; var5 < var4; ++var5) {
+        for (int var5 = 0; var5 < var4; ++var5) {
             String columnName = var3[var5];
             newJsonObject.put(columnName, jsonObject.getString(columnName));
         }
@@ -744,9 +777,9 @@ public final class StringUtils {
                 JSONObject jsonObject = JSONObject.parseObject(jsonStr);
                 Iterator var4 = jsonObject.keySet().iterator();
 
-                while(true) {
-                    while(var4.hasNext()) {
-                        String key = (String)var4.next();
+                while (true) {
+                    while (var4.hasNext()) {
+                        String key = (String) var4.next();
                         value = jsonObject.getString(key);
                         String camelNamedKey = camelNamed(key);
                         if (checkValidJsonObjectStr(value)) {
@@ -757,7 +790,7 @@ public final class StringUtils {
                         } else {
                             JSONArray jsonArray = JSONArray.parseArray(value);
 
-                            for(int i = 0; i < jsonArray.size(); ++i) {
+                            for (int i = 0; i < jsonArray.size(); ++i) {
                                 String s = jsonStrKeyCamelNamed(jsonArray.getString(i));
                                 jsonArray.set(i, s);
                             }
@@ -772,7 +805,7 @@ public final class StringUtils {
             } else if (checkValidJsonArrayStr(jsonStr)) {
                 JSONArray jsonArray = JSONArray.parseArray(jsonStr);
 
-                for(int i = 0; i < jsonArray.size(); ++i) {
+                for (int i = 0; i < jsonArray.size(); ++i) {
                     JSONObject jsonObject = JSONObject.parseObject(jsonArray.getString(i));
                     value = jsonStrKeyCamelNamed(jsonObject.toString());
                     jsonArray.set(i, value);
@@ -802,7 +835,7 @@ public final class StringUtils {
             sb.append(splits[0].substring(0, 1).toLowerCase());
             sb.append(splits[0].substring(1));
 
-            for(int i = 1; i < splits.length; ++i) {
+            for (int i = 1; i < splits.length; ++i) {
                 sb.append(splits[i].substring(0, 1).toUpperCase());
                 sb.append(splits[i].substring(1));
             }

@@ -1,9 +1,9 @@
-package com.learning.file.storage.service.impl;
+package com.learning.file.storage.storage.impl;
 
 import cn.hutool.core.io.FileUtil;
 import com.learning.file.storage.exception.FileStorageException;
 import com.learning.file.storage.model.FileInfo;
-import com.learning.file.storage.service.ProjectFileStorageService;
+import com.learning.file.storage.storage.FileStorage;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.io.FileUtils;
@@ -17,7 +17,7 @@ import java.io.InputStream;
  */
 @Getter
 @Setter
-public class LocalProjectFileStorageService extends ProjectFileStorageService {
+public class LocalFileStorage extends FileStorage {
 
     @Override
     public boolean uploadFile(String newFileKey, InputStream inputStream) {

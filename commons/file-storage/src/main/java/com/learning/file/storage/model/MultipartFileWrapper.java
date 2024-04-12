@@ -30,15 +30,23 @@ import java.nio.file.Path;
 /**
  * MultipartFile 的包装类
  */
+@Setter
 public class MultipartFileWrapper implements MultipartFile {
-
-    @Setter
+    /**
+     * 新建存储文件名
+     */
     private String name;
-    @Setter
+    /**
+     * 原始文件名
+     */
     private String originalFilename;
-    @Setter
+    /**
+     * 网络文件类型
+     */
     private String contentType;
-    @Setter
+    /**
+     * 网络文件对象
+     */
     @Getter
     private MultipartFile multipartFile;
 

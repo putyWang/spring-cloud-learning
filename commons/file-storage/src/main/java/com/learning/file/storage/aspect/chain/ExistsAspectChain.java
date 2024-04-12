@@ -1,7 +1,9 @@
-package com.learning.file.storage.aspect;
+package com.learning.file.storage.aspect.chain;
 
+import com.learning.file.storage.aspect.FileStorageAspect;
+import com.learning.file.storage.aspect.callBack.ExistsAspectChainCallback;
 import com.learning.file.storage.model.FileInfo;
-import com.learning.file.storage.service.ProjectFileStorageService;
+import com.learning.file.storage.storage.FileStorage;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,7 +27,7 @@ public class ExistsAspectChain {
     /**
      * 调用下一个切面
      */
-    public boolean next(FileInfo fileInfo, ProjectFileStorageService fileStorage) {
+    public boolean next(FileInfo fileInfo, FileStorage fileStorage) {
         if (aspectIterator.hasNext()) {//还有下一个
             return aspectIterator.next().existsAround(this, fileInfo, fileStorage);
         } else {

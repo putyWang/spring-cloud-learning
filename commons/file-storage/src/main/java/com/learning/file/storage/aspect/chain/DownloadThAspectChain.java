@@ -1,7 +1,9 @@
-package com.learning.file.storage.aspect;
+package com.learning.file.storage.aspect.chain;
 
+import com.learning.file.storage.aspect.FileStorageAspect;
+import com.learning.file.storage.aspect.callBack.DownloadThAspectChainCallback;
 import com.learning.file.storage.model.FileInfo;
-import com.learning.file.storage.service.ProjectFileStorageService;
+import com.learning.file.storage.storage.FileStorage;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,7 +29,7 @@ public class DownloadThAspectChain {
     /**
      * 调用下一个切面
      */
-    public void next(FileInfo fileInfo, ProjectFileStorageService fileStorage, Consumer<InputStream> consumer) {
+    public void next(FileInfo fileInfo, FileStorage fileStorage, Consumer<InputStream> consumer) {
         if (aspectIterator.hasNext()) {//还有下一个
             aspectIterator.next().downloadThAround(this, fileInfo, fileStorage, consumer);
         } else {

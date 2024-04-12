@@ -1,8 +1,8 @@
-package com.learning.file.storage.service.impl;
+package com.learning.file.storage.storage.impl;
 
 import com.learning.core.utils.HttpUtils;
 import com.learning.file.storage.model.FileInfo;
-import com.learning.file.storage.service.ProjectFileStorageService;
+import com.learning.file.storage.storage.FileStorage;
 import io.minio.*;
 import io.minio.messages.Item;
 import lombok.Getter;
@@ -16,20 +16,24 @@ import java.io.InputStream;
  */
 @Getter
 @Setter
-public class MinIOProjectFileStorageService extends ProjectFileStorageService {
+public class MinIOFileStorage extends FileStorage {
 
     private String accessKey;
     private String secretKey;
     private String endPoint;
     private String bucketName;
 
-    private MinioClient client;
-
-    public MinIOProjectFileStorageService (String accessKey, String secretKey, String endPoint, String bucketName) {
+    public MinIOFileStorage(String accessKey, String secretKey, String endPoint, String bucketName) {
         this.bucketName = bucketName;
+        this.accessKey = accessKey;
+        this.secretKey = secretKey;
+        this.endPoint = endPoint;
+    }
+
+    private MinioClient getClient(){
         try {
             // 1.获取 minio 链接
-            client = MinioClient.builder()
+            MinioClient client = MinioClient.builder()
                     .endpoint(endPoint)
                     .credentials(accessKey, secretKey)
                     .httpClient(HttpUtils.getUnsafeOkHttpsClient())
@@ -42,16 +46,15 @@ public class MinIOProjectFileStorageService extends ProjectFileStorageService {
                         .bucket(bucketName)
                         .build());
             }
+            return client;
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException("minioClient创建失败", e);
         }
-
-
     }
 
     @Override
     public boolean uploadFile(String newFileKey, InputStream inputStream) throws Exception {
-        client.putObject(
+        getClient().putObject(
                 PutObjectArgs.builder()
                         .bucket(bucketName)
                         .stream(inputStream, inputStream.available(), -1)
@@ -65,7 +68,7 @@ public class MinIOProjectFileStorageService extends ProjectFileStorageService {
 
     @Override
     public boolean deleteFile(String fileKey) throws Exception {
-        client.removeObject(
+        getClient().removeObject(
                 RemoveObjectArgs.builder()
                         .bucket(bucketName)
                         .object(fileKey)
@@ -77,7 +80,7 @@ public class MinIOProjectFileStorageService extends ProjectFileStorageService {
 
     @Override
     public boolean fileExists(String fileKey) throws Exception {
-        Iterable<Result<Item>> myObjects = client.listObjects(
+        Iterable<Result<Item>> myObjects = getClient().listObjects(
                 ListObjectsArgs.builder()
                         .bucket(bucketName)
                         .build()
@@ -94,7 +97,7 @@ public class MinIOProjectFileStorageService extends ProjectFileStorageService {
 
     @Override
     public InputStream downloadFile(String fileKey) throws Exception {
-        return client.getObject(
+        return getClient().getObject(
                 GetObjectArgs.builder()
                         .bucket(bucketName)
                         .object(fileKey)

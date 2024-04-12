@@ -3,12 +3,12 @@ package com.learning.file.storage.model;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.IoUtil;
-import com.learning.file.storage.aspect.DownloadAspectChain;
-import com.learning.file.storage.aspect.DownloadThAspectChain;
+import com.learning.file.storage.aspect.chain.DownloadAspectChain;
+import com.learning.file.storage.aspect.chain.DownloadThAspectChain;
 import com.learning.file.storage.aspect.FileStorageAspect;
 import com.learning.file.storage.exception.FileStorageException;
 import com.learning.file.storage.listener.ProgressListener;
-import com.learning.file.storage.service.ProjectFileStorageService;
+import com.learning.file.storage.storage.FileStorage;
 
 import java.io.File;
 import java.io.InputStream;
@@ -30,7 +30,7 @@ public class Downloader {
      */
     public static final int TARGET_TH_FILE = 2;
 
-    private final ProjectFileStorageService fileStorage;
+    private final FileStorage fileStorage;
     private final List<FileStorageAspect> aspectList;
     private final FileInfo fileInfo;
     private final Integer target;
@@ -41,7 +41,7 @@ public class Downloader {
      *
      * @param target 下载目标：{@link Downloader#TARGET_FILE}下载文件，{@link Downloader#TARGET_TH_FILE}下载缩略图文件
      */
-    public Downloader(FileInfo fileInfo, List<FileStorageAspect> aspectList, ProjectFileStorageService fileStorage, Integer target) {
+    public Downloader(FileInfo fileInfo, List<FileStorageAspect> aspectList, FileStorage fileStorage, Integer target) {
         this.fileStorage = fileStorage;
         this.aspectList = aspectList;
         this.fileInfo = fileInfo;

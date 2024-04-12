@@ -1,4 +1,4 @@
-package com.learning.file.storage.service;
+package com.learning.file.storage.recorder;
 
 import com.learning.file.storage.model.FileInfo;
 
@@ -7,7 +7,7 @@ import com.learning.file.storage.model.FileInfo;
 /**
  * 文件记录记录者接口
  */
-public interface ProjectFileRecorderService {
+public interface FileRecorder {
 
     /**
      * 保存文件记录

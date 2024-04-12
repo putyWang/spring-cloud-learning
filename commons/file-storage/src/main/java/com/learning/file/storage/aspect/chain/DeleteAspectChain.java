@@ -1,8 +1,10 @@
-package com.learning.file.storage.aspect;
+package com.learning.file.storage.aspect.chain;
 
+import com.learning.file.storage.aspect.FileStorageAspect;
+import com.learning.file.storage.aspect.callBack.DeleteAspectChainCallback;
 import com.learning.file.storage.model.FileInfo;
-import com.learning.file.storage.service.ProjectFileRecorderService;
-import com.learning.file.storage.service.ProjectFileStorageService;
+import com.learning.file.storage.recorder.FileRecorder;
+import com.learning.file.storage.storage.FileStorage;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,7 +28,7 @@ public class DeleteAspectChain {
     /**
      * 调用下一个切面
      */
-    public boolean next(FileInfo fileInfo, ProjectFileStorageService fileStorage, ProjectFileRecorderService fileRecorder) {
+    public boolean next(FileInfo fileInfo, FileStorage fileStorage, FileRecorder fileRecorder) {
         if (aspectIterator.hasNext()) {//还有下一个
             return aspectIterator.next().deleteAround(this, fileInfo, fileStorage, fileRecorder);
         } else {

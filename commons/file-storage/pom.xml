@@ -20,8 +20,8 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <docker.image.prefix>learning</docker.image.prefix>
-        <mybatis-plus-boot-starter.version>3.5.5</mybatis-plus-boot-starter.version>
-        <druid.version>1.0.29</druid.version>
+        <thumbnailator.version>0.4.8</thumbnailator.version>
+        <ftp.version>3.8.0</ftp.version>
     </properties>
 
     <dependencies>
@@ -35,7 +35,18 @@
             <artifactId>minio</artifactId>
             <version>8.1.0</version>
         </dependency>
-
+        <!-- 图片压缩 -->
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+            <version>${thumbnailator.version}</version>
+        </dependency>
+        <!-- FTP -->
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>${ftp.version}</version>
+        </dependency>
     </dependencies>
 
     <build>

@@ -29,7 +29,6 @@ public class ProgressInputStream extends FilterInputStream {
         return skip;
     }
 
-
     @Override
     public int read() throws IOException {
         int b = super.read();
@@ -60,6 +59,4 @@ public class ProgressInputStream extends FilterInputStream {
             this.listener.finish();
         }
     }
-
-
 }

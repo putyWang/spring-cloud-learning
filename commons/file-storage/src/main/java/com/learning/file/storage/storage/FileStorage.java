@@ -1,4 +1,4 @@
-package com.learning.file.storage.service;
+package com.learning.file.storage.storage;
 
 import com.learning.core.utils.StringUtils;
 import com.learning.file.storage.exception.FileStorageException;
@@ -16,7 +16,7 @@ import java.util.function.Consumer;
  */
 @Log4j2
 @Data
-public abstract class ProjectFileStorageService {
+public abstract class FileStorage {
 
     /**
      * 存储根路径

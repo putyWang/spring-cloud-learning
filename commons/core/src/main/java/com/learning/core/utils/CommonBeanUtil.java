@@ -63,8 +63,7 @@ public class CommonBeanUtil {
             copyAndFormat(target, source);
             return target;
         } catch (Exception e) {
-            e.printStackTrace();
-            return null;
+            throw new RuntimeException(String.format("对象转换错误：%s->%s", source.getClass().getName(), targetClass.getName()), e);
         }
     }
 
@@ -82,7 +81,6 @@ public class CommonBeanUtil {
         Field[] declaredFields = target.getClass().getDeclaredFields();
         //将相应属性添加到相应集合中
         List<String> dtoSkipFields = new ArrayList<>();
-        List<Field> fields = new ArrayList<>(declaredFields.length);
         List<Field> formatterTypeFields = new ArrayList<>();
 
         for (int i = 0; i < declaredFields.length; i++) {
@@ -92,8 +90,6 @@ public class CommonBeanUtil {
                 dtoSkipFields.add(field.getName());
             } else if (field.isAnnotationPresent(FormatterType.class)) {
                 formatterTypeFields.add(field);
-            } else {
-                fields.add(field);
             }
         }
 
@@ -101,11 +97,6 @@ public class CommonBeanUtil {
         dtoSkipFields.addAll(formatterTypeFields.stream().map(Field::getName).collect(Collectors.toList()));
         //将source元对象中除忽略属性以外的属性值赋予目标对象
         BeanUtils.copyProperties(source, target, dtoSkipFields.toArray(new String[0]));
-        //获取目标类超类中的属性字段
-        Field[] superDeclaredFields = target.getClass().getSuperclass().getDeclaredFields();
-        //将超类中的属性字段加入到字段中
-        fields.addAll(Arrays.asList(superDeclaredFields));
-
         //为target对象所有值进行赋值
         for (Field field : formatterTypeFields) {
 
@@ -129,8 +120,8 @@ public class CommonBeanUtil {
                         case LIST:
                             Type genericType = field.getGenericType();
                             ParameterizedType parameterizedType = (ParameterizedType) genericType;
-                            Class fieldTargetClass = (Class) parameterizedType.getActualTypeArguments()[0];
-                            List fieldTargetList = copyList((List) fieldSource, fieldTargetClass);
+                            Class<?> fieldTargetClass = (Class<?>) parameterizedType.getActualTypeArguments()[0];
+                            List<?> fieldTargetList = copyList((List<?>) fieldSource, fieldTargetClass);
                             writeMethod.invoke(target, fieldTargetList);
                     }
                 }
@@ -145,11 +136,9 @@ public class CommonBeanUtil {
 
     public static String formatKey(String key, String[] replaceArray, Map<String, Object> params, Object source) {
         if (key.contains("${")) {
-            Map<String, Object> keyPatternMap = new HashMap(2);
+            Map<String, Object> keyPatternMap = new HashMap<>(2);
 
-            for (int i = 0; i < replaceArray.length; i++) {
-                String fieldName = replaceArray[i];
-
+            for (String fieldName : replaceArray) {
                 try {
                     Object value = params.get(fieldName);
                     if (null == value) {

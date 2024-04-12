@@ -1,29 +1,24 @@
 package com.learning.file.storage;
 
-import cn.hutool.core.io.file.FileNameUtil;
-import cn.hutool.core.util.IdUtil;
-import cn.hutool.core.util.StrUtil;
 import cn.hutool.core.util.URLUtil;
-import com.learning.file.storage.aspect.DeleteAspectChain;
-import com.learning.file.storage.aspect.ExistsAspectChain;
+import com.learning.core.utils.StringUtils;
+import com.learning.file.storage.aspect.chain.DeleteAspectChain;
+import com.learning.file.storage.aspect.chain.ExistsAspectChain;
 import com.learning.file.storage.aspect.FileStorageAspect;
-import com.learning.file.storage.aspect.UploadAspectChain;
+import com.learning.file.storage.aspect.chain.UploadAspectChain;
 import com.learning.file.storage.config.properties.ProjectFileStorageProperties;
 import com.learning.file.storage.exception.FileStorageException;
 import com.learning.file.storage.model.*;
-import com.learning.file.storage.service.ProjectFileRecorderService;
-import com.learning.file.storage.service.ProjectFileStorageService;
-import lombok.Getter;
-import lombok.Setter;
+import com.learning.file.storage.recorder.FileRecorder;
+import com.learning.file.storage.storage.FileStorage;
+import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
-import java.util.Date;
+import java.nio.file.Files;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Predicate;
 
@@ -32,36 +27,60 @@ import java.util.function.Predicate;
  * 用来处理文件存储，对接多个平台
  * 对外暴露接口
  */
-@Getter
-@Setter
-public class ProjectFileStorage {
+@Data
+public class FileStorageService {
 
-    private ProjectFileStorage self;
-    private ProjectFileRecorderService fileRecorder;
-    private CopyOnWriteArrayList<ProjectFileStorageService> fileStorageList;
+    private FileStorageService self;
+    /**
+     * 记录器
+     */
+    private FileRecorder fileRecorder;
+    /**
+     * 文件存储器列表
+     */
+    private CopyOnWriteArrayList<FileStorage> fileStorageList;
+    /**
+     * 文件存储属性
+     */
     private ProjectFileStorageProperties properties;
+    /**
+     * 文件处理切面列表
+     */
     private CopyOnWriteArrayList<FileStorageAspect> aspectList;
-
 
     /**
      * 获取默认的存储平台
+     * @return
      */
-    public ProjectFileStorageService getFileStorage() {
+    public FileStorage getFileStorage() {
         return getFileStorage(properties.getDefaultPlatform());
+    }
+
+    /**
+     * 获取对应的存储平台，如果存储平台不存在则抛出异常
+     * @param fileInfo 文件信息
+     * @return
+     */
+    public FileStorage getFileStorageVerify(FileInfo fileInfo) {
+        FileStorage fileStorageService = getFileStorage(fileInfo.getPlatform());
+        if (fileStorageService == null) throw new FileStorageException("没有找到对应的存储平台！");
+        return fileStorageService;
     }
 
     /**
      * 获取对应的存储平台,如果存储平台不存在则返回默认的存储平台
      */
-    public ProjectFileStorageService getFileStorage(String platform) {
-        ProjectFileStorageService cur = null;
-        ProjectFileStorageService defaultStorage = null;
-        for (ProjectFileStorageService fileStorageService : fileStorageList) {
-            if (properties.getDefaultPlatform() != null && fileStorageService.getPlatform().equals(properties.getDefaultPlatform())) {
+    public FileStorage getFileStorage(String platform) {
+        FileStorage cur = null;
+        FileStorage defaultStorage = null;
+
+        for (FileStorage fileStorageService : fileStorageList) {
+
+            if (StringUtils.equals(properties.getDefaultPlatform(), fileStorageService.getPlatform())) {
                 defaultStorage = fileStorageService;
             }
 
-            if (fileStorageService.getPlatform().equals(platform)) {
+            if (StringUtils.equals(platform, fileStorageService.getPlatform())) {
                 cur = fileStorageService;
                 break;
             }
@@ -76,66 +95,31 @@ public class ProjectFileStorage {
     }
 
     /**
-     * 获取对应的存储平台，如果存储平台不存在则抛出异常
-     */
-    public ProjectFileStorageService getFileStorageVerify(FileInfo fileInfo) {
-        ProjectFileStorageService fileStorageService = getFileStorage(fileInfo.getPlatform());
-        if (fileStorageService == null) throw new FileStorageException("没有找到对应的存储平台！");
-        return fileStorageService;
-    }
-
-    /**
-     * 上传文件，成功返回文件信息，失败返回 null
+     * 上传文件
+     * @param pre 文件上传预处理对象
+     * @return
      */
     public FileInfo upload(UploadPretreatment pre) {
-        MultipartFile file = pre.getFileWrapper();
-        if (file == null) throw new FileStorageException("文件不允许为 null ！");
-        if (pre.getPlatform() == null) throw new FileStorageException("platform 不允许为 null ！");
-
-        FileInfo fileInfo = new FileInfo();
-        fileInfo.setCreateTime(new Date());
-        fileInfo.setSize(file.getSize());
-        fileInfo.setOriginalFilename(file.getOriginalFilename());
-        fileInfo.setExt(FileNameUtil.getSuffix(file.getOriginalFilename()));
-        fileInfo.setObjectId(pre.getObjectId());
-        fileInfo.setObjectType(pre.getObjectType());
-        fileInfo.setPath(pre.getPath());
-        fileInfo.setPlatform(pre.getPlatform());
-        fileInfo.setUploadUserId(pre.getUploadUserId() == null ? "0" : pre.getUploadUserId());
-        fileInfo.setPid(pre.getPId() == null ? 0 : Integer.parseInt(pre.getPId()));
-        if (StrUtil.isNotBlank(pre.getSaveFilename())) {
-            fileInfo.setFilename(pre.getSaveFilename());
-        } else {
-            fileInfo.setFilename(IdUtil.objectId() + (StrUtil.isEmpty(fileInfo.getExt()) ? StrUtil.EMPTY : "." + fileInfo.getExt()));
-        }
-
-        byte[] thumbnailBytes = pre.getThumbnailBytes();
-        if (thumbnailBytes != null) {
-            fileInfo.setThSize((long) thumbnailBytes.length);
-            if (StrUtil.isNotBlank(pre.getSaveThFilename())) {
-                fileInfo.setThFilename(pre.getSaveThFilename() + pre.getThumbnailSuffix());
-            } else {
-                fileInfo.setThFilename(fileInfo.getFilename() + pre.getThumbnailSuffix());
-            }
-        }
-
-        ProjectFileStorageService fileStorageService = getFileStorage(pre.getPlatform());
+        // 1.获取对应存储平台
+        FileStorage fileStorageService = getFileStorage(pre.getPlatform());
         if (fileStorageService == null) throw new FileStorageException("没有找到对应的存储平台！");
 
-        //处理切面
+        // 2.处理切面
         return new UploadAspectChain(aspectList, (_fileInfo, _pre, _fileStorage, _fileRecorder) -> {
-            //真正开始保存
+            // 3.上传文件同时记录上传信息
             if (_fileStorage.upload(_fileInfo, _pre)) {
                 if (_fileRecorder.record(_fileInfo)) {
                     return _fileInfo;
                 }
             }
             return null;
-        }).next(fileInfo, pre, fileStorageService, fileRecorder);
+        }).next(FileInfo.buildByUploadPretreatment(pre), pre, fileStorageService, fileRecorder);
     }
 
     /**
      * 根据 url 获取 FileInfo
+     * @param url url 信息
+     * @return
      */
     public FileInfo getFileInfoByUrl(String url) {
         return fileRecorder.getByUrl(url);
@@ -143,6 +127,8 @@ public class ProjectFileStorage {
 
     /**
      * 根据 url 删除文件
+     * @param url url 信息
+     * @return
      */
     public boolean delete(String url) {
         return delete(getFileInfoByUrl(url));
@@ -150,25 +136,33 @@ public class ProjectFileStorage {
 
     /**
      * 根据 url 删除文件
+     * @param url url 信息
+     * @param predicate 删除条件断言
+     * @return
      */
     public boolean delete(String url, Predicate<FileInfo> predicate) {
         return delete(getFileInfoByUrl(url), predicate);
     }
 
     /**
-     * 根据条件
+     * 根据文件信息删除文件
+     * @param fileInfo 文件信息
+     * @return
      */
     public boolean delete(FileInfo fileInfo) {
         return delete(fileInfo, null);
     }
 
     /**
-     * 根据条件删除文件
+     * 根据 文件信息 有条件的删除文件
+     * @param fileInfo 文件信息
+     * @param predicate 删除条件断言
+     * @return
      */
     public boolean delete(FileInfo fileInfo, Predicate<FileInfo> predicate) {
         if (fileInfo == null) return true;
         if (predicate != null && !predicate.test(fileInfo)) return false;
-        ProjectFileStorageService fileStorage = getFileStorage(fileInfo.getPlatform());
+        FileStorage fileStorage = getFileStorage(fileInfo.getPlatform());
         if (fileStorage == null) throw new FileStorageException("没有找到对应的存储平台！");
 
         return new DeleteAspectChain(aspectList, (_fileInfo, _fileStorage, _fileRecorder) -> {
@@ -180,14 +174,18 @@ public class ProjectFileStorage {
     }
 
     /**
-     * 文件是否存在
+     * 指定 url 文件是否存在
+     * @param url 文件 url
+     * @return
      */
     public boolean exists(String url) {
         return exists(getFileInfoByUrl(url));
     }
 
     /**
-     * 文件是否存在
+     * 是否存在指定文件信息
+     * @param fileInfo 文件信息
+     * @return
      */
     public boolean exists(FileInfo fileInfo) {
         if (fileInfo == null) return false;
@@ -196,12 +194,10 @@ public class ProjectFileStorage {
         ).next(fileInfo, getFileStorageVerify(fileInfo));
     }
 
-    public void previewImg(HttpServletResponse response) {
-
-    }
-
     /**
-     * 获取文件下载器
+     * 获取指定文件关联下载器
+     * @param fileInfo 文件信息
+     * @return
      */
     public Downloader download(FileInfo fileInfo) {
         return new Downloader(fileInfo, aspectList, getFileStorageVerify(fileInfo), Downloader.TARGET_FILE);
@@ -227,7 +223,6 @@ public class ProjectFileStorage {
     public Downloader downloadTh(String url) {
         return downloadTh(getFileInfoByUrl(url));
     }
-
 
     /**
      * 创建上传预处理器
@@ -277,7 +272,7 @@ public class ProjectFileStorage {
     public UploadPretreatment of(File file) {
         try {
             UploadPretreatment pre = of();
-            pre.setFileWrapper(new MultipartFileWrapper(new MockMultipartFile(file.getName(), file.getName(), null, new FileInputStream(file))));
+            pre.setFileWrapper(new MultipartFileWrapper(new MockMultipartFile(file.getName(), file.getName(), null, Files.newInputStream(file.toPath()))));
             return pre;
         } catch (Exception e) {
             throw new FileStorageException("根据 File 创建上传预处理器失败！", e);
@@ -286,6 +281,8 @@ public class ProjectFileStorage {
 
     /**
      * 根据 URL 创建上传预处理器，originalFilename 为空字符串
+     * @param url url 对象
+     * @return
      */
     public UploadPretreatment of(URL url) {
         try {
@@ -299,6 +296,8 @@ public class ProjectFileStorage {
 
     /**
      * 根据 URI 创建上传预处理器，originalFilename 为空字符串
+     * @param uri uri 对象
+     * @return
      */
     public UploadPretreatment of(URI uri) {
         try {

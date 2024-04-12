@@ -1,9 +1,11 @@
-package com.learning.file.storage.aspect;
+package com.learning.file.storage.aspect.chain;
 
+import com.learning.file.storage.aspect.FileStorageAspect;
+import com.learning.file.storage.aspect.callBack.UploadAspectChainCallback;
 import com.learning.file.storage.model.FileInfo;
 import com.learning.file.storage.model.UploadPretreatment;
-import com.learning.file.storage.service.ProjectFileRecorderService;
-import com.learning.file.storage.service.ProjectFileStorageService;
+import com.learning.file.storage.recorder.FileRecorder;
+import com.learning.file.storage.storage.FileStorage;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -27,7 +29,7 @@ public class UploadAspectChain {
     /**
      * 调用下一个切面
      */
-    public FileInfo next(FileInfo fileInfo, UploadPretreatment pre, ProjectFileStorageService fileStorage, ProjectFileRecorderService fileRecorder) {
+    public FileInfo next(FileInfo fileInfo, UploadPretreatment pre, FileStorage fileStorage, FileRecorder fileRecorder) {
         if (aspectIterator.hasNext()) {//还有下一个
             return aspectIterator.next().uploadAround(this, fileInfo, pre, fileStorage, fileRecorder);
         } else {

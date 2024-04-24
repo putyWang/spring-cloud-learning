@@ -47,6 +47,11 @@
             <artifactId>commons-net</artifactId>
             <version>${ftp.version}</version>
         </dependency>
+        <!-- SFTP -->
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+        </dependency>
     </dependencies>
 
     <build>

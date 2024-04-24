@@ -55,7 +55,7 @@ public class FtpFileStorage extends FileStorage {
 
     @Override
     public boolean deleteFile(String fileKey) throws Exception {
-        getClient().delFile(fileKey);
+        return getClient().delFile(fileKey);
     }
 
     @Override

@@ -35,7 +35,6 @@
 //        return new Queue(queueName, false);
 //    }
 //
-//
 //    /**
 //     * 交换机
 //     *
@@ -46,7 +45,6 @@
 //        log.info("exchange:{}", EXCHANGE_NAME);
 //        return new TopicExchange(EXCHANGE_NAME);
 //    }
-//
 //
 //    /**
 //     * 绑定资源更新的队列
@@ -61,10 +59,6 @@
 //        return BindingBuilder.bind(queue).to(exchange).with(RESOURCE_ROUTING_KEY);
 //    }
 //
-//
-//
-//
-//    ////////////////////
 //    ////////////////////  资源更新相关配置
 //    ////////////////////
 //    @Bean
@@ -75,7 +69,6 @@
 //        container.setMessageListener(messageListenerAdapter);
 //        return container;
 //    }
-//
 //
 //    @Bean
 //    MessageListenerAdapter resourceMessageListenerAdapter(ResourceBusReceiver resourceBusReceiver, @Qualifier("resourceMessageConverter") MessageConverter messageConverter) {
@@ -89,7 +82,4 @@
 //        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
 //        return new ContentTypeDelegatingMessageConverter(new Jackson2JsonMessageConverter(objectMapper));
 //    }
-//
-//
-//
 //}

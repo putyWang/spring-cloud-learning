@@ -16,6 +16,7 @@
         <module>gateway</module>
         <module>temp</module>
         <module>system</module>
+        <module>Job-schedule</module>
     </modules>
 
     <properties>
@@ -27,7 +28,6 @@
         <commons-lang3.version>3.11</commons-lang3.version>
         <log4.version>4.3</log4.version>
         <commons-collections4.version>4.4</commons-collections4.version>
-        <shiro.version>1.7.1</shiro.version>
         <jwt.version>3.12.1</jwt.version>
         <mybatisplus.version>3.4.2</mybatisplus.version>
         <mybatis-ehcache.version>1.1.0</mybatis-ehcache.version>
@@ -40,16 +40,18 @@
         <commons-dbutils.version>1.7</commons-dbutils.version>
         <disruptor.version>3.4.2</disruptor.version>
         <commons-io>2.6</commons-io>
-        <spring-cloud.version>2021.0.3</spring-cloud.version>
+        <spring-cloud.version>2021.0.8</spring-cloud.version>
+        <spring-cloud-alibaba.version>2021.0.6.0</spring-cloud-alibaba.version>
+        <spring-boot.version>2.7.18</spring-boot.version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
-            <!--支持Spring Boot 2.1.X-->
+            <!--支持Spring Boot 2.4.X-->
             <dependency>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-dependencies</artifactId>
-                <version>2.7.2</version>
+                <version>${spring-boot.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -63,7 +65,7 @@
             <dependency>
                 <groupId>com.alibaba.cloud</groupId>
                 <artifactId>spring-cloud-alibaba-dependencies</artifactId>
-                <version>2021.0.1.0</version>
+                <version>${spring-cloud-alibaba.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -139,11 +141,6 @@
             <artifactId>commons-collections4</artifactId>
             <version>${commons-collections4.version}</version>
         </dependency>
-        <!--消息总线-->
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.cloud</groupId>-->
-<!--            <artifactId>spring-cloud-starter-bus-amqp</artifactId>-->
-<!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-bootstrap</artifactId>

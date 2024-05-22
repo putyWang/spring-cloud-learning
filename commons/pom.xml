@@ -18,6 +18,8 @@
         <module>core</module>
         <module>web</module>
         <module>file-storage</module>
+        <module>orm</module>
+        <module>security</module>
     </modules>
 
     <properties>

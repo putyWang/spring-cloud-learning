@@ -24,9 +24,19 @@ public class UserContext implements Serializable {
     private String account;
 
     /**
+     * 账户名
+     */
+    private String password;
+
+    /**
      * 真实名字
      */
     private String realName;
+
+    /**
+     * 真实名字
+     */
+    private String phone;
 
     /**
      * 是否为超级管理员

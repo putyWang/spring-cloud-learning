@@ -4,8 +4,10 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Component;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import javax.sql.DataSource;
 
 @Component
 public class XxlJobAdminConfig implements InitializingBean {

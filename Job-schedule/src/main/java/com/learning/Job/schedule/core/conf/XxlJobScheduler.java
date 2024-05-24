@@ -1,5 +1,8 @@
 package com.learning.Job.schedule.core.conf;
 
+import com.learning.Job.schedule.core.thread.JobFailMonitorHelper;
+import com.learning.Job.schedule.core.thread.JobRegistryMonitorHelper;
+import com.learning.Job.schedule.core.thread.JobScheduleHelper;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.DisposableBean;
 import org.springframework.beans.factory.InitializingBean;
@@ -26,7 +29,7 @@ public class XxlJobScheduler implements InitializingBean, DisposableBean {
         JobRegistryMonitorHelper.getInstance().start();
         JobFailMonitorHelper.getInstance().start();
         JobScheduleHelper.getInstance().start();
-        logger.info(">>>>>>>>> init yh-job admin success.");
+        log.info(">>>>>>>>> init yh-job admin success.");
     }
 
     public void destroy() throws Exception {

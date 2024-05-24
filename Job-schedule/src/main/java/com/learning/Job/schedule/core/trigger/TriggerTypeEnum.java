@@ -1,6 +1,6 @@
 package com.learning.Job.schedule.core.trigger;
 
-import com.xxl.job.admin.core.util.I18nUtil;
+import com.learning.Job.schedule.core.utils.I18nUtil;
 
 public enum TriggerTypeEnum {
     MANUAL(I18nUtil.getString("jobconf_trigger_type_manual")),

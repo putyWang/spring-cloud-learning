@@ -1,16 +1,6 @@
 package com.learning.Job.schedule.core.trigger;
 
 import com.alibaba.fastjson.JSON;
-import com.xxl.job.admin.core.conf.XxlJobAdminConfig;
-import com.xxl.job.admin.core.model.XxlJobGroup;
-import com.xxl.job.admin.core.model.XxlJobInfo;
-import com.xxl.job.admin.core.model.XxlJobLog;
-import com.xxl.job.admin.core.route.ExecutorRouteStrategyEnum;
-import com.xxl.job.admin.core.util.I18nUtil;
-import com.xxl.job.core.biz.model.ReturnT;
-import com.xxl.job.core.biz.model.TriggerParam;
-import com.xxl.job.core.enums.ExecutorBlockStrategyEnum;
-import com.xxl.job.core.util.HttpUtil;
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.InputStreamReader;
@@ -21,12 +11,18 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import com.learning.Job.schedule.core.conf.XxlJobAdminConfig;
+import com.learning.Job.schedule.core.model.XxlJobGroup;
+import com.learning.Job.schedule.core.model.XxlJobInfo;
+import com.learning.Job.schedule.core.model.XxlJobLog;
+import com.learning.Job.schedule.core.route.ExecutorRouteStrategyEnum;
+import com.learning.Job.schedule.core.utils.I18nUtil;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.util.StringUtils;
 
+@Log4j2
 public class XxlJobTrigger {
-    private static Logger logger = LoggerFactory.getLogger(XxlJobTrigger.class);
     private static final Pattern CHINESE_PATTERN = Pattern.compile("[\\u4e00-\\u9fa5]");
 
     public XxlJobTrigger() {
@@ -35,7 +31,7 @@ public class XxlJobTrigger {
     public static void trigger(int jobId, TriggerTypeEnum triggerType, int failRetryCount, String executorShardingParam, String executorParam, String addressList) {
         XxlJobInfo jobInfo = XxlJobAdminConfig.getAdminConfig().getXxlJobInfoDao().loadById(jobId);
         if (jobInfo == null) {
-            logger.warn(">>>>>>>>>>>> trigger fail, jobId invalid，jobId={}", jobId);
+            log.warn(">>>>>>>>>>>> trigger fail, jobId invalid，jobId={}", jobId);
         } else {
             if (executorParam != null) {
                 jobInfo.setExecutorParam(executorParam);
@@ -90,7 +86,7 @@ public class XxlJobTrigger {
         jobLog.setJobId(jobInfo.getId());
         jobLog.setTriggerTime(new Date());
         XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().save(jobLog);
-        logger.debug(">>>>>>>>>>> yh-job trigger start, jobId:{}", jobLog.getId());
+        log.debug(">>>>>>>>>>> yh-job trigger start, jobId:{}", jobLog.getId());
         TriggerParam triggerParam = new TriggerParam();
         triggerParam.setJobId(jobInfo.getId());
         triggerParam.setExecutorHandler(jobInfo.getExecutorHandler());
@@ -152,7 +148,7 @@ public class XxlJobTrigger {
         jobLog.setTriggerCode(triggerResult.getCode());
         jobLog.setTriggerMsg(triggerMsgSb.toString());
         XxlJobAdminConfig.getAdminConfig().getXxlJobLogDao().updateTriggerInfo(jobLog);
-        logger.debug(">>>>>>>>>>> yh-job trigger end, jobId:{}", jobLog.getId());
+        log.debug(">>>>>>>>>>> yh-job trigger end, jobId:{}", jobLog.getId());
     }
 
     public static ReturnT<String> runExecutor(TriggerParam triggerParam, String address, boolean isHttpHandler) {
@@ -168,12 +164,12 @@ public class XxlJobTrigger {
                 runResult = (ReturnT)JSON.toJavaObject(JSON.parseObject(result), ReturnT.class);
             } catch (Exception var9) {
                 Exception e = var9;
-                logger.info(">>>>>>>>>>> yh-job trigger error, please check if the executor[{}] is running.", address, e);
+                log.info(">>>>>>>>>>> yh-job trigger error, please check if the executor[{}] is running.", address, e);
                 runResult = new ReturnT(500, e.toString() + "返回信息：" + result);
             }
 
             if (null == runResult) {
-                logger.info(">>>>>>>>>>> 返回结果为空！");
+                log.info(">>>>>>>>>>> 返回结果为空！");
                 runResult = new ReturnT(500, "返回信息为空，网络通信异常！");
             }
 
@@ -239,7 +235,7 @@ public class XxlJobTrigger {
                                     temp = matcher.group();
                                 }
                             } catch (UnsupportedOperationException var31) {
-                                logger.error("get 请求参数处理失败! url: {}, data: {}", new Object[]{url, data, var31});
+                                log.error("get 请求参数处理失败! url: {}, data: {}", new Object[]{url, data, var31});
                             }
 
                             url = url + "?" + data;
@@ -279,10 +275,10 @@ public class XxlJobTrigger {
 
                             String responseMsg = result.toString();
                             if (null == runResult) {
-                                logger.info(">>>>>>>>>>> 返回结果为空！");
+                                log.info(">>>>>>>>>>> 返回结果为空！");
                                 runResult = new ReturnT(500, "返回信息为空，网络通信异常！");
                             } else {
-                                logger.info("请求:{}, 返回数据: {}", url, responseMsg);
+                                log.info("请求:{}, 返回数据: {}", url, responseMsg);
                                 runResultSB = new StringBuffer(I18nUtil.getString("jobconf_trigger_run") + "：");
                                 runResultSB.append("<br>address：").append(address);
                                 runResultSB.append("<br>code：").append(statusCode);
@@ -293,7 +289,7 @@ public class XxlJobTrigger {
                         }
                     } catch (Exception var32) {
                         Exception e = var32;
-                        logger.error("请求url: {} 失败", url, e);
+                        log.error("请求url: {} 失败", url, e);
                         runResult = new ReturnT(500, "请求异常！");
                     } finally {
                         try {
@@ -306,17 +302,17 @@ public class XxlJobTrigger {
                             }
                         } catch (Exception var30) {
                             Exception e2 = var30;
-                            logger.error("关闭数据流失败!", e2);
+                            log.error("关闭数据流失败!", e2);
                         }
 
                         return runResult;
                     }
                 } else {
-                    logger.error("method[" + url + "] invalid.");
+                    log.error("method[" + url + "] invalid.");
                     return new ReturnT(500, "method[" + method + "] invalid.");
                 }
             } else {
-                logger.error("url[" + url + "] invalid.");
+                log.error("url[" + url + "] invalid.");
                 return new ReturnT(500, "url[" + url + "] invalid.");
             }
         }

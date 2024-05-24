@@ -20,6 +20,7 @@
         <module>file-storage</module>
         <module>orm</module>
         <module>security</module>
+        <module>job</module>
     </modules>
 
     <properties>

@@ -14,6 +14,7 @@
         <module name="web" />
         <module name="Job-schedule" />
         <module name="orm" />
+        <module name="job" />
         <module name="gateway" />
         <module name="file-storage" />
       </profile>

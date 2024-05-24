@@ -1,6 +1,6 @@
 package com.learning.core.utils.date;
 
-import com.learning.core.utils.StringUtils;
+import com.learning.core.utils.StringUtil;
 import com.learning.core.utils.Validate;
 
 import java.lang.management.ManagementFactory;
@@ -150,7 +150,7 @@ public class DateUtils {
     }
 
     public static Date toDate(String date, String format, TimeZone timeZone) throws ParseException {
-        if (StringUtils.isBlank(date)) {
+        if (StringUtil.isBlank(date)) {
             return null;
         } else {
             SimpleDateFormat dateFormat = new SimpleDateFormat(format);

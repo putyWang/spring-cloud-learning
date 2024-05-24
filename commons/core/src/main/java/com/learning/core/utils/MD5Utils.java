@@ -87,7 +87,7 @@ public class MD5Utils {
      * @return
      */
     public static String encode(String inStr) {
-        if (StringUtils.isEmpty(inStr)) {
+        if (StringUtil.isEmpty(inStr)) {
             return null;
         }
 
@@ -107,7 +107,7 @@ public class MD5Utils {
      * @return
      */
     public static String decode(String inStr) {
-        if (StringUtils.isEmpty(inStr)) {
+        if (StringUtil.isEmpty(inStr)) {
             return null;
         } else {
             char[] a = inStr.toCharArray();

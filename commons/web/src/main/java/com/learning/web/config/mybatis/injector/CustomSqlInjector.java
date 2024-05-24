@@ -9,8 +9,6 @@ import com.learning.web.config.mybatis.mapper.UpdateBatchMethod;
 import java.util.List;
 
 public class CustomSqlInjector extends DefaultSqlInjector {
-    public CustomSqlInjector() {
-    }
 
     @Override
     public List<AbstractMethod> getMethodList(Class<?> mapperClass, TableInfo tableInfo) {

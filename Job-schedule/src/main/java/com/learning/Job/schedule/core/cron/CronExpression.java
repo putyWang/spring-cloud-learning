@@ -1283,5 +1283,10 @@ public final class CronExpression implements Serializable, Cloneable {
         dayMap.put("SAT", 7);
         MAX_YEAR = Calendar.getInstance().get(1) + 100;
     }
+
+    private static class ValueSet {
+        public int value;
+        public int pos;
+    }
 }
 

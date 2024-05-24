@@ -12,14 +12,14 @@ import java.util.*;
 /**
  * 字符串工具类
  */
-public final class StringUtils {
+public final class StringUtil {
     public static final String EMPTY_STRING = "";
     public static final char DEFAULT_DELIMITER_CHAR = ',';
     public static final char DEFAULT_QUOTE_CHAR = '"';
     public static final String COMMA = ",";
-    private static Logger logger = LoggerFactory.getLogger(StringUtils.class);
+    private static Logger logger = LoggerFactory.getLogger(StringUtil.class);
 
-    public StringUtils() {
+    public StringUtil() {
     }
 
     /**
@@ -305,7 +305,7 @@ public final class StringUtils {
      * @return
      */
     public static List<String> getListByStr(String str) {
-        if (StringUtils.isEmpty(str)) {
+        if (StringUtil.isEmpty(str)) {
             return new ArrayList<>();
         }
 

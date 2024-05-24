@@ -98,7 +98,7 @@ public class Validate {
     public static <T extends CharSequence> void notBlank(T str, String message, Object... values) {
         if (null == str) {
             throw new NullPointerException(String.format(message, values));
-        } else if (StringUtils.isBlank(str)) {
+        } else if (StringUtil.isBlank(str)) {
             throw new IllegalArgumentException(String.format(message, values));
         }
     }

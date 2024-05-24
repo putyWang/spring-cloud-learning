@@ -1,6 +1,6 @@
 package com.learning.core.utils.date;
 
-import com.learning.core.utils.StringUtils;
+import com.learning.core.utils.StringUtil;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -32,7 +32,7 @@ public class TemporalAccessorUtils {
     }
 
     public static String format(TemporalAccessor temporalAccessor, String formatter) {
-        DateTimeFormatter format = StringUtils.isBlank(formatter) ? null : DateTimeFormatter.ofPattern(formatter);
+        DateTimeFormatter format = StringUtil.isBlank(formatter) ? null : DateTimeFormatter.ofPattern(formatter);
         return format(temporalAccessor, format);
     }
 

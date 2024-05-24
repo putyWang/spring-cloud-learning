@@ -25,10 +25,6 @@
             <artifactId>core</artifactId>
             <version>0.0.1</version>
         </dependency>
-        <dependency>
-            <groupId>org.projectlombok</groupId>
-            <artifactId>lombok</artifactId>
-        </dependency>
         <!--springdoc-->
         <dependency>
             <groupId>org.springdoc</groupId>
@@ -39,6 +35,10 @@
             <groupId>org.springframework.security</groupId>
             <artifactId>spring-security-oauth2-authorization-server</artifactId>
             <version>${spring.authorization.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
         </dependency>
     </dependencies>
 

@@ -16,7 +16,7 @@ import com.learning.core.annotation.Unique;
 import com.learning.core.enums.ApiCode;
 import com.learning.core.utils.CollectionUtils;
 import com.learning.core.utils.ReflectionUtils;
-import com.learning.core.utils.StringUtils;
+import com.learning.core.utils.StringUtil;
 import com.learning.web.eums.BaseOperationEnum;
 import com.learning.web.except.ExceptionBuilder;
 import com.learning.web.model.dto.BaseDto;
@@ -231,7 +231,7 @@ public interface BaseService<D extends BaseDto, T extends BaseEntity>
                     try {
                         Object value = this.getFieldValue(entity, field);
                         String column;
-                        if (StringUtils.isBlank(unique.column())) {
+                        if (StringUtil.isBlank(unique.column())) {
                             column = com.baomidou.mybatisplus.core.toolkit.StringUtils.camelToUnderline(field.getName());
                         } else {
                             column = unique.column();
@@ -247,7 +247,7 @@ public interface BaseService<D extends BaseDto, T extends BaseEntity>
 
                     if (this.getBaseMapper().selectCount(wrapper) > 0) {
                         String errorMeg = unique.code();
-                        if (StringUtils.isBlank(errorMeg)) {
+                        if (StringUtil.isBlank(errorMeg)) {
                             errorMeg = unique.apiCode().getMessage();
                         }
 
@@ -272,7 +272,7 @@ public interface BaseService<D extends BaseDto, T extends BaseEntity>
                             Object value = this.getFieldValue(entity, field);
                             String column;
 
-                            if (StringUtils.isBlank(unionUnique.column())) {
+                            if (StringUtil.isBlank(unionUnique.column())) {
                                 column = com.baomidou.mybatisplus.core.toolkit.StringUtils.camelToUnderline(field.getName());
                             } else {
                                 column = unionUnique.column();
@@ -324,7 +324,7 @@ public interface BaseService<D extends BaseDto, T extends BaseEntity>
 
                 for (int i = 0; i < unionUniqueCodes.length; ++i) {
                     UnionUniqueCode unionUniqueCode = unionUniqueCodes[i];
-                    if (StringUtils.equals(unionUniqueCode.group(), group)) {
+                    if (StringUtil.equals(unionUniqueCode.group(), group)) {
                         throw ExceptionBuilder.build(unionUniqueCode.code());
                     }
                 }
@@ -366,7 +366,7 @@ public interface BaseService<D extends BaseDto, T extends BaseEntity>
 
                 //设置字段名
                 if (field.isAnnotationPresent(Query.class)
-                        && !StringUtils.isBlank(field.getAnnotation(Query.class).column())) {
+                        && !StringUtil.isBlank(field.getAnnotation(Query.class).column())) {
                     column = field.getAnnotation(Query.class).column();
                 } else {
                     column = com.baomidou.mybatisplus.core.toolkit.StringUtils.camelToUnderline(field.getName());
@@ -377,7 +377,7 @@ public interface BaseService<D extends BaseDto, T extends BaseEntity>
                 //判断字段值是否为字符串，或者是否为list
                 if (o instanceof String) {
 
-                    flag = !StringUtils.isNoneBlank((String) o);
+                    flag = !StringUtil.isNoneBlank((String) o);
                 } else
                     flag = o == null;
 

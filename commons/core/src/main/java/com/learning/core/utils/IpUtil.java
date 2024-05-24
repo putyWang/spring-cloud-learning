@@ -20,7 +20,7 @@ public class IpUtil {
         // 根据 HttpHeaders 获取 请求 IP地址
         String ip = request.getHeaders().getFirst("X-Forwarded-For");
 
-        if (StringUtils.isEmpty(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
+        if (StringUtil.isEmpty(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getHeaders().getFirst("x-forwarded-for");
 
             if (ip != null && ip.length() != 0 && !UNKNOWN.equalsIgnoreCase(ip)) {
@@ -47,7 +47,7 @@ public class IpUtil {
             ip = request.getHeaders().getFirst("X-Real-IP");
         }
         //兼容k8s集群获取ip
-        if (StringUtils.isEmpty(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
+        if (StringUtil.isEmpty(ip) || UNKNOWN.equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddress().getAddress().getHostAddress();
 
             if (LOCALHOST_IP1.equalsIgnoreCase(ip) || LOCALHOST_IP.equalsIgnoreCase(ip)) {

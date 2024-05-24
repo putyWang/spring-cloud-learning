@@ -3,7 +3,6 @@ package com.learning.web.config.mybatis;
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
 import com.learning.core.model.UserContext;
 import org.apache.ibatis.reflection.MetaObject;
-import org.apache.shiro.SecurityUtils;
 
 import java.util.Date;
 

@@ -1,7 +1,7 @@
 package com.learning.core.utils.date;
 
 import com.learning.core.utils.ObjectUtils;
-import com.learning.core.utils.StringUtils;
+import com.learning.core.utils.StringUtil;
 
 import java.time.*;
 import java.time.format.DateTimeFormatter;
@@ -28,7 +28,7 @@ public class LocalDateTimeUtils {
     }
 
     public static LocalDateTime of(Instant instant, String zone) {
-        ZoneId zoneId = StringUtils.isBlank(zone) ? ZoneId.systemDefault() : ZoneId.of(zone);
+        ZoneId zoneId = StringUtil.isBlank(zone) ? ZoneId.systemDefault() : ZoneId.of(zone);
         return of(instant, zoneId);
     }
 
@@ -49,7 +49,7 @@ public class LocalDateTimeUtils {
     }
 
     public static LocalDateTime of(long epochMilli, String timeZone) {
-        TimeZone zone = StringUtils.isBlank(timeZone) ? TimeZone.getDefault() : TimeZone.getTimeZone(timeZone);
+        TimeZone zone = StringUtil.isBlank(timeZone) ? TimeZone.getDefault() : TimeZone.getTimeZone(timeZone);
         return of(epochMilli, zone);
     }
 

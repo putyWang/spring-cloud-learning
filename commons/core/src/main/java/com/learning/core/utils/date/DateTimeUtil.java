@@ -1,7 +1,7 @@
 package com.learning.core.utils.date;
 
 import com.learning.core.exception.SpringBootException;
-import com.learning.core.utils.StringUtils;
+import com.learning.core.utils.StringUtil;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -129,7 +129,7 @@ public class DateTimeUtil {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = null;
-        if (!StringUtils.isEmpty(str)) {
+        if (!StringUtil.isEmpty(str)) {
             try {
                 if (Pattern.matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}", str)) {
                     date = timeFormat.parse(str);
@@ -158,7 +158,7 @@ public class DateTimeUtil {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat timeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String timestamp = "";
-        if (!StringUtils.isEmpty(str)) {
+        if (!StringUtil.isEmpty(str)) {
             try {
                 if (Pattern.matches("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}", str)) {
                     timestamp = (new Long(timeFormat.parse(str).getTime())).toString();

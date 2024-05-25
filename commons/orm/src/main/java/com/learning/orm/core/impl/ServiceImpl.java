@@ -7,10 +7,12 @@ import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.google.common.collect.Lists;
 import com.learning.core.utils.StringUtil;
 import com.learning.orm.annotation.TableCode;
 import com.learning.orm.config.OrmUtilConfig;
+import com.learning.orm.core.BaseService;
 import com.learning.orm.dto.TableAnnotationDto;
 import com.learning.orm.dto.TableInfoDto;
 import com.learning.orm.dto.TableParamDto;
@@ -34,12 +36,15 @@ import java.util.*;
  * @Date: 2024-05-24
  * @Version V1.0
  **/
-public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybatisplus.extension.service.impl.ServiceImpl<M, T> implements YhService<T> {
+public class BaseServiceImpl<M extends RootMapper<T>, T>
+        extends ServiceImpl<M, T>
+        implements BaseService<T> {
+
     private static final Integer MAX_PARAMS = 2099;
 
     private void handleBatchMapData(Map<TableParamDto, List<T>> map, TableParamDto tableParamDto, T t) {
         YhEntity yhEntity;
-        if (CollectionUtils.isEmpty((Collection)map.get(tableParamDto))) {
+        if (CollectionUtils.isEmpty(map.get(tableParamDto))) {
             List<T> list = new ArrayList();
             if (t instanceof YhEntity) {
                 yhEntity = (YhEntity)t;
@@ -49,7 +54,7 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
             list.add(t);
             map.put(tableParamDto, list);
         } else {
-            List<T> list = (List)map.get(tableParamDto);
+            List list = (List)map.get(tableParamDto);
             if (t instanceof YhEntity) {
                 yhEntity = (YhEntity)t;
                 yhEntity.initDefault();
@@ -60,15 +65,15 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
 
     }
 
-    private int yhInsertBatchSomeColumnMap(Map<TableParamDto, List<T>> insertMap, int batchSize) {
+    private int insertBatchSomeColumnMap(Map<TableParamDto, List<T>> insertMap, int batchSize) {
         int insertCount = 0;
 
         TableParamDto key;
         List value;
         for(Iterator var4 = insertMap.entrySet().iterator(); var4.hasNext(); insertCount += this.slicingHandleList(value, batchSize, key)) {
             Map.Entry<TableParamDto, List<T>> map = (Map.Entry)var4.next();
-            key = (TableParamDto)map.getKey();
-            value = (List)map.getValue();
+            key = map.getKey();
+            value = map.getValue();
         }
 
         return insertCount;
@@ -90,7 +95,7 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
         int var3;
         try {
             this.setTableParam(dto);
-            var3 = ((YhMapper)this.getBaseMapper()).insertBatchSomeColumn(entityList);
+            var3 = this.getBaseMapper().insertBatchSomeColumn(entityList);
         } finally {
             TableThreadLocalUtil.remove();
         }
@@ -184,12 +189,8 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
     }
 
     private String getFieldName(Field field) {
-        TableField annotation = (TableField)field.getAnnotation(TableField.class);
+        TableField annotation = field.getAnnotation(TableField.class);
         return !Objects.isNull(annotation) && StringUtil.isNotBlank(annotation.value()) ? annotation.value() : field.getName();
-    }
-
-    private TableParamDto handleSaveBatch(T t, TableCode tableCode) {
-        return this.handleSaveOrUpdateBatch(t, tableCode, (Map)null, (Map)null, (QueryWrapper)null);
     }
 
     private TableInfoDto getTableInfoDto(T t) {
@@ -218,32 +219,11 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
 
     }
 
-    /** @deprecated */
     @Transactional(
             rollbackFor = {Exception.class}
     )
-    @Deprecated
-    public boolean yhSaveBatchNoTF(List<T> entityList) {
-        Assert.isTrue(CollectionUtil.isNotEmpty(entityList), "error: entityList must not be empty");
-        Map<TableParamDto, List<T>> insertMap = new HashMap(entityList.size());
-        Class<?> aClass = entityList.get(0).getClass();
-        int batchSizeZero = DynamicTableUtil.getAllField(entityList.get(0).getClass()).size();
-        TableCode tableCode = (TableCode)aClass.getAnnotation(TableCode.class);
-        Iterator var6 = entityList.iterator();
-
-        while(var6.hasNext()) {
-            T t = var6.next();
-            TableParamDto tableParamDto = this.handleSaveBatch(t, tableCode);
-            this.handleBatchMapData(insertMap, tableParamDto, t);
-        }
-
-        return this.yhInsertBatchSomeColumnMap(insertMap, MAX_PARAMS / batchSizeZero) > 0;
-    }
-
-    @Transactional(
-            rollbackFor = {Exception.class}
-    )
-    public boolean yhSaveBatch(List<T> entityList, TableParamDto dto) {
+    @Override
+    public boolean saveBatch(List<T> entityList, TableParamDto dto) {
         try {
             Assert.isTrue(CollectionUtil.isNotEmpty(entityList), "error: entityList must not be empty");
             Map<TableParamDto, List<T>> insertMap = new HashMap(entityList.size());
@@ -255,19 +235,18 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
                 this.handleBatchMapData(insertMap, dto, t);
             }
 
-            boolean var10 = this.yhInsertBatchSomeColumnMap(insertMap, MAX_PARAMS / batchSizeZero) > 0;
+            boolean var10 = this.insertBatchSomeColumnMap(insertMap, MAX_PARAMS / batchSizeZero) > 0;
             return var10;
         } finally {
             TableThreadLocalUtil.remove();
         }
     }
 
-    /** @deprecated */
     @Transactional(
             rollbackFor = {Exception.class}
     )
-    @Deprecated
-    public boolean yhSaveOrUpdateBatchNoTFIgnoreTenant(List<T> entityList) {
+    @Override
+    public boolean saveOrUpdateBatchNoTFIgnoreTenant(List<T> entityList) {
         boolean var20;
         try {
             int updateCount = 0;
@@ -303,13 +282,13 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
 
             while(var19.hasNext()) {
                 List<T> list = (List)var19.next();
-                int i = ((YhMapper)this.baseMapper).updateBatchSomeColumn(list);
+                int i = this.baseMapper.updateBatchSomeColumn(list);
                 if (i > 0) {
                     updateCount += list.size();
                 }
             }
 
-            var20 = this.yhInsertBatchSomeColumnMap(insertMap, MAX_PARAMS / batchSizeZero) + updateCount > 0;
+            var20 = this.insertBatchSomeColumnMap(insertMap, MAX_PARAMS / batchSizeZero) + updateCount > 0;
         } finally {
             TableThreadLocalUtil.remove();
         }
@@ -317,6 +296,7 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
         return var20;
     }
 
+    @Override
     public boolean saveOrUpdateBatchIgnoreTenant(List<T> entityList, List<String> fieldNameList) {
         boolean var4;
         try {
@@ -340,11 +320,11 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
                     }
                 }
 
-                boolean var15 = this.yhInsertBatchSomeColumnMap(insertMap, MAX_PARAMS / batchSizeZero) + updateCount > 0;
+                boolean var15 = this.insertBatchSomeColumnMap(insertMap, MAX_PARAMS / batchSizeZero) + updateCount > 0;
                 return var15;
             }
 
-            var4 = this.yhSaveOrUpdateBatchNoTF(entityList);
+            var4 = this.saveOrUpdateBatchNoTF(entityList);
         } finally {
             TableThreadLocalUtil.remove();
         }
@@ -355,7 +335,8 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
     @Transactional(
             rollbackFor = {Exception.class}
     )
-    public boolean yhSaveOrUpdateBatchIgnoreTenant(List<T> entityList, TableParamDto dto) {
+    @Override
+    public boolean saveOrUpdateBatchIgnoreTenant(List<T> entityList, TableParamDto dto) {
         boolean var29;
         try {
             int updateCount = 0;
@@ -421,13 +402,13 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
 
             while(var28.hasNext()) {
                 List<T> list = (List)var28.next();
-                int i = ((YhMapper)this.baseMapper).updateBatchSomeColumn(list);
+                int i = this.baseMapper.updateBatchSomeColumn(list);
                 if (i > 0) {
                     updateCount += list.size();
                 }
             }
 
-            var29 = this.yhInsertBatchSomeColumnMap(insertMap, MAX_PARAMS / batchSizeZero) + updateCount > 0;
+            var29 = this.insertBatchSomeColumnMap(insertMap, MAX_PARAMS / batchSizeZero) + updateCount > 0;
         } finally {
             TableThreadLocalUtil.remove();
         }
@@ -435,7 +416,8 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
         return var29;
     }
 
-    public boolean yhSave(T entity, TableParamDto dto) {
+    @Override
+    public boolean insert(T entity, TableParamDto dto) {
         boolean var7;
         try {
             this.setTableParam(dto);
@@ -452,7 +434,8 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
         return var7;
     }
 
-    public boolean yhDeleteIgnoreTenant(Wrapper<T> queryWrapper, TableParamDto dto) {
+    @Override
+    public boolean deleteIgnoreTenant(Wrapper<T> queryWrapper, TableParamDto dto) {
         boolean var3;
         try {
             this.setTableParam(dto);
@@ -464,7 +447,8 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
         return var3;
     }
 
-    public boolean yhRemoveByIdIgnoreTenant(Serializable id, TableParamDto dto) {
+    @Override
+    public boolean removeByIdIgnoreTenant(Serializable id, TableParamDto dto) {
         boolean var3;
         try {
             this.setTableParam(dto);
@@ -476,7 +460,8 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
         return var3;
     }
 
-    public boolean yhRemoveByMapIgnoreTenant(Map<String, Object> columnMap, TableParamDto dto) {
+    @Override
+    public boolean removeByMapIgnoreTenant(Map<String, Object> columnMap, TableParamDto dto) {
         boolean var3;
         try {
             this.setTableParam(dto);
@@ -488,7 +473,8 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
         return var3;
     }
 
-    public boolean yhRemoveByIdsIgnoreTenant(Collection<? extends Serializable> idList, TableParamDto dto) {
+    @Override
+    public boolean removeByIdsIgnoreTenant(Collection<? extends Serializable> idList, TableParamDto dto) {
         boolean var3;
         try {
             this.setTableParam(dto);
@@ -500,7 +486,8 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
         return var3;
     }
 
-    public boolean yhUpdateByIdIgnoreTenant(T entity, TableParamDto dto) {
+    @Override
+    public boolean updateByIdIgnoreTenant(T entity, TableParamDto dto) {
         boolean var4;
         try {
             this.setTableParam(dto);
@@ -518,6 +505,7 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
         return var4;
     }
 
+    @Override
     public boolean updateBatchIgnoreTenant(List<T> entityList, List<String> fieldNameList, int batchSize, boolean useStock) {
         boolean ret;
         try {
@@ -532,7 +520,7 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
                 List<List<T>> partition = Lists.partition(entityList, batchSize / batchSizeZero);
 
                 List list;
-                for(Iterator var8 = partition.iterator(); var8.hasNext(); ret = ret && ((YhMapper)this.baseMapper).updateBatchSomeColumn(list) > 0) {
+                for(Iterator var8 = partition.iterator(); var8.hasNext(); ret = ret && this.baseMapper.updateBatchSomeColumn(list) > 0) {
                     list = (List)var8.next();
                 }
 
@@ -540,7 +528,7 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
                 return var13;
             }
 
-            ret = this.yhUpdateBatchByIdIgnoreTenant(entityList, batchSize, (TableParamDto)null, useStock);
+            ret = this.updateBatchByIdIgnoreTenant(entityList, batchSize, (TableParamDto)null, useStock);
         } finally {
             TableThreadLocalUtil.remove();
         }
@@ -548,7 +536,8 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
         return ret;
     }
 
-    public boolean yhSaveOrUpdateIgnoreTenant(T entity, TableParamDto dto) {
+    @Override
+    public boolean saveOrUpdateIgnoreTenant(T entity, TableParamDto dto) {
         boolean var4;
         try {
             this.setTableParam(dto);
@@ -563,7 +552,7 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
                 return var4;
             }
 
-            var4 = super.update(entity, this.handleCompositeKeys(entity, primaryKey)) || this.yhSave(entity, TableParamDto.initSingleTable());
+            var4 = super.update(entity, this.handleCompositeKeys(entity, primaryKey)) || this.save(entity, TableParamDto.initSingleTable());
         } finally {
             TableThreadLocalUtil.remove();
         }
@@ -571,7 +560,8 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
         return var4;
     }
 
-    public boolean yhUpdateIgnoreTenant(T entity, Wrapper<T> updateWrapper, TableParamDto dto) {
+    @Override
+    public boolean updateIgnoreTenant(T entity, Wrapper<T> updateWrapper, TableParamDto dto) {
         boolean var4;
         try {
             this.setTableParam(dto);
@@ -583,7 +573,8 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
         return var4;
     }
 
-    public boolean yhUpdateBatchByIdIgnoreTenant(List<T> entityList, int batchSize, TableParamDto dto) {
+    @Override
+    public boolean updateBatchByIdIgnoreTenant(List<T> entityList, int batchSize, TableParamDto dto) {
         try {
             if (CollectionUtil.isEmpty(entityList)) {
                 throw new IllegalArgumentException("Error: entityList must not be empty");
@@ -595,7 +586,7 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
                 List<List<T>> partition = Lists.partition(entityList, batchSize / batchSizeZero);
 
                 List list;
-                for(Iterator var8 = partition.iterator(); var8.hasNext(); ret = ret && ((YhMapper)this.baseMapper).updateBatchSomeColumn(list) > 0) {
+                for(Iterator var8 = partition.iterator(); var8.hasNext(); ret = ret && this.baseMapper.updateBatchSomeColumn(list) > 0) {
                     list = (List)var8.next();
                 }
 
@@ -607,34 +598,8 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
         }
     }
 
-    /** @deprecated */
-    @Deprecated
-    public boolean yhUpdateBatchByIdNoTFIgnoreTenant(List<T> entityList, int batchSize) {
-        try {
-            if (CollectionUtil.isEmpty(entityList)) {
-                throw new IllegalArgumentException("Error: entityList must not be empty");
-            } else {
-                Class<?> aClass = entityList.get(0).getClass();
-                TableCode tableCode = (TableCode)aClass.getAnnotation(TableCode.class);
-                this.getMaintainPrimaryKeys(entityList.get(0));
-                boolean ret = true;
-                int batchSizeZero = DynamicTableUtil.getAllField(entityList.get(0).getClass()).size();
-                List<List<T>> partition = Lists.partition(entityList, batchSize / batchSizeZero);
-
-                List list;
-                for(Iterator var9 = partition.iterator(); var9.hasNext(); ret = ret && ((YhMapper)this.baseMapper).updateBatchSomeColumn(list) > 0) {
-                    list = (List)var9.next();
-                }
-
-                boolean var14 = ret;
-                return var14;
-            }
-        } finally {
-            TableThreadLocalUtil.remove();
-        }
-    }
-
-    public T yhGetByIdIgnoreTenant(Serializable id, TableParamDto dto) {
+    @Override
+    public T getByIdIgnoreTenant(Serializable id, TableParamDto dto) {
         Object var3;
         try {
             this.setTableParam(dto);
@@ -646,7 +611,7 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
         return var3;
     }
 
-    public T yhGetOneIgnoreTenant(Wrapper<T> queryWrapper, boolean throwEx, TableParamDto dto) {
+    public T getOneIgnoreTenant(Wrapper<T> queryWrapper, boolean throwEx, TableParamDto dto) {
         Object var4;
         try {
             this.setTableParam(dto);
@@ -658,7 +623,8 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
         return var4;
     }
 
-    public Map<String, Object> yhGetMapIgnoreTenant(Wrapper<T> queryWrapper, TableParamDto dto) {
+    @Override
+    public Map<String, Object> getMapIgnoreTenant(Wrapper<T> queryWrapper, TableParamDto dto) {
         Map var3;
         try {
             this.setTableParam(dto);
@@ -670,7 +636,8 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
         return var3;
     }
 
-    public List<T> yhListIgnoreTenant(Wrapper<T> queryWrapper, TableParamDto dto) {
+    @Override
+    public List<T> selectListIgnoreTenant(Wrapper<T> queryWrapper, TableParamDto dto) {
         List var3;
         try {
             this.setTableParam(dto);
@@ -682,7 +649,8 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
         return var3;
     }
 
-    public IPage<T> yhPageIgnoreTenant(IPage<T> page, Wrapper<T> queryWrapper, TableParamDto dto) {
+    @Override
+    public IPage<T> selectPageIgnoreTenant(IPage<T> page, Wrapper<T> queryWrapper, TableParamDto dto) {
         IPage var4;
         try {
             this.setTableParam(dto);
@@ -694,7 +662,8 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
         return var4;
     }
 
-    public long yhCountIgnoreTenant(Wrapper<T> queryWrapper, TableParamDto dto) {
+    @Override
+    public long selectCountIgnoreTenant(Wrapper<T> queryWrapper, TableParamDto dto) {
         long var3;
         try {
             this.setTableParam(dto);
@@ -708,10 +677,11 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
 
     private long privateCount(Wrapper<T> queryWrapper, TableParamDto dto) {
         this.setTableParam(dto);
-        return (long)super.count(queryWrapper);
+        return super.count(queryWrapper);
     }
 
-    public List<Map<String, Object>> yhListMapsIgnoreTenant(Wrapper<T> queryWrapper, TableParamDto dto) {
+    @Override
+    public List<Map<String, Object>> selectListMapsIgnoreTenant(Wrapper<T> queryWrapper, TableParamDto dto) {
         List var3;
         try {
             this.setTableParam(dto);
@@ -723,7 +693,8 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
         return var3;
     }
 
-    public List<Object> yhListObjsIgnoreTenant(Wrapper<T> queryWrapper, TableParamDto dto) {
+    @Override
+    public List<Object> selectListObjsIgnoreTenant(Wrapper<T> queryWrapper, TableParamDto dto) {
         List var3;
         try {
             this.setTableParam(dto);
@@ -735,7 +706,8 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
         return var3;
     }
 
-    public <E extends IPage<Map<String, Object>>> E yhPageMapsIgnoreTenant(E page, Wrapper<T> queryWrapper, TableParamDto dto) {
+    @Override
+    public <E extends IPage<Map<String, Object>>> E selectPageMapsIgnoreTenant(E page, Wrapper<T> queryWrapper, TableParamDto dto) {
         IPage var4;
         try {
             this.setTableParam(dto);
@@ -747,7 +719,8 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
         return var4;
     }
 
-    public List<T> yhListByMapIgnoreTenant(Map<String, Object> columnMap, TableParamDto dto) {
+    @Override
+    public List<T> selectListByMapIgnoreTenant(Map<String, Object> columnMap, TableParamDto dto) {
         List var3;
         try {
             this.setTableParam(dto);
@@ -759,7 +732,8 @@ public class ServiceImpl<M extends RootMapper<T>, T> extends com.baomidou.mybati
         return var3;
     }
 
-    public List<T> yhListByIdsIgnoreTenant(List<? extends Serializable> idList, TableParamDto dto) {
+    @Override
+    public List<T> selectListByIdsIgnoreTenant(List<? extends Serializable> idList, TableParamDto dto) {
         List var3;
         try {
             this.setTableParam(dto);

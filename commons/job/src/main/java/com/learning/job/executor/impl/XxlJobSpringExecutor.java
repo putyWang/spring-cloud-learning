@@ -10,6 +10,7 @@ import com.learning.job.handler.IJobHandler;
 import com.learning.job.handler.annotation.JobHandler;
 import com.learning.job.handler.annotation.XxlJob;
 import com.learning.job.handler.impl.MethodJobHandler;
+import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -21,10 +22,10 @@ import org.springframework.core.MethodIntrospector;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import com.learning.job.executor.XxlJobExecutor;
 
+@Log4j2
 public class XxlJobSpringExecutor
         extends XxlJobExecutor
         implements ApplicationContextAware, SmartInitializingSingleton, DisposableBean {
-    private static final Logger logger = LoggerFactory.getLogger(XxlJobSpringExecutor.class);
     private static ApplicationContext applicationContext;
 
     public XxlJobSpringExecutor() {
@@ -86,7 +87,7 @@ public class XxlJobSpringExecutor
                     });
                 } catch (Throwable var19) {
                     Throwable ex = var19;
-                    logger.error("yh-job method-jobhandler resolve error for bean[" + beanDefinitionName + "].", ex);
+                    log.error("yh-job method-jobhandler resolve error for bean[" + beanDefinitionName + "].", ex);
                 }
 
                 if (annotatedMethods != null && !annotatedMethods.isEmpty()) {

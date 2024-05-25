@@ -44,43 +44,41 @@ public class TriggerCallbackThread {
     }
 
     public void start() {
-        this.triggerCallbackThread = new Thread(new Runnable() {
-            public void run() {
-                Exception e;
-                while(!TriggerCallbackThread.this.toStop) {
-                    try {
-                        HandleCallbackParam callback = (HandleCallbackParam)TriggerCallbackThread.getInstance().callBackQueue.take();
-                        if (callback != null) {
-                            List<HandleCallbackParam> callbackParamListx = new ArrayList();
-                            int drainToNumx = TriggerCallbackThread.getInstance().callBackQueue.drainTo(callbackParamListx);
-                            callbackParamListx.add(callback);
-                            if (callbackParamListx != null && callbackParamListx.size() > 0) {
-                                TriggerCallbackThread.this.doCallback(callbackParamListx);
-                            }
-                        }
-                    } catch (Exception var4) {
-                        e = var4;
-                        if (!TriggerCallbackThread.this.toStop) {
-                            TriggerCallbackThread.logger.error(e.getMessage(), e);
-                        }
-                    }
-                }
-
+        this.triggerCallbackThread = new Thread(() -> {
+            Exception e;
+            while(!TriggerCallbackThread.this.toStop) {
                 try {
-                    List<HandleCallbackParam> callbackParamList = new ArrayList();
-                    int drainToNum = TriggerCallbackThread.getInstance().callBackQueue.drainTo(callbackParamList);
-                    if (callbackParamList != null && callbackParamList.size() > 0) {
-                        TriggerCallbackThread.this.doCallback(callbackParamList);
+                    HandleCallbackParam callback = (HandleCallbackParam)TriggerCallbackThread.getInstance().callBackQueue.take();
+                    if (callback != null) {
+                        List<HandleCallbackParam> callbackParamListx = new ArrayList();
+                        int drainToNumx = TriggerCallbackThread.getInstance().callBackQueue.drainTo(callbackParamListx);
+                        callbackParamListx.add(callback);
+                        if (callbackParamListx != null && callbackParamListx.size() > 0) {
+                            TriggerCallbackThread.this.doCallback(callbackParamListx);
+                        }
                     }
-                } catch (Exception var5) {
-                    e = var5;
+                } catch (Exception var4) {
+                    e = var4;
                     if (!TriggerCallbackThread.this.toStop) {
                         TriggerCallbackThread.logger.error(e.getMessage(), e);
                     }
                 }
-
-                TriggerCallbackThread.logger.info(">>>>>>>>>>> yh-job, executor callback thread destory.");
             }
+
+            try {
+                List<HandleCallbackParam> callbackParamList = new ArrayList();
+                int drainToNum = TriggerCallbackThread.getInstance().callBackQueue.drainTo(callbackParamList);
+                if (callbackParamList != null && callbackParamList.size() > 0) {
+                    TriggerCallbackThread.this.doCallback(callbackParamList);
+                }
+            } catch (Exception var5) {
+                e = var5;
+                if (!TriggerCallbackThread.this.toStop) {
+                    TriggerCallbackThread.logger.error(e.getMessage(), e);
+                }
+            }
+
+            TriggerCallbackThread.logger.info(">>>>>>>>>>> yh-job, executor callback thread destory.");
         });
         this.triggerCallbackThread.setDaemon(true);
         this.triggerCallbackThread.setName("yh-job, executor TriggerCallbackThread");
@@ -184,7 +182,7 @@ public class TriggerCallbackThread {
             HandleCallbackParam callbackParam = (HandleCallbackParam)var3.next();
             String logFileName = XxlJobFileAppender.makeLogFileName(new Date(callbackParam.getLogDateTim()), callbackParam.getLogId());
             XxlJobFileAppender.contextHolder.set(logFileName);
-            XxlJobLogger.log(logContent, new Object[0]);
+            XxlJobLogger.log(logContent);
         }
 
     }
@@ -237,7 +235,7 @@ public class TriggerCallbackThread {
     }
 
     static {
-        failCallbackFilePath = XxlJobFileAppender.getLogPath().concat(File.separator).concat(XxlJobFileAppender.callbacklog).concat(File.separator);
+        failCallbackFilePath = XxlJobFileAppender.getLogPath().concat(File.separator).concat(XxlJobFileAppender.callBackLog).concat(File.separator);
         failCallbackFileName = failCallbackFilePath.concat("yh-job-callback-{x}").concat(".log");
     }
 }

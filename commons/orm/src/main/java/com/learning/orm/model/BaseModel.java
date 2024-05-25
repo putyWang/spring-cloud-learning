@@ -9,6 +9,7 @@ import com.learning.orm.dto.TableInfoDto;
 import com.learning.orm.dto.TableParamDto;
 import com.learning.orm.enums.TableTypeEnum;
 import com.learning.orm.mapper.DynamicSqlMapper;
+import com.learning.orm.utils.PoUtil;
 import com.learning.orm.utils.TableThreadLocalUtil;
 import lombok.Getter;
 import lombok.Setter;
@@ -39,7 +40,7 @@ public class BaseModel {
     public TableParamDto tableParamDto;
 
     private static void handleOtherInfo(String dataBaseName, String tableName, TableParamDto tableParamDto) {
-        Assert.isTrue(StringUtil.isNotBlank(tableName), "表名不能为空", new Object[0]);
+        Assert.isTrue(StringUtil.isNotBlank(tableName), "表名不能为空");
         TableInfoDto tableInfoDto = new TableInfoDto();
         tableInfoDto.setDataBaseName(dataBaseName);
         tableInfoDto.setName(tableName);
@@ -48,21 +49,21 @@ public class BaseModel {
     }
 
     private static TableInfoDto codeHandle(String code, TableParamDto tableParamDto) {
-        Assert.isTrue(StringUtil.isNotBlank(code), "编码不能为空", new Object[0]);
+        Assert.isTrue(StringUtil.isNotBlank(code), "编码不能为空");
         OrmUtilConfig.initTableInfoByTableCode(code);
         TableInfoDto tableInfo = TableThreadLocalUtil.getTableInfo();
         String name = tableInfo.getName();
-        Assert.isTrue(StringUtil.isNotBlank(name), "表名不能为空", new Object[0]);
+        Assert.isTrue(StringUtil.isNotBlank(name), "表名不能为空");
         TableThreadLocalUtil.setTableParam(tableParamDto);
         TableThreadLocalUtil.setTableInfo(tableInfo);
         return tableInfo;
     }
 
     private static TableInfoDto codeHandle(String code, TableParamDto tableParamDto, Map<String, Object> fieldMap) {
-        Assert.isTrue(CollectionUtil.isNotEmpty(fieldMap), "字段信息不能为空", new Object[0]);
+        Assert.isTrue(CollectionUtil.isNotEmpty(fieldMap), "字段信息不能为空");
         String join = StringUtils.join(fieldMap.keySet().toArray(), ",");
-        Assert.isTrue(PoUtil.isSqlInject(join), String.format("表字段存在sql注入,fields=%s", join), new Object[0]);
-        Assert.isTrue(StringUtil.isNotBlank(code), "编码不能为空", new Object[0]);
+        Assert.isTrue(PoUtil.isSqlInject(join), String.format("表字段存在sql注入,fields=%s", join));
+        Assert.isTrue(StringUtil.isNotBlank(code), "编码不能为空");
         OrmUtilConfig.initTableInfoByTableCode(code);
         TableInfoDto tableInfo = TableThreadLocalUtil.getTableInfo();
         if (Objects.isNull(tableParamDto)) {
@@ -70,7 +71,7 @@ public class BaseModel {
         }
 
         String name = tableInfo.getName();
-        Assert.isTrue(StringUtil.isNotBlank(name), "表名不能为空", new Object[0]);
+        Assert.isTrue(StringUtil.isNotBlank(name), "表名不能为空");
         TableThreadLocalUtil.setTableParam(tableParamDto);
         TableThreadLocalUtil.setTableInfo(tableInfo);
         return tableInfo;
@@ -84,24 +85,24 @@ public class BaseModel {
         Object dateValue;
         if (Objects.equals(type, TableTypeEnum.WARD_TABLE.getValue())) {
             dateValue = fieldMap.get(wardKey);
-            Assert.notNull(dateValue, "病区表值获取失败,请检查配置或则病区字段是否有值", new Object[0]);
+            Assert.notNull(dateValue, "病区表值获取失败,请检查配置或则病区字段是否有值");
             return TableParamDto.initWardParam(dateValue.toString());
         } else if (Objects.equals(type, TableTypeEnum.SINGLE_LIBRARY_PARTITION.getValue())) {
             dateValue = fieldMap.get(partitionKey);
-            Assert.notNull(dateValue, "单库分区表值获取失败,请检查配置或则分区字段是否有值", new Object[0]);
+            Assert.notNull(dateValue, "单库分区表值获取失败,请检查配置或则分区字段是否有值");
             return TableParamDto.initPartitionParam(dateValue.toString());
         } else if (!Objects.equals(type, TableTypeEnum.YEAR_LIBRARY_PARTITION.getValue())) {
             if (Objects.equals(type, TableTypeEnum.SINGLE_TABLE.getValue())) {
                 return null;
             } else {
                 dateValue = fieldMap.get(dateKey);
-                Assert.isTrue(!Objects.isNull(dateValue), "年月表值获取失败,请检查配置或则时间字段是否有值", new Object[0]);
+                Assert.isTrue(!Objects.isNull(dateValue), "年月表值获取失败,请检查配置或则时间字段是否有值");
                 return TableParamDto.initDateParam(dateValue.toString());
             }
         } else {
             dateValue = fieldMap.get(dateKey);
             Object partitionValue = fieldMap.get(partitionKey);
-            Assert.isTrue(!Objects.isNull(dateValue) && Objects.isNull(partitionValue), "年库分区表值获取失败,请检查配置或则分区字段是否有值", new Object[0]);
+            Assert.isTrue(!Objects.isNull(dateValue) && Objects.isNull(partitionValue), "年库分区表值获取失败,请检查配置或则分区字段是否有值");
             return TableParamDto.initYearPartitionParam(dateValue.toString(), partitionValue.toString());
         }
     }
@@ -110,12 +111,12 @@ public class BaseModel {
         if (CollectionUtils.isEmpty(this.fieldList)) {
             return "*";
         } else {
-            List<String> filtered = (List)this.fieldList.stream().filter(StringUtil::isNotBlank).collect(Collectors.toList());
+            List<String> filtered = this.fieldList.stream().filter(StringUtil::isNotBlank).collect(Collectors.toList());
             if (CollectionUtils.isEmpty(filtered)) {
                 return "*";
             } else {
                 String join = StringUtils.join(filtered.toArray(), ",");
-                Assert.isTrue(PoUtil.isSqlInject(join), String.format("表字段存在sql注入,fields=%s", join), new Object[0]);
+                Assert.isTrue(PoUtil.isSqlInject(join), String.format("表字段存在sql注入,fields=%s", join));
                 return join;
             }
         }
@@ -127,7 +128,7 @@ public class BaseModel {
     }
 
     public static SelectModel initSelect(String dataBaseName, String tableName, List<String> fields) {
-        return initSelect(dataBaseName, tableName, fields, (TableParamDto)null);
+        return initSelect(dataBaseName, tableName, fields, null);
     }
 
     public static SelectModel initSelectByCode(String code, TableParamDto tableParamDto) {
@@ -153,9 +154,9 @@ public class BaseModel {
 
     public static InsertModel initInsert(String dataBaseName, String tableName, Map<String, Object> fieldMap, TableParamDto tableParamDto) {
         handleOtherInfo(dataBaseName, tableName, tableParamDto);
-        Assert.isTrue(CollectionUtils.isNotEmpty(fieldMap), "字段信息不能为空", new Object[0]);
+        Assert.isTrue(CollectionUtils.isNotEmpty(fieldMap), "字段信息不能为空");
         String join = StringUtils.join(fieldMap.keySet().toArray(), ",");
-        Assert.isTrue(PoUtil.isSqlInject(join), String.format("表字段存在sql注入,fields=%s", join), new Object[0]);
+        Assert.isTrue(PoUtil.isSqlInject(join), String.format("表字段存在sql注入,fields=%s", join));
         return new InsertModel(dataBaseName, tableName, fieldMap, join);
     }
 
@@ -174,9 +175,9 @@ public class BaseModel {
 
     public static UpdateModel initUpdate(String dataBaseName, String tableName, Map<String, Object> fieldMap, TableParamDto tableParamDto) {
         handleOtherInfo(dataBaseName, tableName, tableParamDto);
-        Assert.isTrue(CollectionUtils.isNotEmpty(fieldMap), "字段信息不能为空", new Object[0]);
+        Assert.isTrue(CollectionUtils.isNotEmpty(fieldMap), "字段信息不能为空");
         String join = StringUtils.join(fieldMap.keySet().toArray(), ",");
-        Assert.isTrue(PoUtil.isSqlInject(join), String.format("表字段存在sql注入,fields=%s", join), new Object[0]);
+        Assert.isTrue(PoUtil.isSqlInject(join), String.format("表字段存在sql注入,fields=%s", join));
         return new UpdateModel(dataBaseName, tableName, fieldMap);
     }
 
@@ -200,7 +201,7 @@ public class BaseModel {
     }
 
     public static DeleteModel initDeleteByCode(String code) {
-        TableInfoDto tableInfo = codeHandle(code, (TableParamDto)null);
+        TableInfoDto tableInfo = codeHandle(code, null);
         return new DeleteModel(tableInfo.getDataBaseName(), tableInfo.getName());
     }
 
@@ -210,7 +211,7 @@ public class BaseModel {
     }
 
     public static DeleteModel initDeleteByCode(String code, Map<String, Object> fieldMap) {
-        TableInfoDto tableInfo = codeHandle(code, (TableParamDto)null, fieldMap);
+        TableInfoDto tableInfo = codeHandle(code, null, fieldMap);
         return new DeleteModel(tableInfo.getDataBaseName(), tableInfo.getName());
     }
 

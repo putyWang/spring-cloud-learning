@@ -16,7 +16,7 @@
         <module>gateway</module>
         <module>temp</module>
         <module>system</module>
-        <module>Job-schedule</module>
+        <module>job-schedule</module>
     </modules>
 
     <properties>

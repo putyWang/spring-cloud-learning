@@ -10,9 +10,10 @@
         <module name="temp" />
         <module name="security" />
         <module name="system" />
+        <module name="job-schedule (1)" />
+        <module name="job-schedule" />
         <module name="auth" />
         <module name="web" />
-        <module name="Job-schedule" />
         <module name="orm" />
         <module name="job" />
         <module name="gateway" />
@@ -21,6 +22,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="auth (1)" target="1.8" />
+      <module name="Job-schedule" target="1.8" />
     </bytecodeTargetLevel>
   </component>
 </project>

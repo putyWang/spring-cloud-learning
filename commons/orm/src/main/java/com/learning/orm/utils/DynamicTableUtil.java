@@ -5,6 +5,7 @@ import com.alibaba.nacos.shaded.io.grpc.internal.JsonUtil;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.learning.core.utils.CollectionUtils;
+import com.learning.core.utils.SpringContextHolder;
 import com.learning.core.utils.StringUtil;
 import com.learning.orm.annotation.TableCode;
 import com.learning.orm.annotation.UseStock;
@@ -613,7 +614,7 @@ public class DynamicTableUtil {
         if (Objects.nonNull(ormProperties.getTenant()) && ormProperties.getTenant()) {
             try {
                 if (environment == null) {
-                    environment = (Environment)YhCloudSpringUtils.getBean(Environment.class);
+                    environment = SpringContextHolder.getBean(Environment.class);
                 }
 
                 String property = environment.getProperty("yanhua.mybatis.tokenTenantId");

@@ -18,12 +18,9 @@ public class XxlJobFileAppender {
     
     public static final InheritableThreadLocal<String> contextHolder = new InheritableThreadLocal();
     public static String logBasePath = "/data/applogs/yh-job/jobhandler";
-    public static String gluesource = "gluesource";
-    public static String callbacklog = "callbacklog";
+    public static String glueSource = "gluesource";
+    public static String callBackLog = "callbacklog";
     private static String glueSrcPath;
-
-    public XxlJobFileAppender() {
-    }
 
     public static void initLogPath(String logPath) {
         if (logPath != null && logPath.trim().length() > 0) {
@@ -36,7 +33,7 @@ public class XxlJobFileAppender {
         }
 
         logBasePath = logPathDir.getPath();
-        File glueBaseDir = new File(logPathDir, gluesource);
+        File glueBaseDir = new File(logPathDir, glueSource);
         if (!glueBaseDir.exists()) {
             glueBaseDir.mkdirs();
         }
@@ -188,7 +185,7 @@ public class XxlJobFileAppender {
     }
 
     static {
-        glueSrcPath = logBasePath.concat(File.separator + gluesource);
+        glueSrcPath = logBasePath.concat(File.separator + glueSource);
     }
 }
 

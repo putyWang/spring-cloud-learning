@@ -7,6 +7,7 @@ import com.learning.orm.dto.TableInfoDto;
 import com.learning.orm.dto.TableParamDto;
 import com.learning.orm.dto.TableYearPartitionDto;
 import com.learning.orm.enums.TableTypeEnum;
+import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -24,8 +25,8 @@ import java.util.regex.Pattern;
  * @Date: 2024-05-24
  * @Version V1.0
  **/
+@Log4j2
 public class PoUtil {
-    private static final Logger log = LoggerFactory.getLogger(PoUtil.class);
     public static ConcurrentHashMap<String, TableInfoDto> TABLE_CACHE_INFO = new ConcurrentHashMap();
     public static ConcurrentHashMap<String, String> TABLE_NAME_CACHE = new ConcurrentHashMap();
     private static String reg = "(?:')|(?:--)|(/\\*(?:.|[\\n\\r])*?\\*/)|(\\b(select|update|union|and|or|delete|insert|truncate|char|substr|ascii|declare|exec|count|master|into|drop|execute)\\b)";

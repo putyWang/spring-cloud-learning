@@ -33,7 +33,7 @@ public class LogFileScheduler {
     )
     public void deleteLogFiles() {
         if (this.keepDays > 0) {
-            this.log.info("开始删除日志文件，配置为--->admin.job.log.keepDays ：" + this.keepDays + ",admin.job.log.keepCount :" + this.keepCount + ",fileBasePath:" + XxlJobFileAppender.getLogPath());
+            log.info("开始删除日志文件，配置为--->admin.job.log.keepDays ：" + this.keepDays + ",admin.job.log.keepCount :" + this.keepCount + ",fileBasePath:" + XxlJobFileAppender.getLogPath());
             Calendar cal = Calendar.getInstance();
             cal.add(5, -this.keepDays);
             Date date = cal.getTime();
@@ -55,17 +55,15 @@ public class LogFileScheduler {
                             File folder = new File(path);
                             if (folder.isDirectory() && folder.exists()) {
                                 Path path1 = Paths.get(path);
-                                Files.list(path1).filter((x$0) -> {
-                                    return Files.isRegularFile(x$0, new LinkOption[0]);
-                                }).sorted(Comparator.comparingLong((f) -> {
-                                    return -f.toFile().lastModified();
-                                })).skip((long)this.keepCount).forEach((f) -> {
-                                    f.toFile().delete();
-                                });
+                                Files.list(path1).filter((x$0) -> Files.isRegularFile(x$0))
+                                        .sorted(Comparator.comparingLong((f) -> -f.toFile().lastModified()))
+                                        .skip(this.keepCount).forEach((f) -> {
+                                            f.toFile().delete();
+                                        });
                             }
                         }
                     } catch (Exception var11) {
-                        this.log.info("删除失败，filename：" + fileList[i].getName());
+                        log.info("删除失败，filename：" + fileList[i].getName());
                     }
                 }
             }
@@ -97,12 +95,12 @@ public class LogFileScheduler {
             }
 
             if (!flag) {
-                this.log.info("删除文件夹失败！");
+                log.info("删除文件夹失败！");
                 return false;
             }
 
             directory.delete();
-            this.log.info("删除{}完成！", dirPath);
+            log.info("删除{}完成！", dirPath);
         }
 
         return false;

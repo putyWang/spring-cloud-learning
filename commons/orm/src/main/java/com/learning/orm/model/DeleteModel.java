@@ -17,7 +17,7 @@ public class DeleteModel extends BaseModel {
     }
 
     public int delete(Wrapper query) {
-        return YH_MAPPER.Delete(query, this);
+        return MAPPER.delete(query, this);
     }
 }
 

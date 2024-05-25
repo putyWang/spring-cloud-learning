@@ -18,7 +18,7 @@ public class UpdateBatchPatch {
 
     private UpdateBatchPatch(){}
 
-    public static final Map<String, String> TABLE_COMPSITE_ID = new ConcurrentHashMap<>();
+    public static final Map<String, String> TABLE_COMPOSITE_ID = new ConcurrentHashMap<>();
 
     static {
         for (Class<?> cla : ClassUtil.scanPackageByAnnotation("com.learning", CompsiteId.class)) {
@@ -26,7 +26,7 @@ public class UpdateBatchPatch {
             String compsiteIdValue = compsiteIdAnnotation.value();
             TableName tableNameAnnotation = cla.getAnnotation(TableName.class);
             String tableNameValue = tableNameAnnotation.value();
-            TABLE_COMPSITE_ID.put(tableNameValue, compsiteIdValue);
+            TABLE_COMPOSITE_ID.put(tableNameValue, compsiteIdValue);
         }
     }
 }

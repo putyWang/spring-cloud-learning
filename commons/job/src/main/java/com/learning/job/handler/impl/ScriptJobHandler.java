@@ -7,19 +7,21 @@ import com.learning.job.log.XxlJobFileAppender;
 import com.learning.job.log.XxlJobLogger;
 import com.learning.job.utils.ScriptUtil;
 import com.learning.job.utils.ShardingUtil;
+import lombok.Getter;
 
 import java.io.File;
 
 public class ScriptJobHandler extends IJobHandler {
     private int jobId;
-    private long glueUpdatetime;
-    private String gluesource;
+    @Getter
+    private long glueUpdateTime;
+    private String glueSource;
     private GlueTypeEnum glueType;
 
     public ScriptJobHandler(int jobId, long glueUpdatetime, String gluesource, GlueTypeEnum glueType) {
         this.jobId = jobId;
-        this.glueUpdatetime = glueUpdatetime;
-        this.gluesource = gluesource;
+        this.glueUpdateTime = glueUpdatetime;
+        this.glueSource = gluesource;
         this.glueType = glueType;
         File glueSrcPath = new File(XxlJobFileAppender.getGlueSrcPath());
         if (glueSrcPath.exists()) {
@@ -39,25 +41,22 @@ public class ScriptJobHandler extends IJobHandler {
 
     }
 
-    public long getGlueUpdatetime() {
-        return this.glueUpdatetime;
-    }
-
     public ReturnT<String> execute(String param) throws Exception {
         if (!this.glueType.isScript()) {
             return new ReturnT(IJobHandler.FAIL.getCode(), "glueType[" + this.glueType + "] invalid.");
         } else {
             String cmd = this.glueType.getCmd();
-            String scriptFileName = XxlJobFileAppender.getGlueSrcPath().concat(File.separator).concat(String.valueOf(this.jobId)).concat("_").concat(String.valueOf(this.glueUpdatetime)).concat(this.glueType.getSuffix());
+            String scriptFileName = XxlJobFileAppender.getGlueSrcPath().concat(File.separator).concat(String.valueOf(this.jobId))
+                    .concat("_").concat(String.valueOf(this.glueUpdateTime)).concat(this.glueType.getSuffix());
             File scriptFile = new File(scriptFileName);
             if (!scriptFile.exists()) {
-                ScriptUtil.markScriptFile(scriptFileName, this.gluesource);
+                ScriptUtil.markScriptFile(scriptFileName, this.glueSource);
             }
 
             String logFileName = XxlJobFileAppender.contextHolder.get();
             ShardingUtil.ShardingVO shardingVO = ShardingUtil.getShardingVo();
             String[] scriptParams = new String[]{param, String.valueOf(shardingVO.getIndex()), String.valueOf(shardingVO.getTotal())};
-            XxlJobLogger.log("----------- script file:" + scriptFileName + " -----------", new Object[0]);
+            XxlJobLogger.log("----------- script file:" + scriptFileName + " -----------");
             int exitValue = ScriptUtil.execToFile(cmd, scriptFileName, logFileName, scriptParams);
             return exitValue == 0 ? IJobHandler.SUCCESS : new ReturnT(IJobHandler.FAIL.getCode(), "script exit value(" + exitValue + ") is failed");
         }

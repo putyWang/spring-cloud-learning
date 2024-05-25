@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.learning.job.schedule.dao.XxlJobGroupDao">
+
+    <select id="findByAddressType" parameterType="java.lang.Integer" resultMap="XxlJobGroup" databaseId="sqlserver">
+        SELECT <include refid="Base_Column_List" />
+        FROM xxl_job_group AS t
+        <if test="addressType != null">
+            WHERE t.address_type = #{addressType}
+        </if>
+        ORDER BY t.[order] ASC
+    </select>
+
+    <resultMap id="XxlJobGroup" type="com.learning.job.schedule.core.model.XxlJobGroup" >
+        <result column="id" property="id" />
+        <result column="app_name" property="appName" />
+        <result column="title" property="title" />
+        <result column="order" property="order" />
+        <result column="address_type" property="addressType" />
+        <result column="address_list" property="addressList" />
+    </resultMap>
+
+    <sql id="Base_Column_List">
+        t.id,
+		t.app_name,
+		t.title,
+		t.[order],
+		t.address_type,
+		t.address_list
+    </sql>
+
+    <select id="findAll" resultMap="XxlJobGroup" databaseId="sqlserver">
+        SELECT <include refid="Base_Column_List" />
+        FROM xxl_job_group AS t
+        ORDER BY t.[order] ASC
+    </select>
+    <select id="pageList" resultMap="XxlJobGroup" databaseId="sqlserver">
+        SELECT <include refid="Base_Column_List" />
+        FROM xxl_job_group AS t
+        ORDER BY t.[order] ASC
+        offset #{offset} rows fetch next #{pagesize} rows only
+    </select>
+    <select id="findAllCount" resultType="int" databaseId="sqlserver">
+        SELECT count(1) FROM xxl_job_group
+    </select>
+
+    <insert id="save" parameterType="com.learning.job.schedule.core.model.XxlJobGroup" useGeneratedKeys="true" keyProperty="id" databaseId="sqlserver">
+        INSERT INTO xxl_job_group ( app_name, title, [order], address_type, address_list)
+        values ( #{appName}, #{title}, #{order}, #{addressType}, #{addressList});
+    </insert>
+
+    <select id="findByappName" parameterType="java.lang.String" resultType="java.lang.Integer" databaseId="sqlserver">
+        SELECT COUNT(1) FROM xxl_job_group WHERE app_name = #{appName}
+    </select>
+
+    <select id="getIdByappName" parameterType="java.lang.String" resultType="java.lang.Integer" databaseId="sqlserver">
+        SELECT id FROM xxl_job_group WHERE app_name = #{appName}
+    </select>
+
+    <select id="notIdAppName" parameterType="com.learning.job.schedule.core.model.XxlJobGroup" resultType="java.lang.Integer" databaseId="sqlserver">
+        SELECT COUNT(1) FROM xxl_job_group WHERE app_name = #{appName} AND id != #{id}
+    </select>
+
+    <update id="update" parameterType="com.learning.job.schedule.core.model.XxlJobGroup" databaseId="sqlserver">
+        UPDATE xxl_job_group
+        SET app_name = #{appName},
+            title = #{title},
+            [order] = #{order},
+            address_type = #{addressType},
+            address_list = #{addressList}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="remove" parameterType="java.lang.Integer" databaseId="sqlserver">
+        DELETE FROM xxl_job_group
+        WHERE id = #{id}
+    </delete>
+
+    <select id="load" parameterType="java.lang.Integer" resultMap="XxlJobGroup" databaseId="sqlserver">
+        SELECT <include refid="Base_Column_List" />
+        FROM xxl_job_group AS t
+        WHERE t.id = #{id}
+    </select>
+
+
+    <!--fixme pg start-->
+
+    <select id="findByAddressType" parameterType="java.lang.Integer" resultMap="XxlJobGroup" databaseId="pg">
+        SELECT <include refid="Base_Column_List_Pg" />
+        FROM xxl_job_group AS t
+        <if test="addressType != null">
+            WHERE t.address_type = #{addressType}
+        </if>
+        ORDER BY t."order" ASC
+    </select>
+
+    <sql id="Base_Column_List_Pg">
+        t.id,
+		t.app_name,
+		t.title,
+		t."order",
+		t.address_type,
+		t.address_list
+    </sql>
+
+    <select id="findAll" resultMap="XxlJobGroup" databaseId="pg">
+        SELECT <include refid="Base_Column_List_Pg" />
+        FROM xxl_job_group AS t
+        ORDER BY t."order" ASC
+    </select>
+    <select id="pageList" resultMap="XxlJobGroup" databaseId="pg">
+        SELECT <include refid="Base_Column_List_Pg" />
+        FROM xxl_job_group AS t
+        ORDER BY t."order" ASC
+        offset #{offset} rows fetch next #{pagesize} rows only
+    </select>
+    <select id="findAllCount" resultType="int" databaseId="pg">
+        SELECT count(1) FROM xxl_job_group
+    </select>
+
+    <insert id="save" parameterType="com.learning.job.schedule.core.model.XxlJobGroup" useGeneratedKeys="true" keyProperty="id" databaseId="pg">
+        INSERT INTO xxl_job_group ( app_name, title, "order", address_type, address_list)
+        values ( #{appName}, #{title}, #{order}, #{addressType}, #{addressList});
+    </insert>
+
+    <select id="findByappName" parameterType="java.lang.String" resultType="java.lang.Integer" databaseId="pg">
+        SELECT COUNT(1) FROM xxl_job_group WHERE app_name = #{appName}
+    </select>
+
+    <select id="getIdByappName" parameterType="java.lang.String" resultType="java.lang.Integer" databaseId="pg">
+        SELECT id FROM xxl_job_group WHERE app_name = #{appName}
+    </select>
+
+    <select id="notIdAppName" parameterType="com.learning.job.schedule.core.model.XxlJobGroup" resultType="java.lang.Integer" databaseId="pg">
+        SELECT COUNT(1) FROM xxl_job_group WHERE app_name = #{appName} AND id != #{id}
+    </select>
+
+    <update id="update" parameterType="com.learning.job.schedule.core.model.XxlJobGroup" databaseId="pg">
+        UPDATE xxl_job_group
+        SET app_name = #{appName},
+            title = #{title},
+            "order" = #{order},
+            address_type = #{addressType},
+            address_list = #{addressList}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="remove" parameterType="java.lang.Integer" databaseId="pg">
+        DELETE FROM xxl_job_group
+        WHERE id = #{id}
+    </delete>
+
+    <select id="load" parameterType="java.lang.Integer" resultMap="XxlJobGroup" databaseId="pg">
+        SELECT <include refid="Base_Column_List_Pg" />
+        FROM xxl_job_group AS t
+        WHERE t.id = #{id}
+    </select>
+
+    <!--fixme pg end-->
+</mapper>

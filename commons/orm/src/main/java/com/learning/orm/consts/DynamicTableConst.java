@@ -12,7 +12,7 @@ import java.util.Map;
  **/
 public interface DynamicTableConst {
     String SQL_SUFFIX = ";sqlend;";
-    String FIXEDCODE = "FIXED:";
+    String FIXED_CODE = "FIXED:";
     String UPDATE = "update";
     String QUERY = "query";
     String STR1 = "-";

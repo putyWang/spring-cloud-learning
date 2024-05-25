@@ -8,7 +8,6 @@ import java.io.Serializable;
 
 @Setter
 @Getter
-@NoArgsConstructor
 public class TriggerParam implements Serializable {
     private static final long serialVersionUID = 42L;
     private int jobId;

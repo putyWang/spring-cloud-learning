@@ -10,11 +10,12 @@ import com.learning.job.log.XxlJobFileAppender;
 import com.learning.job.thread.JobLogFileCleanThread;
 import com.learning.job.thread.JobThread;
 import com.learning.job.thread.TriggerCallbackThread;
+import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+@Log4j2
 public class XxlJobExecutor {
-    private static final Logger logger = LoggerFactory.getLogger(XxlJobExecutor.class);
     private String logPath;
     private int logRetentionDays;
     private static ConcurrentMap<String, IJobHandler> jobHandlerRepository = new ConcurrentHashMap();
@@ -31,7 +32,7 @@ public class XxlJobExecutor {
         this.logRetentionDays = logRetentionDays;
     }
 
-    public void start() throws Exception {
+    public void start() {
         XxlJobFileAppender.initLogPath(this.logPath);
         JobLogFileCleanThread.getInstance().start((long)this.logRetentionDays);
         TriggerCallbackThread.getInstance().start();
@@ -43,7 +44,7 @@ public class XxlJobExecutor {
 
             while(var1.hasNext()) {
                 Map.Entry<Integer, JobThread> item = (Map.Entry)var1.next();
-                removeJobThread((Integer)item.getKey(), "web container destroy and kill the job.");
+                removeJobThread(item.getKey(), "web container destroy and kill the job.");
             }
 
             jobThreadRepository.clear();
@@ -55,8 +56,8 @@ public class XxlJobExecutor {
     }
 
     public static IJobHandler registJobHandler(String name, IJobHandler jobHandler) {
-        logger.info(">>>>>>>>>>> yh-job register jobhandler success, name:{}, jobHandler:{}", name, jobHandler);
-        return (IJobHandler)jobHandlerRepository.put(name, jobHandler);
+        log.info(">>>>>>>>>>> yh-job register jobhandler success, name:{}, jobHandler:{}", name, jobHandler);
+        return jobHandlerRepository.put(name, jobHandler);
     }
 
     public static IJobHandler loadJobHandler(String name) {
@@ -66,8 +67,8 @@ public class XxlJobExecutor {
     public static JobThread registJobThread(int jobId, IJobHandler handler, String removeOldReason) {
         JobThread newJobThread = new JobThread(jobId, handler);
         newJobThread.start();
-        logger.info(">>>>>>>>>>> yh-job regist JobThread success, jobId:{}, handler:{}", new Object[]{jobId, handler});
-        JobThread oldJobThread = (JobThread)jobThreadRepository.put(jobId, newJobThread);
+        log.info(">>>>>>>>>>> yh-job regist JobThread success, jobId:{}, handler:{}", new Object[]{jobId, handler});
+        JobThread oldJobThread = jobThreadRepository.put(jobId, newJobThread);
         if (oldJobThread != null) {
             oldJobThread.toStop(removeOldReason);
             oldJobThread.interrupt();
@@ -77,7 +78,7 @@ public class XxlJobExecutor {
     }
 
     public static void removeJobThread(int jobId, String removeOldReason) {
-        JobThread oldJobThread = (JobThread)jobThreadRepository.remove(jobId);
+        JobThread oldJobThread = jobThreadRepository.remove(jobId);
         if (oldJobThread != null) {
             oldJobThread.toStop(removeOldReason);
             oldJobThread.interrupt();
@@ -86,7 +87,6 @@ public class XxlJobExecutor {
     }
 
     public static JobThread loadJobThread(int jobId) {
-        JobThread jobThread = (JobThread)jobThreadRepository.get(jobId);
-        return jobThread;
+        return jobThreadRepository.get(jobId);
     }
 }

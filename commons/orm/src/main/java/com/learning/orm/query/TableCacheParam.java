@@ -12,7 +12,7 @@ import lombok.Setter;
  **/
 @Setter
 @Getter
-public class TableCacheQuery extends PageQuery {
+public class TableCacheParam extends PageQuery {
     private String rowId;
     private String name;
     private String dataBaseName;

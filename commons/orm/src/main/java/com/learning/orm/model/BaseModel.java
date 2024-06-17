@@ -39,13 +39,20 @@ public class BaseModel {
     public String keys;
     public TableParamDto tableParamDto;
 
+    /**
+     *
+     *
+     * @param dataBaseName
+     * @param tableName
+     * @param tableParamDto
+     */
     private static void handleOtherInfo(String dataBaseName, String tableName, TableParamDto tableParamDto) {
         Assert.isTrue(StringUtil.isNotBlank(tableName), "表名不能为空");
-        TableInfoDto tableInfoDto = new TableInfoDto();
-        tableInfoDto.setDataBaseName(dataBaseName);
-        tableInfoDto.setName(tableName);
         TableThreadLocalUtil.setTableParam(tableParamDto);
-        TableThreadLocalUtil.setTableInfo(tableInfoDto);
+        TableThreadLocalUtil.setTableInfo(
+                new TableInfoDto().setDataBaseName(dataBaseName)
+                        .setName(tableName)
+        );
     }
 
     private static TableInfoDto codeHandle(String code, TableParamDto tableParamDto) {

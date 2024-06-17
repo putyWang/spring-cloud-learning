@@ -1,6 +1,5 @@
 package com.learning.orm.config;
 
-import cn.hutool.core.collection.CollectionUtil;
 import com.alibaba.nacos.shaded.io.grpc.internal.JsonUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.learning.core.utils.CollectionUtils;
@@ -11,21 +10,13 @@ import com.learning.orm.model.BaseModel;
 import com.learning.orm.model.SelectModel;
 import com.learning.orm.utils.PoUtil;
 import com.learning.orm.utils.TableThreadLocalUtil;
-import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
-import javax.annotation.PostConstruct;
-import javax.annotation.Resource;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 

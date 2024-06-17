@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.config.GlobalConfig;
 import com.baomidou.mybatisplus.core.toolkit.GlobalConfigUtils;
 import com.learning.orm.injector.SqlInjector;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.apache.ibatis.session.Configuration;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.jetbrains.annotations.NotNull;
@@ -21,12 +22,12 @@ import org.springframework.stereotype.Component;
  * @Version V1.0
  **/
 @Component
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class MpBeanPostProcessor implements BeanPostProcessor {
 
-    private SqlInjector sqlInjector;
+    private final SqlInjector sqlInjector;
 
-    private SqlSessionFactory sqlSessionFactory;
+    private final SqlSessionFactory sqlSessionFactory;
 
     @Override
     public Object postProcessAfterInitialization(@NotNull Object bean, @NotNull String beanName) throws BeansException {

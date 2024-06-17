@@ -459,7 +459,7 @@ public interface BaseService<D extends BaseDto, T extends BaseEntity>
         if (page instanceof SortPageParam) {
             SortPageParam sortPage = (SortPageParam) page;
             List<String> sorts = sortPage.getSorts();
-            List<String> acSs = sortPage.getACSs();
+            List<String> acSs = sortPage.getAcsList();
 
             if (CollectionUtils.isNotEmpty(sorts)) {
                 OrderItem[] orderItems = new OrderItem[sorts.size()];

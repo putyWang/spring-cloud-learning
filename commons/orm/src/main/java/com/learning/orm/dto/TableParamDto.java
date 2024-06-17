@@ -1,7 +1,10 @@
 package com.learning.orm.dto;
 
+import com.learning.core.utils.date.DateUtils;
 import com.learning.orm.enums.TableTypeEnum;
 import lombok.Data;
+import lombok.experimental.Accessors;
+import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
@@ -18,83 +21,93 @@ import java.util.Objects;
  * @Version V1.0
  **/
 @Data
+@Accessors(chain = true)
+@Log4j2
 public class TableParamDto {
-    private static final Logger log = LoggerFactory.getLogger(TableParamDto.class);
+    /**
+     * 分表值
+     */
     private String tableField;
     private TableYearPartitionDto yearPartitionDto;
+
+    /**
+     * 分表类型
+     */
     private TableTypeEnum typeEnum;
 
+    /**
+     *
+     *
+     * @param dateKey
+     * @return
+     */
     public static TableParamDto initDateParam(Date dateKey) {
         Assert.isTrue(!Objects.isNull(dateKey), "时间不能为空");
-        TableParamDto tableParamDto = new TableParamDto();
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        tableParamDto.setTableField(formatter.format(dateKey));
-        return tableParamDto;
+        return new TableParamDto().setTableField(DateUtils.formatDate(dateKey));
     }
 
+    /**
+     *
+     *
+     * @return
+     */
     public static TableParamDto initSingleTable() {
-        TableParamDto tableParamDto = new TableParamDto();
-        tableParamDto.setTypeEnum(TableTypeEnum.SINGLE_TABLE);
-        return tableParamDto;
+        return new TableParamDto().setTypeEnum(TableTypeEnum.SINGLE_TABLE);
     }
 
+    /**
+     *
+     *
+     * @param typeEnum
+     * @return
+     */
     public static TableParamDto init(TableTypeEnum typeEnum) {
         log.error("未实现的功能,请勿调用");
-        TableParamDto tableParamDto = new TableParamDto();
-        tableParamDto.setTypeEnum(typeEnum);
-        return tableParamDto;
+        return new TableParamDto().setTypeEnum(typeEnum);
     }
 
+    /**
+     *
+     *
+     * @param dateKey
+     * @param typeEnum
+     * @return
+     */
     public static TableParamDto initDateParam(Date dateKey, TableTypeEnum typeEnum) {
-        TableParamDto tableParamDto = initDateParam(dateKey);
-        tableParamDto.setTypeEnum(typeEnum);
-        return tableParamDto;
+        return initDateParam(dateKey).setTypeEnum(typeEnum);
     }
 
     public static TableParamDto initDateParam(String dateKey) {
-        TableParamDto tableParamDto = new TableParamDto();
-        tableParamDto.setTableField(dateKey);
-        return tableParamDto;
+        return new TableParamDto().setTableField(dateKey);
     }
 
     public static TableParamDto initDateParam(String dateKey, TableTypeEnum typeEnum) {
-        TableParamDto tableParamDto = initDateParam(dateKey);
-        tableParamDto.setTypeEnum(typeEnum);
-        return tableParamDto;
+        return initDateParam(dateKey).setTypeEnum(typeEnum);
     }
 
     public static TableParamDto initWardParam(String wardKey) {
-        TableParamDto tableParamDto = new TableParamDto();
-        tableParamDto.setTableField(wardKey);
-        tableParamDto.setTypeEnum(TableTypeEnum.WARD_TABLE);
-        return tableParamDto;
+        return new TableParamDto().setTableField(wardKey)
+                .setTypeEnum(TableTypeEnum.WARD_TABLE);
     }
 
     public static TableParamDto initLibraryPartitionParam(String partitionKey) {
-        TableParamDto tableParamDto = new TableParamDto();
-        tableParamDto.setTableField(partitionKey);
-        tableParamDto.setTypeEnum(TableTypeEnum.SEVEN);
-        return tableParamDto;
+        return new TableParamDto().setTableField(partitionKey)
+                .setTypeEnum(TableTypeEnum.SEVEN);
     }
 
     public static TableParamDto initPartitionParam(String partitionKey) {
-        TableParamDto tableParamDto = new TableParamDto();
-        tableParamDto.setTableField(partitionKey);
-        tableParamDto.setTypeEnum(TableTypeEnum.SINGLE_LIBRARY_PARTITION);
-        return tableParamDto;
+        return new TableParamDto().setTableField(partitionKey)
+                .setTypeEnum(TableTypeEnum.SINGLE_LIBRARY_PARTITION);
     }
 
     public static TableParamDto initYearPartitionParam(String dateKey, String partitionKey) {
-        TableParamDto tableParamDto = new TableParamDto();
-        tableParamDto.setYearPartitionDto(new TableYearPartitionDto(dateKey, partitionKey));
-        tableParamDto.setTypeEnum(TableTypeEnum.YEAR_LIBRARY_PARTITION);
-        return tableParamDto;
+        return new TableParamDto().setYearPartitionDto(new TableYearPartitionDto(dateKey, partitionKey))
+                .setTypeEnum(TableTypeEnum.YEAR_LIBRARY_PARTITION);
     }
 
     public static TableParamDto initYearPartitionParam(String dateKey, String partitionKey, Integer partitionNum) {
-        TableParamDto tableParamDto = new TableParamDto();
-        tableParamDto.setYearPartitionDto(new TableYearPartitionDto(dateKey, partitionKey, partitionNum));
-        tableParamDto.setTypeEnum(TableTypeEnum.YEAR_LIBRARY_PARTITION);
-        return tableParamDto;
+        return new TableParamDto()
+                .setYearPartitionDto(new TableYearPartitionDto(dateKey, partitionKey, partitionNum))
+                .setTypeEnum(TableTypeEnum.YEAR_LIBRARY_PARTITION);
     }
 }

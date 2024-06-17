@@ -27,52 +27,33 @@ import java.util.regex.Pattern;
  **/
 @Log4j2
 public class PoUtil {
-    public static ConcurrentHashMap<String, TableInfoDto> TABLE_CACHE_INFO = new ConcurrentHashMap();
-    public static ConcurrentHashMap<String, String> TABLE_NAME_CACHE = new ConcurrentHashMap();
-    private static String reg = "(?:')|(?:--)|(/\\*(?:.|[\\n\\r])*?\\*/)|(\\b(select|update|union|and|or|delete|insert|truncate|char|substr|ascii|declare|exec|count|master|into|drop|execute)\\b)";
-    private static Pattern sqlPattern;
+    public static ConcurrentHashMap<String, TableInfoDto> TABLE_CACHE_INFO = new ConcurrentHashMap<>();
+    public static ConcurrentHashMap<String, String> TABLE_NAME_CACHE = new ConcurrentHashMap<>();
+    private static final String REQ = "(?:')|(?:--)|(/\\*(?:.|[\\n\\r])*?\\*/)|(\\b(select|update|union|and|or|delete|insert|truncate|char|substr|ascii|declare|exec|count|master|into|drop|execute)\\b)";
+    private static final Pattern SQL_PATTERN;
 
     private PoUtil() {
     }
 
-    private static Map<String, String> listTurnMap(List<String> list) {
-        Map<String, String> map = new HashMap(list.size());
-        Iterator var2 = list.iterator();
-
-        while(var2.hasNext()) {
-            String s = (String)var2.next();
-            map.put(s, s);
-        }
-
-        return map;
-    }
-
-    private static <T> Map<String, T> listTurnMapClass(List<String> list, Class<T> cls) throws IllegalAccessException, InstantiationException {
-        Map<String, T> map = new HashMap(list.size());
-        Iterator var3 = list.iterator();
-
-        while(var3.hasNext()) {
-            String s = (String)var3.next();
-            map.put(s, cls.newInstance());
-        }
-
-        return map;
-    }
-
-    public static List<String> getTimeSlotTableByClass(Class cls, String minTime, String maxTime) {
+    /**
+     *
+     * @param cls
+     * @param minTime
+     * @param maxTime
+     * @return
+     */
+    public static List<String> getTimeSlotTableByClass(Class<?> cls, String minTime, String maxTime) {
         Assert.isTrue(cls.isAnnotationPresent(TableCode.class), "动态表标识注解@TableCode不存在");
-        TableCode tableCode = (TableCode)cls.getAnnotation(TableCode.class);
-        return getTimeSlotTableByTableCode(tableCode.value(), minTime, maxTime);
+        return getTimeSlotTableByTableCode(cls.getAnnotation(TableCode.class).value(), minTime, maxTime);
     }
 
-    public static List<String> getTimeSlotTableByClass(Class cls, String minTime, String maxTime, TableTypeEnum typeEnum) {
+    public static List<String> getTimeSlotTableByClass(Class<?> cls, String minTime, String maxTime, TableTypeEnum typeEnum) {
         Assert.isTrue(cls.isAnnotationPresent(TableCode.class), "动态表标识注解@TableCode不存在");
-        TableCode tableCode = (TableCode)cls.getAnnotation(TableCode.class);
-        return getTimeSlotTableByTableCode(tableCode.value(), minTime, maxTime, typeEnum);
+        return getTimeSlotTableByTableCode(cls.getAnnotation(TableCode.class).value(), minTime, maxTime, typeEnum);
     }
 
     public static List<String> getTimeSlotTableByTableCode(String tableCode, String minTime, String maxTime) {
-        return getTimeSlotTableByTableCode(tableCode, minTime, maxTime, (TableTypeEnum)null);
+        return getTimeSlotTableByTableCode(tableCode, minTime, maxTime, null);
     }
 
 
@@ -227,10 +208,10 @@ public class PoUtil {
     }
 
     public static boolean isSqlInject(String str) {
-        return !sqlPattern.matcher(str).find();
+        return ! SQL_PATTERN.matcher(str).find();
     }
 
     static {
-        sqlPattern = Pattern.compile(reg, 2);
+        SQL_PATTERN = Pattern.compile(REQ, 2);
     }
 }

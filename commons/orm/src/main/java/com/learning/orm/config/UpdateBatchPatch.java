@@ -2,7 +2,7 @@ package com.learning.orm.config;
 
 import cn.hutool.core.util.ClassUtil;
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.learning.orm.annotation.CompsiteId;
+import com.learning.orm.annotation.CompositeId;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,12 +21,12 @@ public class UpdateBatchPatch {
     public static final Map<String, String> TABLE_COMPOSITE_ID = new ConcurrentHashMap<>();
 
     static {
-        for (Class<?> cla : ClassUtil.scanPackageByAnnotation("com.learning", CompsiteId.class)) {
-            CompsiteId compsiteIdAnnotation = cla.getAnnotation(CompsiteId.class);
-            String compsiteIdValue = compsiteIdAnnotation.value();
+        for (Class<?> cla : ClassUtil.scanPackageByAnnotation("com.learning", CompositeId.class)) {
+            CompositeId compositeIdAnnotation = cla.getAnnotation(CompositeId.class);
+            String compositeIdValue = compositeIdAnnotation.value();
             TableName tableNameAnnotation = cla.getAnnotation(TableName.class);
             String tableNameValue = tableNameAnnotation.value();
-            TABLE_COMPOSITE_ID.put(tableNameValue, compsiteIdValue);
+            TABLE_COMPOSITE_ID.put(tableNameValue, compositeIdValue);
         }
     }
 }

@@ -2,7 +2,6 @@ package com.learning.web.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.learning.core.annotation.Permission;
 import com.learning.core.handler.ApiResult;
 import com.learning.core.utils.CommonBeanUtil;
 import com.learning.web.except.ExceptionBuilder;
@@ -22,8 +21,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class BaseController<T extends BaseEntity, D extends BaseDto>
-        extends Controller {
+public abstract class BaseController<T extends BaseEntity, D extends BaseDto> {
 
     /**
      * 返回当前服务类

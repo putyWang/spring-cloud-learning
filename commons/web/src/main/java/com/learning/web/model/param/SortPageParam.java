@@ -9,8 +9,7 @@ import java.util.List;
  * 分页排序类
  */
 @Data
-public class SortPageParam
-        extends PageParam {
+public class SortPageParam extends PageParam {
 
     /**
      * 排序字段
@@ -22,5 +21,5 @@ public class SortPageParam
      * 升序还是降序
      */
     @Schema(name = "升序还是降序", title = "升序还是降序")
-    private List<String> ACSs;
+    private List<String> acsList;
 }

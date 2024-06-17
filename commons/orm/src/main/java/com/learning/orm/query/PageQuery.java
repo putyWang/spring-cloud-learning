@@ -12,18 +12,18 @@ import lombok.Setter;
  **/
 @Setter
 public class PageQuery {
-    private long page = 1L;
-    private long pageSize = 10L;
+    private int page = 1;
+    private int pageSize = 10;
 
     public Page getPageObj() {
         return new Page(this.page, this.pageSize);
     }
 
-    public long getPageSize() {
-        return this.pageSize == 0L ? 10L : this.pageSize;
+    public int getPageSize() {
+        return this.pageSize == 0 ? 10 : this.pageSize;
     }
 
-    public long getPage() {
-        return this.page == 0L ? 1L : this.page;
+    public int getPage() {
+        return this.page == 0 ? 1 : this.page;
     }
 }

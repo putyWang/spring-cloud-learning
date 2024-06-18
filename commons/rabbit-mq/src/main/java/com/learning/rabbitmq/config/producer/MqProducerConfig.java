@@ -1,10 +1,10 @@
-package com.learning.rabbit.config.producer;
+package com.learning.rabbitmq.config.producer;
 
-import com.learning.rabbit.converter.MqMessageConverter;
-import com.learning.rabbit.service.AsyncMqSendService;
-import com.learning.rabbit.service.MqSendService;
-import com.learning.rabbit.service.RabbitMqService;
-import com.learning.rabbit.strategy.RabbitMqReturnCallback;
+import com.learning.rabbitmq.converter.MqMessageConverter;
+import com.learning.rabbitmq.service.AsyncMqSendService;
+import com.learning.rabbitmq.service.MqSendService;
+import com.learning.rabbitmq.service.RabbitMqService;
+import com.learning.rabbitmq.strategy.RabbitMqReturnCallback;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.annotation.Bean;

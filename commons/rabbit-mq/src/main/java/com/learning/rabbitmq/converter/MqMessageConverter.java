@@ -1,9 +1,7 @@
-package com.learning.rabbit.converter;
+package com.learning.rabbitmq.converter;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.amqp.core.Message;
@@ -20,12 +18,9 @@ import java.nio.charset.StandardCharsets;
  * @Date: 2024-06-17
  * @Version V1.0
  **/
-@NoArgsConstructor
-@AllArgsConstructor
 @Log4j2
 public class MqMessageConverter extends SimpleMessageConverter {
     private static final ObjectMapper OBJECTMAPPER = new ObjectMapper();
-    private Class<?> actualType;
 
     @Override
     public @NotNull Object fromMessage(Message message) throws MessageConversionException {

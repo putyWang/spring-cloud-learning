@@ -1,4 +1,4 @@
-package com.learning.rabbit.config.consumer;
+package com.learning.rabbitmq.config.consumer;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;

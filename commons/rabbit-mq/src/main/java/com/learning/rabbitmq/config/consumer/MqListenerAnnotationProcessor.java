@@ -1,8 +1,8 @@
-package com.learning.rabbit.config.consumer;
+package com.learning.rabbitmq.config.consumer;
 
-import com.learning.rabbit.annotation.MqListener;
-import com.learning.rabbit.converter.MqMessageConverter;
-import com.learning.rabbit.domain.BindingObject;
+import com.learning.rabbitmq.annotation.MqListener;
+import com.learning.rabbitmq.converter.MqMessageConverter;
+import com.learning.rabbitmq.domain.BindingObject;
 import org.aopalliance.aop.Advice;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.Queue;
@@ -19,7 +19,6 @@ import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.ReflectionUtils;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Type;
 import java.util.Iterator;
 
 /**
@@ -104,8 +103,7 @@ public class MqListenerAnnotationProcessor implements BeanPostProcessor {
                 MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter();
                 messageListenerAdapter.setDefaultListenerMethod(method.getName());
                 messageListenerAdapter.setDelegate(bean);
-                Type actualType = method.getParameterTypes()[0];
-                messageListenerAdapter.setMessageConverter(new MqMessageConverter((Class)actualType));
+                messageListenerAdapter.setMessageConverter(new MqMessageConverter());
                 messageContainer.setMessageListener(messageListenerAdapter);
             }
         }
@@ -115,7 +113,7 @@ public class MqListenerAnnotationProcessor implements BeanPostProcessor {
         if (mqListener.enableConsumerAutoExpand()) {
             messageContainer.setConcurrentConsumers(mqListener.concurrentConsumers());
             messageContainer.setMaxConcurrentConsumers(mqListener.maxConcurrentConsumers());
-            messageContainer.setStartConsumerMinInterval((long)mqListener.startConsumerMinInterval());
+            messageContainer.setStartConsumerMinInterval(mqListener.startConsumerMinInterval());
         }
 
     }

@@ -1,12 +1,9 @@
-package com.learning.rabbit.config.consumer;
+package com.learning.rabbitmq.config.consumer;
 
-import com.learning.rabbit.converter.MqMessageConverter;
-import com.learning.rabbit.domain.BindingObject;
-import com.learning.rabbit.domain.MqMessageHandler;
-import org.aopalliance.aop.Advice;
+import com.learning.rabbitmq.converter.MqMessageConverter;
+import com.learning.rabbitmq.domain.BindingObject;
+import com.learning.rabbitmq.domain.MqMessageHandler;
 import org.apache.commons.collections4.CollectionUtils;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
 import org.springframework.amqp.rabbit.listener.SimpleMessageListenerContainer;
@@ -17,7 +14,6 @@ import org.springframework.context.annotation.Bean;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -86,12 +82,11 @@ public class MqConsumerConfig {
         return rabbitAdmin;
     }
 
-    protected void setMessageListener(SimpleMessageListenerContainer messageContainer, MqMessageHandler mqMessageHandler) {
+    protected void setMessageListener(SimpleMessageListenerContainer messageContainer, MqMessageHandler<?> mqMessageHandler) {
         if (messageContainer != null && mqMessageHandler != null) {
             Type typeClass = mqMessageHandler.getClass().getGenericSuperclass();
             if (typeClass instanceof ParameterizedType) {
-                Type actualType = ((ParameterizedType)typeClass).getActualTypeArguments()[0];
-                messageContainer.setMessageListener(new MessageListenerAdapter(mqMessageHandler, new MqMessageConverter((Class)actualType)));
+                messageContainer.setMessageListener(new MessageListenerAdapter(mqMessageHandler, new MqMessageConverter()));
             } else {
                 messageContainer.setMessageListener(new MessageListenerAdapter(mqMessageHandler, new SimpleMessageConverter()));
             }

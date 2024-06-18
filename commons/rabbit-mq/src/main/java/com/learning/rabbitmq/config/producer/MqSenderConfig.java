@@ -1,4 +1,4 @@
-package com.learning.rabbit.config.producer;
+package com.learning.rabbitmq.config.producer;
 
 import org.springframework.context.annotation.Bean;
 

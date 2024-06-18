@@ -1,4 +1,4 @@
-package com.learning.rabbit.domain;
+package com.learning.rabbitmq.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

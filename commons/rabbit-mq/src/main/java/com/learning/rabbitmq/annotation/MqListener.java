@@ -1,4 +1,4 @@
-package com.learning.rabbit.annotation;
+package com.learning.rabbitmq.annotation;
 
 import java.lang.annotation.*;
 

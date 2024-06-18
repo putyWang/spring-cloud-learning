@@ -1,16 +1,15 @@
-package com.learning.rabbit.config.producer;
+package com.learning.rabbitmq.config.producer;
 
-import com.learning.rabbit.annotation.MqSender;
-import com.learning.rabbit.service.AsyncMqSendService;
-import com.learning.rabbit.service.MqSendService;
+import com.learning.rabbitmq.annotation.MqSender;
+import com.learning.rabbitmq.service.AsyncMqSendService;
+import com.learning.rabbitmq.service.MqSendService;
+import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.lang.annotation.Annotation;
@@ -23,40 +22,29 @@ import java.lang.annotation.Annotation;
  * @Version V1.0
  **/
 @Aspect
+@Log4j2
 public class MqSenderAspect {
-    private static final Logger LOGGER = LoggerFactory.getLogger(MqSenderAspect.class);
     @Autowired
     private AsyncMqSendService asyncMqSendService;
     @Autowired
     private MqSendService mqSendService;
 
-    public MqSenderAspect() {
-    }
-
-    @Pointcut("@annotation(com.yanhua.cloud.rabbitmq.annotation.MqSender)")
-    public void mqSenderCut() {
-        System.out.println("aaa");
-    }
+    @Pointcut("@annotation(com.learning.rabbitmq.annotation.MqSender)")
+    public void mqSenderCut() {}
 
     @AfterReturning(
             pointcut = "mqSenderCut()",
             returning = "object"
     )
-    public void afterReturning(JoinPoint point, Object object) throws Throwable {
+    public void afterReturning(JoinPoint point, Object object) {
         if (null == object) {
-            LOGGER.debug(String.format("error, return message is null"));
-        } else {
-            Annotation[] annotations = ((MethodSignature)point.getStaticPart().getSignature()).getMethod().getAnnotations();
-            Annotation[] var4 = annotations;
-            int var5 = annotations.length;
+            log.debug("error, return message is null");
+        }
 
-            for(int var6 = 0; var6 < var5; ++var6) {
-                Annotation annotation = var4[var6];
-                if (annotation.annotationType().equals(MqSender.class)) {
-                    this.sendMessage((MqSender)annotation, object);
-                }
+        for(Annotation annotation : ((MethodSignature)point.getStaticPart().getSignature()).getMethod().getAnnotations()) {
+            if (annotation.annotationType().equals(MqSender.class)) {
+                this.sendMessage((MqSender)annotation, object);
             }
-
         }
     }
 
@@ -65,7 +53,7 @@ public class MqSenderAspect {
             throwing = "exception"
     )
     public void afterThrowing(Exception exception) throws Throwable {
-        LOGGER.error(String.format("mqSenderCut() is throw a exception:%s", exception.toString()));
+        log.error("mqSenderCut() is throw a exception");
         throw exception;
     }
 

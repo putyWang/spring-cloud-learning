@@ -1,10 +1,6 @@
-package com.learning.rabbit.service;
+package com.learning.rabbitmq.service;
 
-import com.learning.rabbit.domain.BaseMqMessage;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.learning.rabbitmq.domain.BaseMqMessage;
 import org.springframework.scheduling.annotation.Async;
 
 /**

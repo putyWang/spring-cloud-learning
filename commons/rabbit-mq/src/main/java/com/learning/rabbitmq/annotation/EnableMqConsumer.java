@@ -1,5 +1,8 @@
-package com.learning.rabbit.annotation;
+package com.learning.rabbitmq.annotation;
 
+import com.learning.rabbitmq.config.MqConnectionConfig;
+import com.learning.rabbitmq.config.consumer.MqConsumerConfig;
+import com.learning.rabbitmq.config.consumer.MqListenerConfig;
 import org.springframework.context.annotation.Import;
 
 import java.lang.annotation.*;

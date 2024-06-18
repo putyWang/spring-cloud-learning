@@ -1,9 +1,9 @@
-package com.learning.rabbit.service;
+package com.learning.rabbitmq.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learning.core.utils.StringUtil;
-import com.learning.rabbit.domain.BaseMqMessage;
+import com.learning.rabbitmq.domain.BaseMqMessage;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;

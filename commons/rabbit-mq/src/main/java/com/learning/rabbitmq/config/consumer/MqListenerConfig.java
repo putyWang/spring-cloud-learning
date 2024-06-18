@@ -1,4 +1,4 @@
-package com.learning.rabbit.config.consumer;
+package com.learning.rabbitmq.config.consumer;
 
 import org.springframework.context.annotation.Bean;
 

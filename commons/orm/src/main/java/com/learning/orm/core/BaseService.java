@@ -6,7 +6,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.learning.core.exception.SpringBootException;
+import com.learning.core.exception.LearningException;
 import com.learning.core.utils.StringUtil;
 import com.learning.orm.dto.TableInfoDto;
 import com.learning.orm.dto.TableParamDto;
@@ -163,7 +163,7 @@ public interface BaseService<T> extends IService<T> {
                     qw.eq(fieldName, o);
                 }
             } catch (IllegalAccessException var10) {
-                throw new SpringBootException("获取字段信息异常", var10);
+                throw new LearningException("获取字段信息异常", var10);
             }
         }
 

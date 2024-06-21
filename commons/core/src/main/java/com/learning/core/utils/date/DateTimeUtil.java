@@ -1,6 +1,6 @@
 package com.learning.core.utils.date;
 
-import com.learning.core.exception.SpringBootException;
+import com.learning.core.exception.LearningException;
 import com.learning.core.utils.StringUtil;
 
 import java.text.DateFormat;
@@ -115,7 +115,7 @@ public class DateTimeUtil {
         try {
             return dateFormat.parse(timeStr);
         } catch (ParseException e) {
-            throw new SpringBootException("日期解析错误");
+            throw new LearningException("日期解析错误");
         }
     }
 
@@ -135,13 +135,13 @@ public class DateTimeUtil {
                     date = timeFormat.parse(str);
                 } else {
                     if (!Pattern.matches("\\d{4}-\\d{2}-\\d{2}", str)) {
-                        throw new SpringBootException("日期格式不正确");
+                        throw new LearningException("日期格式不正确");
                     }
 
                     date = dateFormat.parse(str);
                 }
             } catch (ParseException e) {
-                throw new SpringBootException("日期解析错误");
+                throw new LearningException("日期解析错误");
             }
         }
 
@@ -168,7 +168,7 @@ public class DateTimeUtil {
                     timestamp = str;
                 }
             } catch (ParseException e) {
-                throw new SpringBootException("日期解析错误");
+                throw new LearningException("日期解析错误");
             }
         }
 
@@ -218,7 +218,7 @@ public class DateTimeUtil {
             }
 
             if (cal.before(birthDay)) {
-                throw new SpringBootException("出生日期晚于计算日期");
+                throw new LearningException("出生日期晚于计算日期");
             } else {
                 //设置结束日期
                 int yearNow = cal.get(Calendar.YEAR);

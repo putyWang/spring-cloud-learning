@@ -1,9 +1,7 @@
 package com.learning.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.learning.core.exception.SpringBootException;
-import com.learning.core.model.UserContext;
+import com.learning.core.exception.LearningException;
 import com.learning.core.utils.CollectionUtils;
 import com.learning.core.utils.CommonBeanUtil;
 import com.learning.core.utils.MD5Utils;
@@ -16,7 +14,6 @@ import com.learning.system.mapper.UserMapper;
 import com.learning.system.service.UserRoleService;
 import com.learning.system.service.UserService;
 import com.learning.web.eums.BaseOperationEnum;
-import com.learning.web.except.ExceptionBuilder;
 import com.learning.web.service.impl.BaseServiceImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -54,7 +51,7 @@ public class UserServiceImpl
         List<UserEntity> userEntities = this.baseMapper.selectList(new QueryWrapper<UserEntity>().lambda().eq(UserEntity::getUsername, userName));
 
         if (CollectionUtils.isEmpty(userEntities)) {
-            throw new SpringBootException("用户名不存在");
+            throw new LearningException("用户名不存在");
         }
 
         return userEntities.get(0);

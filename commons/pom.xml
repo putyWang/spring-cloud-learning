@@ -21,6 +21,8 @@
         <module>orm</module>
         <module>security</module>
         <module>rabbit-mq</module>
+        <module>redis</module>
+        <module>validation</module>
     </modules>
 
     <properties>

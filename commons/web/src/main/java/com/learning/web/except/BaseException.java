@@ -1,13 +1,13 @@
 package com.learning.web.except;
 
 import com.learning.core.enums.ApiCode;
-import com.learning.core.exception.SpringBootException;
+import com.learning.core.exception.LearningException;
 
 /**
  * 自定义异常类
  */
 public class BaseException
-        extends SpringBootException {
+        extends LearningException {
 
 
     public BaseException() {

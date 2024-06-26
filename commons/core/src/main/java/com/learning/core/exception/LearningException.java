@@ -3,6 +3,7 @@ package com.learning.core.exception;
 import com.learning.core.enums.ApiCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 import java.util.Arrays;
 
@@ -14,6 +15,7 @@ import java.util.Arrays;
  **/
 @EqualsAndHashCode(callSuper = true)
 @Data
+@NoArgsConstructor
 public class LearningException
         extends RuntimeException {
 
@@ -26,6 +28,10 @@ public class LearningException
         super(message);
         this.errorCode = ApiCode.SYSTEM_EXCEPTION.getCode();
         this.message = message;
+    }
+
+    public LearningException(String message,  Object... args) {
+        this(ApiCode.SYSTEM_EXCEPTION.getCode(), message, args);
     }
 
     public LearningException(Integer errorCode, String message) {

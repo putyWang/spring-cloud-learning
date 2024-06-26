@@ -9,18 +9,11 @@ import javax.validation.ConstraintValidatorContext;
 /**
  * @author WangWei
  * @version v 1.0
- * @description
+ * @description Url 验证（UrlValid）处理器
  * @date 2024-06-21
  **/
 public class UrlValidHandle implements ConstraintValidator<UrlValid, String> {
-    private String regex = "^([hH][tT]{2}[pP]:/*|[hH][tT]{2}[pP][sS]:/*|[fF][tT][pP]:/*)(([A-Za-z0-9-~]+).)+([A-Za-z0-9-~\\\\/])+(\\\\?{0,1}(([A-Za-z0-9-~]+\\\\={0,1})([A-Za-z0-9-~]*)\\\\&{0,1})*)$";
-
-    public UrlValidHandle() {
-    }
-
-    public void initialize(UrlValid constraintAnnotation) {
-    }
-
+    @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
         return ValidUtil.validUrl(value);
     }

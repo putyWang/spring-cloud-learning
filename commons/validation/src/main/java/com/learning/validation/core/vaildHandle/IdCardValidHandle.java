@@ -9,18 +9,13 @@ import javax.validation.ConstraintValidatorContext;
 /**
  * @author WangWei
  * @version v 1.0
- * @description
+ * @description 身份证验证（IdCardValid）处理器
  * @date 2024-06-21
  **/
 public class IdCardValidHandle implements ConstraintValidator<IdCardValid, Object> {
-    public IdCardValidHandle() {
-    }
 
-    public void initialize(IdCardValid constraintAnnotation) {
-    }
-
-    public boolean isValid(Object objval, ConstraintValidatorContext context) {
-        String value = (String)objval;
-        return ValidUtil.validIdCard(value);
+    @Override
+    public boolean isValid(Object value, ConstraintValidatorContext context) {
+        return ValidUtil.validIdCard((String)value);
     }
 }

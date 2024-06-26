@@ -1,6 +1,6 @@
 package com.learning.validation.core.annotation;
 
-import com.learning.validation.core.vaildHandle.YHClassCheckHandle;
+import com.learning.validation.core.vaildHandle.ClassCheckHandle;
 import com.learning.validation.core.yhclasscheck.IClassCheck;
 
 import javax.validation.Constraint;
@@ -16,14 +16,14 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 @Constraint(
-        validatedBy = {YHClassCheckHandle.class}
+        validatedBy = {ClassCheckHandle.class}
 )
 @Documented
 @Repeatable(YHClassCheckList.class)
-public @interface YHClassCheck {
+public @interface ClassCheck {
     String message() default "未指定验证类！";
 
-    Class<? extends IClassCheck> checkClass();
+    Class<? extends IClassCheck<Object>> checkClass();
 
     String checkPty() default "";
 

@@ -12,5 +12,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
 public @interface YHClassCheckList {
-    YHClassCheck[] value();
+    ClassCheck[] value();
 }

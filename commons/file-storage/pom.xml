@@ -10,7 +10,6 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.learning</groupId>
     <artifactId>file-storage</artifactId>
     <version>0.0.1</version>
 
@@ -46,11 +45,6 @@
             <groupId>commons-net</groupId>
             <artifactId>commons-net</artifactId>
             <version>${ftp.version}</version>
-        </dependency>
-        <!-- SFTP -->
-        <dependency>
-            <groupId>com.jcraft</groupId>
-            <artifactId>jsch</artifactId>
         </dependency>
     </dependencies>
 

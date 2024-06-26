@@ -3,25 +3,25 @@ package com.learning.validation.core.yhclasscheck;
 /**
  * @author WangWei
  * @version v 1.0
- * @description
+ * @description 自定义类检查器结果
  * @date 2024-06-21
  **/
 public class CheckResult {
-    private boolean valited;
+    private boolean validate;
     private String msg;
     private String failPty;
 
-    public CheckResult(boolean valited) {
-        this.valited = valited;
+    public CheckResult(boolean validate) {
+        this.validate = validate;
     }
 
     public CheckResult(boolean valited, String msg) {
-        this.valited = valited;
+        this.validate = valited;
         this.msg = msg;
     }
 
     public CheckResult(boolean valited, String failPty, String msg) {
-        this.valited = valited;
+        this.validate = valited;
         this.failPty = failPty;
         this.msg = msg;
     }
@@ -38,8 +38,8 @@ public class CheckResult {
         return new CheckResult(false, failPty, msg);
     }
 
-    public boolean isValited() {
-        return this.valited;
+    public boolean isValidate() {
+        return this.validate;
     }
 
     public String getMsg() {
@@ -50,8 +50,8 @@ public class CheckResult {
         return this.failPty;
     }
 
-    public void setValited(final boolean valited) {
-        this.valited = valited;
+    public void setValidate(final boolean validate) {
+        this.validate = validate;
     }
 
     public void setMsg(final String msg) {
@@ -71,7 +71,7 @@ public class CheckResult {
             CheckResult other = (CheckResult)o;
             if (!other.canEqual(this)) {
                 return false;
-            } else if (this.isValited() != other.isValited()) {
+            } else if (this.isValidate() != other.isValidate()) {
                 return false;
             } else {
                 Object this$msg = this.getMsg();
@@ -106,7 +106,7 @@ public class CheckResult {
     public int hashCode() {
         int PRIME = true;
         int result = 1;
-        int result = result * 59 + (this.isValited() ? 79 : 97);
+        int result = result * 59 + (this.isValidate() ? 79 : 97);
         Object $msg = this.getMsg();
         result = result * 59 + ($msg == null ? 43 : $msg.hashCode());
         Object $failPty = this.getFailPty();
@@ -115,6 +115,6 @@ public class CheckResult {
     }
 
     public String toString() {
-        return "CheckResult(valited=" + this.isValited() + ", msg=" + this.getMsg() + ", failPty=" + this.getFailPty() + ")";
+        return "CheckResult(valited=" + this.isValidate() + ", msg=" + this.getMsg() + ", failPty=" + this.getFailPty() + ")";
     }
 }

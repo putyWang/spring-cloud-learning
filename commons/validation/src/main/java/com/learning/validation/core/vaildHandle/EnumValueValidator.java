@@ -1,10 +1,12 @@
 package com.learning.validation.core.vaildHandle;
 
+import cn.hutool.core.util.ArrayUtil;
+import com.learning.validation.core.annotation.EnumValue;
+import com.learning.validation.core.function.EnumValueValidFunction;
+import lombok.SneakyThrows;
+
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
-import java.lang.reflect.Method;
-
-import static  com.learning.validation.core.annotation.EnumValue.*;
 
 /**
  * @author WangWei
@@ -13,9 +15,20 @@ import static  com.learning.validation.core.annotation.EnumValue.*;
  * @date 2024-06-21
  **/
 public class EnumValueValidator implements ConstraintValidator<EnumValue, Object> {
+    /**
+     * 匹配的 String 类型数组
+     */
     private String[] strValues;
+
+    /**
+     * 匹配的 int 类型数组
+     */
     private int[] intValues;
-    private Class<?> cls;
+
+    /**
+     * 匹配的枚举类型
+     */
+    private Class<? extends EnumValueValidFunction> cls;
 
     @Override
     public void initialize(EnumValue enumValue) {
@@ -24,42 +37,27 @@ public class EnumValueValidator implements ConstraintValidator<EnumValue, Object
         this.cls = enumValue.enumValue();
     }
 
+    @SneakyThrows
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
-        try {
-            if (null == value) {
-                return true;
-            } else {
-                if (this.cls != null && this.cls.isEnum()) {
-                    for(Object obj : this.cls.getEnumConstants()) {
-                        Method method = this.cls.getDeclaredMethod("getCode");
-                        String expectValue = String.valueOf(method.invoke(obj));
-
-                        if (expectValue.equals(String.valueOf(value))) {
-                            return true;
-                        }
-                    }
-                } else {
-                    if (value instanceof String) {
-                        for(String s : strValues) {
-                            if (s.equals(value)) {
-                                return true;
-                            }
-                        }
-                    } else if (value instanceof Integer) {
-                        for(Integer s : intValues) {
-                            if (s == value) {
-                                return true;
-                            }
-                        }
-                    }
-                }
-
-                return false;
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
+        if (null == value) {
+            return true;
         }
+        // 1 判断是否为指定枚举值
+        if (this.cls != null && this.cls.isEnum()) {
+            for(EnumValueValidFunction obj : this.cls.getEnumConstants()) {
+                if (obj.containsCode(String.valueOf(value))) {
+                    return true;
+                }
+            }
+        } else {
+            // 2 判断是否包含指定字符串
+            return (value instanceof String && ArrayUtil.contains(strValues, (String)value)) ||
+            // 3 判断是否包含指定数字
+                    (value instanceof Integer && ArrayUtil.contains(intValues, (Integer)value));
+        }
+
+        return false;
     }
 }
 

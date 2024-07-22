@@ -1,7 +1,6 @@
 package com.learning.validation.aspect;
 
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.nacos.client.utils.ValidatorUtils;
 import com.learning.validation.annotation.Valid;
 import com.learning.validation.core.exception.ValidException;
 import org.aspectj.lang.JoinPoint;
@@ -14,10 +13,12 @@ import org.springframework.util.ReflectionUtils;
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
-import javax.xml.bind.ValidationException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Parameter;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -177,7 +178,7 @@ public class ValidationAspect {
      * 对象验证
      *
      * @param object 需验证对象
-     * @param groups 验证策略的限制约束
+     * @param groups 需校验的分组（会验证其父组的约束）
      * @throws ValidException 验证失败后抛出的异常
      */
     private static void validateEntity(Object object, Class<?>... groups) throws ValidException {

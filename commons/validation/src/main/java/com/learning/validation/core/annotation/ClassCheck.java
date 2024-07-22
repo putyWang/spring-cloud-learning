@@ -1,7 +1,7 @@
 package com.learning.validation.core.annotation;
 
 import com.learning.validation.core.vaildHandle.ClassCheckHandle;
-import com.learning.validation.core.yhclasscheck.IClassCheck;
+import com.learning.validation.core.classcheck.IClassCheck;
 
 import javax.validation.Constraint;
 import javax.validation.Payload;
@@ -23,7 +23,7 @@ import java.lang.annotation.*;
 public @interface ClassCheck {
     String message() default "未指定验证类！";
 
-    Class<? extends IClassCheck<Object>> checkClass();
+    Class<? extends IClassCheck> checkClass();
 
     String checkPty() default "";
 

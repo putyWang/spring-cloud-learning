@@ -1,14 +1,21 @@
 package com.learning.redis.template;
 
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.apache.commons.collections4.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisClusterNode;
+import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisServerCommands;
 import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.ListOperations;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializer;
@@ -26,16 +33,19 @@ import java.util.*;
  * @date 2024-06-21
  **/
 @Component
+@NoArgsConstructor
+@RequiredArgsConstructor
+@Log4j2
 public class RedisRepository {
-    private static final Logger log = LoggerFactory.getLogger(RedisRepository.class);
     private static final Charset DEFAULT_CHARSET;
     private static final StringRedisSerializer STRING_SERIALIZER;
     private static final JdkSerializationRedisSerializer OBJECT_SERIALIZER;
-    @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
 
-    public RedisRepository() {
-    }
+    /**
+     * redis 模板
+     */
+    @Getter
+    private RedisTemplate<String, Object> redisTemplate;
 
     public RedisRepository(RedisTemplate<String, Object> redisTemplate) {
         this.redisTemplate = redisTemplate;
@@ -47,16 +57,12 @@ public class RedisRepository {
         return this.redisTemplate.getConnectionFactory();
     }
 
-    public RedisTemplate<String, Object> getRedisTemplate() {
-        return this.redisTemplate;
-    }
-
     public void flushDB(RedisClusterNode node) {
         this.redisTemplate.opsForCluster().flushDb(node);
     }
 
     public void setExpire(final byte[] key, final byte[] value, final long time) {
-        this.redisTemplate.execute((connection) -> {
+        this.redisTemplate.execute((RedisCallback<Object>) connection -> {
             connection.setEx(key, time, value);
             log.debug("[redisTemplate redis]放入 缓存  url:{} ========缓存时间为{}秒", key, time);
             return 1L;

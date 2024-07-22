@@ -1,4 +1,4 @@
-package com.learning.core.handler;
+package com.learning.core.model;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;

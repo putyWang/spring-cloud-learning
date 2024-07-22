@@ -2,7 +2,7 @@ package com.learning.web.controller;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.learning.core.handler.ApiResult;
+import com.learning.core.model.ApiResult;
 import com.learning.core.utils.CommonBeanUtil;
 import com.learning.web.except.ExceptionBuilder;
 import com.learning.web.model.dto.BaseDto;

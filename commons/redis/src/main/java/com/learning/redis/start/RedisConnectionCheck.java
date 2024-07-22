@@ -1,5 +1,6 @@
 package com.learning.redis.start;
 
+import com.learning.redis.config.properties.RedisProperties;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.slf4j.Logger;
@@ -26,19 +27,15 @@ public class RedisConnectionCheck implements CommandLineRunner {
 
     private final RedisTemplate<?, ?> redisTemplate;
 
-    /**
-     * 是否在无法连接是抛出异常
-     */
-    @Value("${yanhua.cloud.redis.throwerr:true}")
-    public boolean throwErr = true;
+    private RedisProperties redisProperties;
 
     @Override
     public void run(String... args) {
         try {
-            Objects.requireNonNull(this.redisTemplate.getConnectionFactory()).getConnection();
+            Objects.requireNonNull(redisTemplate.getConnectionFactory()).getConnection();
         } catch (Exception e) {
             log.error("redis connection failed !  连接失败", e);
-            if (this.throwErr) {
+            if (redisProperties.isThrowErr()) {
                 throw new RuntimeException(e);
             }
         }

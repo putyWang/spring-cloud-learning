@@ -30,7 +30,7 @@ public class RedisUtil {
 
     public RedisUtil(RedisTemplate<String, Object> redisTemplate, int maxWait) {
         this.defaultRedisScript.setScriptText(this.lua_script);
-        this.defaultRedisScript.setResultType();
+        this.defaultRedisScript.setResultType(List.class);
         this.redisTemplate = redisTemplate;
         this.maxWait = maxWait;
     }

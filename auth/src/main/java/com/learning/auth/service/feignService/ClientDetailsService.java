@@ -1,7 +1,7 @@
 package com.learning.auth.service.feignService;
 
 import com.learning.core.constants.SecurityConstants;
-import com.learning.core.handler.ApiResult;
+import com.learning.core.model.ApiResult;
 import com.learning.core.model.OauthClientDetails;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +10,7 @@ import java.util.List;
 
 /**
  * 调用后台服务接口
+ * @author User
  */
 @FeignClient(value = "system")
 public interface ClientDetailsService {

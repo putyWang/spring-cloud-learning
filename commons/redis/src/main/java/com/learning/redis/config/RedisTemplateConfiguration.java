@@ -16,6 +16,8 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
+import static com.fasterxml.jackson.databind.ObjectMapper.*;
+
 /**
  * @author WangWei
  * @description
@@ -24,33 +26,35 @@ import java.time.Duration;
 @EnableCaching
 @Configuration
 public class RedisTemplateConfiguration {
-    public RedisTemplateConfiguration() {
-    }
 
     @Bean(
             name = {"redisTemplate"}
     )
     @ConditionalOnMissingBean({RedisTemplate.class})
     public RedisTemplate<String, Object> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate();
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
-        Jackson2JsonRedisSerializer<Object> jacksonSeial = new Jackson2JsonRedisSerializer(Object.class);
+        Jackson2JsonRedisSerializer<Object> jacksonSerial = new Jackson2JsonRedisSerializer<>(Object.class);
         ObjectMapper om = new ObjectMapper();
-        om.enableDefaultTyping(DefaultTyping.NON_FINAL);
-        jacksonSeial.setObjectMapper(om);
+        jacksonSerial.setObjectMapper(
+                om.activateDefaultTyping(om.getPolymorphicTypeValidator(), DefaultTyping.NON_FINAL)
+        );
         StringRedisSerializer stringSerial = new StringRedisSerializer();
         redisTemplate.setKeySerializer(stringSerial);
-        redisTemplate.setValueSerializer(jacksonSeial);
+        redisTemplate.setValueSerializer(jacksonSerial);
         redisTemplate.setHashKeySerializer(stringSerial);
-        redisTemplate.setHashValueSerializer(jacksonSeial);
+        redisTemplate.setHashValueSerializer(jacksonSerial);
         redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }
 
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory redisConnectionFactory) {
-        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration.defaultCacheConfig().entryTtl(Duration.ofHours(1L));
-        return RedisCacheManager.builder(RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory)).cacheDefaults(redisCacheConfiguration).build();
+        RedisCacheConfiguration redisCacheConfiguration = RedisCacheConfiguration
+                .defaultCacheConfig().entryTtl(Duration.ofHours(1L));
+        return RedisCacheManager.builder(
+                RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory)
+                ).cacheDefaults(redisCacheConfiguration).build();
     }
 }
 

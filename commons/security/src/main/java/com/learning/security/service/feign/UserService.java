@@ -1,7 +1,7 @@
 package com.learning.security.service.feign;
 
 import com.learning.core.constants.SecurityConstants;
-import com.learning.core.handler.ApiResult;
+import com.learning.core.model.ApiResult;
 import com.learning.core.model.UserContext;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;

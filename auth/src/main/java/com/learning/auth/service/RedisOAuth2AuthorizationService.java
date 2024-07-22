@@ -50,8 +50,9 @@ public class RedisOAuth2AuthorizationService implements OAuth2AuthorizationServi
         if (isCode(authorization)) {
             OAuth2Authorization.Token<OAuth2AuthorizationCode> authorizationCode = authorization
                     .getToken(OAuth2AuthorizationCode.class);
+            assert authorizationCode != null;
             OAuth2AuthorizationCode authorizationCodeToken = authorizationCode.getToken();
-            long between = ChronoUnit.MINUTES.between(authorizationCodeToken.getIssuedAt(),
+            long between = ChronoUnit.MINUTES.between(Objects.requireNonNull(authorizationCodeToken.getIssuedAt()),
                     authorizationCodeToken.getExpiresAt());
             redisTemplate.setValueSerializer(RedisSerializer.java());
             redisTemplate.opsForValue()
@@ -70,7 +71,7 @@ public class RedisOAuth2AuthorizationService implements OAuth2AuthorizationServi
 
         if (isAccessToken(authorization)) {
             OAuth2AccessToken accessToken = authorization.getAccessToken().getToken();
-            long between = ChronoUnit.SECONDS.between(accessToken.getIssuedAt(), accessToken.getExpiresAt());
+            long between = ChronoUnit.SECONDS.between(Objects.requireNonNull(accessToken.getIssuedAt()), accessToken.getExpiresAt());
             redisTemplate.setValueSerializer(RedisSerializer.java());
             redisTemplate.opsForValue()
                     .set(buildKey(OAuth2ParameterNames.ACCESS_TOKEN, accessToken.getTokenValue()), authorization, between,

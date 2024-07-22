@@ -30,12 +30,12 @@ public class RemoteRegisteredClientRepository implements RegisteredClientReposit
     /**
      * 刷新令牌有效期默认 30 天
      */
-    private final static int refreshTokenValiditySeconds = 60 * 60 * 24 * 30;
+    private final static int REFRESH_TOKEN_VALIDITY_SECONDS = 60 * 60 * 24 * 30;
 
     /**
      * 请求令牌有效期默认 12 小时
      */
-    private final static int accessTokenValiditySeconds = 60 * 60 * 12;
+    private final static int ACCESS_TOKEN_VALIDITY_SECONDS = 60 * 60 * 12;
 
     private final ClientDetailsService clientDetailsService;
 
@@ -61,13 +61,6 @@ public class RemoteRegisteredClientRepository implements RegisteredClientReposit
     public RegisteredClient findById(String id) {
         throw new UnsupportedOperationException();
     }
-
-    /**
-     * Returns the registered client identified by the provided {@code clientId}, or
-     * {@code null} if not found.
-     * @param clientId the client identifier
-     * @return the {@link RegisteredClient} if found, otherwise {@code null}
-     */
 
     /**
      * 重写原生方法支持redis缓存
@@ -110,9 +103,9 @@ public class RemoteRegisteredClientRepository implements RegisteredClientReposit
                 .tokenSettings(TokenSettings.builder()
                         .accessTokenFormat(OAuth2TokenFormat.REFERENCE)
                         .accessTokenTimeToLive(Duration.ofSeconds(
-                                Optional.ofNullable(clientDetails.getAccessTokenValidity()).orElse(accessTokenValiditySeconds)))
+                                Optional.ofNullable(clientDetails.getAccessTokenValidity()).orElse(ACCESS_TOKEN_VALIDITY_SECONDS)))
                         .refreshTokenTimeToLive(Duration.ofSeconds(Optional.ofNullable(clientDetails.getRefreshTokenValidity())
-                                .orElse(refreshTokenValiditySeconds)))
+                                .orElse(REFRESH_TOKEN_VALIDITY_SECONDS)))
                         .build())
                 .clientSettings(ClientSettings.builder()
                         .requireAuthorizationConsent(!BooleanUtil.toBoolean(clientDetails.getAutoApprove()))

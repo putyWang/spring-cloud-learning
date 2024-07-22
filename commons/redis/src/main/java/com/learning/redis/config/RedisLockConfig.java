@@ -1,5 +1,8 @@
 package com.learning.redis.config;
 
+import com.learning.core.utils.StringUtil;
+import com.learning.redis.config.properties.RedisProperties;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
@@ -10,6 +13,7 @@ import org.redisson.config.SingleServerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
@@ -30,62 +34,67 @@ import java.util.stream.Collectors;
  * @date 2024-06-18
  * @version v 1.0
  **/
-@ComponentScan({"com.yanhua.cloud.redislock"})
 @Configuration
 @Log4j2
+@RequiredArgsConstructor
+@ConditionalOnProperty(
+        name = "learning.cloud.redis.lock.enable",
+        havingValue = "true"
+)
 public class RedisLockConfig {
-    @Autowired
-    private YhCloudDefaultRedisConfig redisProperties;
+
+    private final DefaultRedisConfig redisConfig;
 
     @Bean
     RedissonClient redissonClient() {
-        RedisConfiguration redisConfiguration = this.redisProperties.redisConfiguration(this.redisProperties.getDatabase());
+        RedisProperties redisProperties = redisConfig.getRedisProperties();
+        RedisConfiguration redisConfiguration = redisConfig.redisConfiguration(redisProperties.getDatabase());
         Config config = new Config();
+        // 1 构建守卫模式配置
         if (redisConfiguration instanceof RedisSentinelConfiguration) {
-            SentinelServersConfig sentinelServersConfig = config.useSentinelServers();
-            sentinelServersConfig.setMasterName(this.redisProperties.getMaster());
-            Set<RedisNode> sentinels = ((RedisSentinelConfiguration)redisConfiguration).getSentinels();
-            String[] nodes = new String[sentinels.size()];
-            ((List)sentinels.stream().map((t) -> "redis://" + t.getHost() + ":" + t.getPort()).collect(Collectors.toList())).toArray(nodes);
-            sentinelServersConfig.addSentinelAddress(nodes);
-            if (null != this.redisProperties.getDatabase()) {
-                sentinelServersConfig.setDatabase(this.redisProperties.getDatabase());
-            }
+            SentinelServersConfig sentinelServersConfig = config.useSentinelServers()
+                    .setMasterName(redisProperties.getSentinel().getMaster())
+                    .addSentinelAddress(
+                            ((RedisSentinelConfiguration) redisConfiguration).getSentinels()
+                                    .stream().map((t) -> DefaultRedisConfig.REDIS_PREFIX + t.getHost() + ":" + t.getPort())
+                                    .toArray(String[]::new)
+                    ).setDatabase(redisProperties.getDatabase())
+                    .setMasterConnectionMinimumIdleSize(redisProperties.getLettuce().getMasterMinSize())
+                    .setSlaveConnectionMinimumIdleSize(redisProperties.getLettuce().getSlaveMinSize());
 
-            if (!StringUtils.isEmpty(this.redisProperties.getPassword())) {
-                sentinelServersConfig.setPassword(this.redisProperties.getPassword());
+            if (StringUtil.isNotBlank(redisProperties.getPassword())) {
+                sentinelServersConfig.setPassword(redisProperties.getPassword());
             }
-
-            sentinelServersConfig.setMasterConnectionMinimumIdleSize(this.redisProperties.getMasterMinSize());
-            sentinelServersConfig.setSlaveConnectionMinimumIdleSize(this.redisProperties.getSlaveMinSize());
-            return Redisson.create(config);
+        // 2 构建集群配置
         } else if (redisConfiguration instanceof RedisClusterConfiguration) {
-            Set<RedisNode> clusterNodes = ((RedisClusterConfiguration)redisConfiguration).getClusterNodes();
-            ClusterServersConfig clusterServersConfig = config.useClusterServers();
-            clusterServersConfig.addNodeAddress((String[])clusterNodes.toArray());
-            if (!StringUtils.isEmpty(this.redisProperties.getPassword())) {
-                clusterServersConfig.setPassword(this.redisProperties.getPassword());
-            }
+            ClusterServersConfig clusterServersConfig = config.useClusterServers()
+                    .addNodeAddress(
+                            ((RedisClusterConfiguration)redisConfiguration).getClusterNodes().stream()
+                                    .map((t) -> DefaultRedisConfig.REDIS_PREFIX + t.getHost() + ":" + t.getPort())
+                                    .toArray(String[]::new)
+                    );
 
-            return Redisson.create(config);
+            if (StringUtil.isNotBlank(redisProperties.getPassword())) {
+                clusterServersConfig.setPassword(redisProperties.getPassword());
+            }
+        // 3 构建单机配置
         } else {
             SingleServerConfig singleServerConfig = config.useSingleServer();
-            singleServerConfig.setAddress("redis://" + this.redisProperties.getHost() + ":" + this.redisProperties.getPort());
-            if (null != this.redisProperties.getDatabase()) {
-                singleServerConfig.setDatabase(this.redisProperties.getDatabase());
-            }
+            singleServerConfig
+                    .setAddress(DefaultRedisConfig.REDIS_PREFIX + redisProperties.getHost() + ":" + redisProperties.getPort())
+                    .setDatabase(redisProperties.getDatabase())
+                    .setConnectionMinimumIdleSize(redisProperties.getLettuce().getMasterMinSize());
 
-            if (!StringUtils.isEmpty(this.redisProperties.getPassword())) {
-                singleServerConfig.setPassword(this.redisProperties.getPassword());
+            if (StringUtil.isNotBlank(redisProperties.getPassword())) {
+                singleServerConfig.setPassword(redisProperties.getPassword());
             }
-
-            singleServerConfig.setConnectionMinimumIdleSize(this.redisProperties.getMasterMinSize());
-            return Redisson.create(config);
         }
+
+        return Redisson.create(config);
     }
 
     @PostConstruct
     public void init() {
-        log.info("yh-redislock-{} init ..", RedisLockConfig.class.getPackage().getImplementationVersion());
+        log.info("redisLock-{} init ..", getClass().getPackage().getImplementationVersion());
     }
 }

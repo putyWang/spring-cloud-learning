@@ -2,7 +2,7 @@ package com.learning.security.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.learning.core.enums.ApiCode;
-import com.learning.core.handler.ApiResult;
+import com.learning.core.model.ApiResult;
 import com.learning.core.constants.CommonConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;

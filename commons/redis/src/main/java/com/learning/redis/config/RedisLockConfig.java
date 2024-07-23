@@ -27,19 +27,14 @@ import javax.annotation.PostConstruct;
  **/
 @Configuration
 @Log4j2
-@RequiredArgsConstructor
 @ConditionalOnProperty(
         name = "learning.cloud.redis.lock.enable",
         havingValue = "true"
 )
 public class RedisLockConfig {
 
-    private final DefaultRedisConfig redisConfig;
-
     @Bean
-    RedissonClient redissonClient() {
-        RedisProperties redisProperties = redisConfig.getRedisProperties();
-        RedisConfiguration redisConfiguration = redisConfig.redisConfiguration(redisProperties.getDatabase());
+    RedissonClient redissonClient(RedisProperties redisProperties, RedisConfiguration redisConfiguration) {
         Config config = new Config();
         // 1 构建守卫模式配置
         if (redisConfiguration instanceof RedisSentinelConfiguration) {

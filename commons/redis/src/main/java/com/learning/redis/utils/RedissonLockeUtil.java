@@ -1,7 +1,6 @@
-package com.learning.redis.service.impl;
+package com.learning.redis.utils;
 
-import com.learning.redis.service.ISynMethod;
-import com.learning.redis.service.YhCloudDistributedLocker;
+import com.learning.redis.function.ISynMethod;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.redisson.api.RLock;
@@ -19,20 +18,18 @@ import java.util.concurrent.TimeUnit;
 @Component
 @Log4j2
 @RequiredArgsConstructor
-public class RedissonDistributedLocker implements YhCloudDistributedLocker {
+public class RedissonLockeUtil {
 
     private final RedissonClient redissonClient;
 
     private static final String LOCK_PREFIX = "learning-lock:";
 
-    @Override
     public RLock lock(String lockKey) {
         RLock lock = this.redissonClient.getFairLock(LOCK_PREFIX + lockKey);
         lock.lock(0L, TimeUnit.SECONDS);
         return lock;
     }
 
-    @Override
     public void tryLock(String lockKey, int waitTime, int leaseTime, ISynMethod synMethod) {
         try {
             if (tryLock(lockKey, waitTime, leaseTime)) {
@@ -48,7 +45,6 @@ public class RedissonDistributedLocker implements YhCloudDistributedLocker {
 
     }
 
-    @Override
     public boolean tryLock(String lockKey, int waitTime, int leaseTime) {
         try {
             return redissonClient.getLock(LOCK_PREFIX + lockKey)
@@ -59,17 +55,14 @@ public class RedissonDistributedLocker implements YhCloudDistributedLocker {
         return false;
     }
 
-    @Override
     public boolean isHeldByCurrentThread(String lockName) {
         return redissonClient.getLock(LOCK_PREFIX + lockName).isHeldByCurrentThread();
     }
 
-    @Override
     public void unlock(String lockKey) {
         redissonClient.getLock(LOCK_PREFIX + lockKey).unlock();
     }
 
-    @Override
     public void unlock(RLock lock) {
         lock.unlock();
     }

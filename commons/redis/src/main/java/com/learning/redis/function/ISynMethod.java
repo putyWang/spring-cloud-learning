@@ -1,4 +1,4 @@
-package com.learning.redis.service;
+package com.learning.redis.function;
 
 /**
  * @author WangWei

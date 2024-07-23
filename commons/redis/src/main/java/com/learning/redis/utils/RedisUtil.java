@@ -61,6 +61,7 @@ public class RedisUtil {
     private RedisTemplate<String, Object> redisTemplate;
 
     public RedisUtil(RedisTemplate<String, Object> redisTemplate) {
+
         this.redisTemplate = redisTemplate;
         this.redisTemplate.setKeySerializer(STRING_SERIALIZER);
         this.redisTemplate.setValueSerializer(OBJECT_SERIALIZER);
@@ -289,11 +290,10 @@ public class RedisUtil {
     }
 
     /**
-     *
-     * @param key
-     * @param map
-     * @param timeSeconds
-     * @return
+     * 新增指定 hash
+     * @param key key 字符串
+     * @param map hash 对应 map
+     * @param timeSeconds 过期时间 单位：秒
      */
     public void putMap(String key, Map<String, Object> map, long timeSeconds) {
         putHashValues(key, map);

@@ -19,11 +19,11 @@ import java.util.concurrent.TimeUnit;
 @Component
 @Log4j2
 @RequiredArgsConstructor
-public class YhCloudRedissonDistributedLocker implements YhCloudDistributedLocker {
+public class RedissonDistributedLocker implements YhCloudDistributedLocker {
 
     private final RedissonClient redissonClient;
 
-    private static final String LOCK_PREFIX = "yh-r-lock:";
+    private static final String LOCK_PREFIX = "learning-lock:";
 
     @Override
     public RLock lock(String lockKey) {

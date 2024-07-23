@@ -10,10 +10,6 @@ import java.nio.charset.StandardCharsets;
  **/
 public interface RedisToolsConstant {
 
-    int SINGLE = 1;
-
-    int CLUSTER = 2;
-
     /**
      * 空白字节数组
      */

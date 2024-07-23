@@ -27,7 +27,7 @@ public class RedisConnectionCheck implements CommandLineRunner {
 
     private final RedisTemplate<?, ?> redisTemplate;
 
-    private RedisProperties redisProperties;
+    private final RedisProperties redisProperties;
 
     @Override
     public void run(String... args) {

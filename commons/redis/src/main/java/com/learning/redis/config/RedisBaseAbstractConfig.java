@@ -26,8 +26,9 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 
-import static com.fasterxml.jackson.databind.ObjectMapper.*;
-import static com.learning.redis.config.properties.RedisProperties.*;
+import static com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
+import static com.learning.redis.config.properties.RedisProperties.LettucePool;
+import static com.learning.redis.config.properties.RedisProperties.Sentinel;
 
 /**
  * @author WangWei

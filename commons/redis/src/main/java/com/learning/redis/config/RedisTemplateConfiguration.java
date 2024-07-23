@@ -16,7 +16,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 import java.time.Duration;
 
-import static com.fasterxml.jackson.databind.ObjectMapper.*;
+import static com.fasterxml.jackson.databind.ObjectMapper.DefaultTyping;
 
 /**
  * @author WangWei
@@ -54,7 +54,7 @@ public class RedisTemplateConfiguration {
                 .defaultCacheConfig().entryTtl(Duration.ofHours(1L));
         return RedisCacheManager.builder(
                 RedisCacheWriter.nonLockingRedisCacheWriter(redisConnectionFactory)
-                ).cacheDefaults(redisCacheConfiguration).build();
+        ).cacheDefaults(redisCacheConfiguration).build();
     }
 }
 

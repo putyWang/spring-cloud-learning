@@ -10,29 +10,20 @@ import org.redisson.config.ClusterServersConfig;
 import org.redisson.config.Config;
 import org.redisson.config.SentinelServersConfig;
 import org.redisson.config.SingleServerConfig;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisClusterConfiguration;
 import org.springframework.data.redis.connection.RedisConfiguration;
-import org.springframework.data.redis.connection.RedisNode;
 import org.springframework.data.redis.connection.RedisSentinelConfiguration;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author WangWei
+ * @version v 1.0
  * @description redis 分布式锁配置
  * @date 2024-06-18
- * @version v 1.0
  **/
 @Configuration
 @Log4j2
@@ -65,11 +56,11 @@ public class RedisLockConfig {
             if (StringUtil.isNotBlank(redisProperties.getPassword())) {
                 sentinelServersConfig.setPassword(redisProperties.getPassword());
             }
-        // 2 构建集群配置
+            // 2 构建集群配置
         } else if (redisConfiguration instanceof RedisClusterConfiguration) {
             ClusterServersConfig clusterServersConfig = config.useClusterServers()
                     .addNodeAddress(
-                            ((RedisClusterConfiguration)redisConfiguration).getClusterNodes().stream()
+                            ((RedisClusterConfiguration) redisConfiguration).getClusterNodes().stream()
                                     .map((t) -> DefaultRedisConfig.REDIS_PREFIX + t.getHost() + ":" + t.getPort())
                                     .toArray(String[]::new)
                     );
@@ -77,7 +68,7 @@ public class RedisLockConfig {
             if (StringUtil.isNotBlank(redisProperties.getPassword())) {
                 clusterServersConfig.setPassword(redisProperties.getPassword());
             }
-        // 3 构建单机配置
+            // 3 构建单机配置
         } else {
             SingleServerConfig singleServerConfig = config.useSingleServer();
             singleServerConfig

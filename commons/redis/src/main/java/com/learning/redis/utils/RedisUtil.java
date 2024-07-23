@@ -1,4 +1,4 @@
-package com.learning.redis.template;
+package com.learning.redis.utils;
 
 import com.learning.core.utils.ObjectUtils;
 import lombok.Getter;
@@ -26,6 +26,7 @@ import org.springframework.stereotype.Component;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -67,10 +68,6 @@ public class RedisUtil {
 
     public RedisConnectionFactory getConnectionFactory() {
         return this.redisTemplate.getConnectionFactory();
-    }
-
-    public void flushDB(RedisClusterNode node) {
-        this.redisTemplate.opsForCluster().flushDb(node);
     }
 
     /**
@@ -129,12 +126,53 @@ public class RedisUtil {
     }
 
     /**
+     * 设置过期时间
+     *
+     * @param key key 值
+     * @param timeSeconds 过期时间，以秒为单位
+     */
+    public void expire(String key, long timeSeconds) {
+        if (timeSeconds > NO_EXPIRE_TIME_VALUE) {
+            this.redisTemplate.expire(key, timeSeconds, TimeUnit.SECONDS);
+        }
+    }
+
+    /**
+     * 获取过期时间
+     *
+     * @param key key 值
+     * @return 过期时间 单位 秒
+     */
+    public long getExpire(String key) {
+        return ObjectUtils.defaultIfNull(redisTemplate.getExpire(key, TimeUnit.SECONDS), 0L);
+    }
+
+
+    /**
      * 查询指定前缀的所有 key
      * @param keyPrefix key 前缀
      * @return 匹配的 key 列表
      */
     public Set<String> keys(final String keyPrefix) {
         return this.redisTemplate.keys(getKeyPatten(keyPrefix));
+    }
+
+    /**
+     * 是否存在指定 key
+     * @param key key 字符串
+     * @return 是否存在指定 key
+     */
+    public Boolean hasKey(String key) {
+        return redisTemplate.hasKey(key);
+    }
+
+    /**
+     * 是否存在指定key 列表
+     * @param keys key 列表
+     * @return 存在 key 的个数
+     */
+    public Long hasKeys(Collection<String> keys) {
+        return redisTemplate.countExistingKeys(keys);
     }
 
     /**
@@ -210,8 +248,7 @@ public class RedisUtil {
      * @param hashValue hash 中对应的值
      */
     public void putHashValue(String key, String hashKey, Object hashValue) {
-        log.debug("[redisTemplate redis]  putHashValue()  key={},hashKey={},hashValue={} ", new Object[]{key, hashKey, hashValue});
-        this.opsForHash().put(key, hashKey, hashValue);
+        opsForHash().put(key, hashKey, hashValue);
     }
 
     /**
@@ -221,8 +258,7 @@ public class RedisUtil {
      * @param hashKey hash 中的 key 字符串
      */
     public Object getHashValues(String key, String hashKey) {
-        log.debug("[redisTemplate redis]  getHashValues()  key={},hashKey={}", key, hashKey);
-        return this.opsForHash().get(key, hashKey);
+        return opsForHash().get(key, hashKey);
     }
 
     /**
@@ -231,8 +267,7 @@ public class RedisUtil {
      * @param hashKeys hash 会被删除的 key 数组
      */
     public void delHashValues(String key, Object... hashKeys) {
-        log.debug("[redisTemplate redis]  delHashValues()  key={}", key);
-        this.opsForHash().delete(key, hashKeys);
+        opsForHash().delete(key, hashKeys);
     }
 
     /**
@@ -241,8 +276,7 @@ public class RedisUtil {
      * @return 对应的 map
      */
     public Map<String, Object> getHashValue(String key) {
-        log.debug("[redisTemplate redis]  getHashValue()  key={}", key);
-        return this.opsForHash().entries(key);
+        return opsForHash().entries(key);
     }
 
     /**
@@ -251,7 +285,19 @@ public class RedisUtil {
      * @param map hash 对应 map
      */
     public void putHashValues(String key, Map<String, Object> map) {
-        this.opsForHash().putAll(key, map);
+        opsForHash().putAll(key, map);
+    }
+
+    /**
+     *
+     * @param key
+     * @param map
+     * @param timeSeconds
+     * @return
+     */
+    public void putMap(String key, Map<String, Object> map, long timeSeconds) {
+        putHashValues(key, map);
+        expire(key, timeSeconds);
     }
 
     /**
@@ -272,6 +318,15 @@ public class RedisUtil {
             return true;
         });
     }
+
+    /**
+     * 刷新指定节点 db
+     * @param node 节点参数
+     */
+    public void flushDB(RedisClusterNode node) {
+        redisTemplate.opsForCluster().flushDb(node);
+    }
+
 
     /**
      * 是否已经存在指定 key 的数据
@@ -298,9 +353,9 @@ public class RedisUtil {
     }
 
     /**
-     * 按步长增加值
+     * 原子加 1
      * @param key 字符串
-     * @return
+     * @return 增加后的值
      */
     public Long incr(final String key) {
         return redisTemplate.execute((RedisCallback<Long>) connection -> ObjectUtils.defaultIfNull(connection.incr(Objects.requireNonNull(getRedisSerializer().serialize(key))), 0L));
@@ -315,48 +370,119 @@ public class RedisUtil {
         return redisTemplate.execute((RedisCallback<Long>) connection -> ObjectUtils.defaultIfNull(connection.incrBy(Objects.requireNonNull(getRedisSerializer().serialize(key)), value), 0L));
     }
 
+    /**
+     * 原子减 1
+     * @param key 字符串
+     * @return 增加后的值
+     */
+    public Long decr(String key, long value) {
+        return redisTemplate.execute((RedisCallback<Long>) connection -> ObjectUtils.defaultIfNull(connection.decr(Objects.requireNonNull(getRedisSerializer().serialize(key))), 0L));
+
+    }
+
+    /**
+     * 按步长减少指定值
+     * @param key 字符串
+     * @return 增加后的值
+     */
+    public Long decrBy(final String key, final long value) {
+        return redisTemplate.execute((RedisCallback<Long>) connection -> ObjectUtils.defaultIfNull(connection.decrBy(Objects.requireNonNull(getRedisSerializer().serialize(key)), value), 0L));
+    }
+
+    /**
+     * 获取 list 操作对象
+     * @return list 操作对象
+     */
     public ListOperations<String, Object> opsForList() {
-        return this.redisTemplate.opsForList();
+        return redisTemplate.opsForList();
     }
 
+    /**
+     * 从左边插入元素
+     * @param key list 对应 key
+     * @param value 将要插入的元素
+     * @return 当前list的长度
+     */
     public Long leftPush(String key, Object value) {
-        return this.opsForList().leftPush(key, value);
+        return opsForList().leftPush(key, value);
     }
 
+    /**
+     * 获取左边的第一个元素
+     * @param key list 对应 key
+     * @return 元素对象
+     */
     public Object leftPop(String key) {
-        return this.opsForList().leftPop(key);
+        return opsForList().leftPop(key);
     }
 
-    public Long in(String key, Object value) {
-        return this.opsForList().rightPush(key, value);
+    /**
+     * 从右边插入元素
+     * @param key list 对应 key
+     * @param value 将要插入的元素
+     * @return 当前list的长度
+     */
+    public Long rightPush(String key, Object value) {
+        return opsForList().rightPush(key, value);
     }
 
+    /**
+     * 获取右边的第一个元素
+     * @param key list 对应 key
+     * @return 元素对象
+     */
     public Object rightPop(String key) {
-        return this.opsForList().rightPop(key);
+        return opsForList().rightPop(key);
     }
 
+    /**
+     * 获取指定 list 长度
+     * @param key list 对应 key
+     * @return 长度
+     */
     public Long length(String key) {
-        return this.opsForList().size(key);
+        return opsForList().size(key);
     }
 
-    public void remove(String key, long i, Object value) {
-        this.opsForList().remove(key, i, value);
+    /**
+     * 移除 list 中指定索引的元素
+     * @param key list 对应 key
+     * @param index 索引
+     * @param value 值
+     */
+    public void remove(String key, long index, Object value) {
+        opsForList().remove(key, index, value);
     }
 
+    /**
+     * 在 list 中指定索引位置处设置元素
+     * @param key list 对应 key
+     * @param index 索引
+     * @param value 值
+     */
     public void set(String key, long index, Object value) {
-        this.opsForList().set(key, index, value);
+        opsForList().set(key, index, value);
     }
 
+    /**
+     * 获取 list 中指定子数组
+     * @param key list 对应 key
+     * @param start 起始索引
+     * @param end 结束索引
+     * @return 子数组
+     */
     public List<Object> getList(String key, int start, int end) {
-        return this.opsForList().range(key, (long)start, (long)end);
+        return opsForList().range(key, start, end);
     }
 
+    /**
+     * 从左边插入所有元素
+     * @param key list 对应 key
+     * @param list 将要插入的元素列表
+     * @return 当前list的长度
+     */
     public Long leftPushAll(String key, List<Object> list) {
-        return this.opsForList().leftPushAll(key, list);
-    }
-
-    public void insert(String key, long index, Object value) {
-        this.opsForList().set(key, index, value);
+        return opsForList().leftPushAll(key, list);
     }
 
     static {

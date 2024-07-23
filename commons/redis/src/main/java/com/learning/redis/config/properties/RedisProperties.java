@@ -65,7 +65,7 @@ public class RedisProperties {
      *
      */
     @Data
-    public static class Sentinel{
+    public static class Sentinel {
         /**
          *
          */
@@ -77,7 +77,7 @@ public class RedisProperties {
      * lettuce 配置
      */
     @Data
-    public static class Lettuce{
+    public static class Lettuce {
 
         /**
          * 最小主节点个数
@@ -99,7 +99,7 @@ public class RedisProperties {
      * lettuce 连接池配置
      */
     @Data
-    public static class LettucePool{
+    public static class LettucePool {
         /**
          * 超时关闭时间
          */

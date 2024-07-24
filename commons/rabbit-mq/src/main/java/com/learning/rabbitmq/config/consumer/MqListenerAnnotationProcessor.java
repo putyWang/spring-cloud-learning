@@ -4,6 +4,7 @@ import com.learning.rabbitmq.annotation.MqListener;
 import com.learning.rabbitmq.converter.MqMessageConverter;
 import com.learning.rabbitmq.domain.BindingObject;
 import org.aopalliance.aop.Advice;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
@@ -22,11 +23,10 @@ import java.lang.reflect.Method;
 import java.util.Iterator;
 
 /**
- * @ClassName: MqListenerAnnotationProcessor
- * @Description:
- * @Author: WangWei
- * @Date: 2024-06-17
- * @Version V1.0
+ * @description 注解式监听器处理类
+ * @author WangWei
+ * @date 2024-06-17
+ * @version V1.0
  **/
 public class MqListenerAnnotationProcessor implements BeanPostProcessor {
     @Autowired
@@ -40,17 +40,17 @@ public class MqListenerAnnotationProcessor implements BeanPostProcessor {
     }
 
     @Override
-    public Object postProcessBeforeInitialization(Object bean, String beanName) throws BeansException {
+    public Object postProcessBeforeInitialization(@NotNull Object bean, @NotNull String beanName) throws BeansException {
         return bean;
     }
 
     @Override
-    public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
-        Class targetClass = AopUtils.getTargetClass(bean);
-        ReflectionUtils.doWithMethods(targetClass, (method) -> {
+    public Object postProcessAfterInitialization(@NotNull Object bean, @NotNull String beanName) throws BeansException {
+        ReflectionUtils.doWithMethods(AopUtils.getTargetClass(bean), (method) -> {
             MqListener mqListener = AnnotationUtils.getAnnotation(method, MqListener.class);
+
             if (mqListener != null) {
-                this.processRabbitAdmin(mqListener, method, bean);
+                processRabbitAdmin(mqListener, method, bean);
             }
 
         });
@@ -64,23 +64,18 @@ public class MqListenerAnnotationProcessor implements BeanPostProcessor {
         messageContainer.setConnectionFactory(this.mqConnectionFactory);
         this.setMessageListener(messageContainer, bean, method);
         this.createExchange(mqListener.exchange());
-        Iterator var6 = bindingObject.getQueues().iterator();
 
-        while(var6.hasNext()) {
-            Queue queue = (Queue)var6.next();
-            this.rabbitAdmin.declareQueue(queue);
-            messageContainer.addQueues(new Queue[]{queue});
+        for(Queue queue : bindingObject.getQueues()) {
+            rabbitAdmin.declareQueue(queue);
+            messageContainer.addQueues(queue);
         }
 
-        var6 = bindingObject.getBindings().iterator();
-
-        while(var6.hasNext()) {
-            Binding binding = (Binding)var6.next();
-            this.rabbitAdmin.declareBinding(binding);
+        for(Binding binding : bindingObject.getBindings()) {
+            rabbitAdmin.declareBinding(binding);
         }
 
         if (this.retryPolicySet) {
-            messageContainer.setAdviceChain(new Advice[]{MqConsumerAdvice.methodInterceptor()});
+            messageContainer.setAdviceChain(MqConsumerAdvice.methodInterceptor());
         }
 
         this.initConsumerConfig(messageContainer, mqListener);
@@ -91,21 +86,21 @@ public class MqListenerAnnotationProcessor implements BeanPostProcessor {
     }
 
     private void createExchange(String exchangeName) {
-        TopicExchange topicExchange = new TopicExchange(exchangeName, true, false);
-        this.rabbitAdmin.declareExchange(topicExchange);
+        this.rabbitAdmin.declareExchange(new TopicExchange(exchangeName, true, false));
     }
 
     protected void setMessageListener(SimpleMessageListenerContainer messageContainer, Object bean, Method method) {
         if (messageContainer != null && bean != null) {
+
             if (method.getParameters().length != 1) {
                 throw new RuntimeException("method parameter's num is only be one");
-            } else {
-                MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter();
-                messageListenerAdapter.setDefaultListenerMethod(method.getName());
-                messageListenerAdapter.setDelegate(bean);
-                messageListenerAdapter.setMessageConverter(new MqMessageConverter());
-                messageContainer.setMessageListener(messageListenerAdapter);
             }
+
+            MessageListenerAdapter messageListenerAdapter = new MessageListenerAdapter();
+            messageListenerAdapter.setDefaultListenerMethod(method.getName());
+            messageListenerAdapter.setDelegate(bean);
+            messageListenerAdapter.setMessageConverter(new MqMessageConverter());
+            messageContainer.setMessageListener(messageListenerAdapter);
         }
     }
 

@@ -25,7 +25,7 @@ public class MqProducerConfig {
         RabbitTemplate rabbitTemplate = new RabbitTemplate(connectionFactory);
         rabbitTemplate.setMessageConverter(new MqMessageConverter());
         rabbitTemplate.setMandatory(true);
-        rabbitTemplate.setReturnCallback(new RabbitMqReturnCallback());
+        rabbitTemplate.setReturnsCallback(new RabbitMqReturnCallback());
         return rabbitTemplate;
     }
 

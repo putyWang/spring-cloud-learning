@@ -21,7 +21,7 @@ public class AsyncMqSendService extends MqSendService{
      *
      * @param mqMessage
      */
-    @Async("taskExecutor")
+    @Async("rabbitMqTaskExecutor")
     @Override
     public void sendMessage(BaseMqMessage mqMessage) {
         super.sendMessage(mqMessage);
@@ -34,7 +34,7 @@ public class AsyncMqSendService extends MqSendService{
      * @param routingKey
      * @param message
      */
-    @Async("taskExecutor")
+    @Async("rabbitMqTaskExecutor")
     @Override
     public void sendMessage(String exchange, String routingKey, Object message) {
         super.sendMessage(exchange, routingKey, message);

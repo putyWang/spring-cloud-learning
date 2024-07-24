@@ -16,10 +16,10 @@ public class MqSendService {
     private final RabbitMqService rabbitMqService;
 
     public void sendMessage(BaseMqMessage mqMessage) {
-        this.rabbitMqService.sendMessage(mqMessage);
+        rabbitMqService.sendMessage(mqMessage);
     }
 
     public void sendMessage(String exchange, String routingKey, Object message) {
-        this.rabbitMqService.sendMessage(exchange, routingKey, message);
+        rabbitMqService.sendMessage(exchange, routingKey, message);
     }
 }

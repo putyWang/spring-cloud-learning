@@ -26,7 +26,6 @@ public class RabbitMqService {
      */
     private static final ObjectMapper OBJECTMAPPER = new ObjectMapper();
 
-    @Autowired
     @Getter
     private final RabbitTemplate rabbitTemplate;
 

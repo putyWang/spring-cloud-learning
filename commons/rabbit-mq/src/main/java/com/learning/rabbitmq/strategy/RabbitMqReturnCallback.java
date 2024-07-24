@@ -16,6 +16,13 @@ public class RabbitMqReturnCallback implements RabbitTemplate.ReturnsCallback {
     @Override
     public void returnedMessage(ReturnedMessage returned) {
         log.error("--------------mq message can't be delivered to any queue--------------");
-        log.error(String.format("message=[%s], exchange=[%s], routingKey=[%s]", returned.getMessage(), returned.getExchange(), returned.getRoutingKey()));
+        log.error(String.format(
+                "message=[%s]\n exchange=[%s]\n routingKey=[%s]\n replyCode=[%s]\n replyText=[%s]",
+                returned.getMessage(),
+                returned.getExchange(),
+                returned.getRoutingKey(),
+                returned.getReplyCode(),
+                returned.getReplyText()
+        ));
     }
 }

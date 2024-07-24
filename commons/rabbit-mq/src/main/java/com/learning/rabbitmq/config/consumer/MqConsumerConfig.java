@@ -24,12 +24,13 @@ import java.util.List;
  * @Version V1.0
  **/
 public class MqConsumerConfig {
-    @Autowired(
-            required = false
-    )
+
     /**
      * 链式 mq 消息处理器
      */
+    @Autowired(
+            required = false
+    )
     private List<MqMessageHandler<?>> mqMessageHandlers;
     private final Boolean retryPolicySet;
 
@@ -61,13 +62,13 @@ public class MqConsumerConfig {
                     throw new RuntimeException("bindings may not be empty");
                 }
 
-                this.setMessageListener(messageContainer, mqMessageHandler);
+                setMessageListener(messageContainer, mqMessageHandler);
                 bindingObject.getQueues().forEach(queue -> {
                     rabbitAdmin.declareQueue(queue);
                     messageContainer.addQueues(queue);
                 });
 
-                 bindingObject.getBindings().forEach(rabbitAdmin::declareBinding);
+                bindingObject.getBindings().forEach(rabbitAdmin::declareBinding);
 
                 if (this.retryPolicySet) {
                     messageContainer.setAdviceChain(MqConsumerAdvice.methodInterceptor());

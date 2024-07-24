@@ -1,5 +1,6 @@
 package com.learning.rabbitmq.config.producer;
 
+import com.learning.core.utils.ObjectUtils;
 import com.learning.rabbitmq.annotation.MqSender;
 import com.learning.rabbitmq.service.AsyncMqSendService;
 import com.learning.rabbitmq.service.MqSendService;
@@ -41,11 +42,7 @@ public class MqSenderAspect {
             log.debug("error, return message is null");
         }
 
-        for(Annotation annotation : ((MethodSignature)point.getStaticPart().getSignature()).getMethod().getAnnotations()) {
-            if (annotation.annotationType().equals(MqSender.class)) {
-                this.sendMessage((MqSender)annotation, object);
-            }
-        }
+        sendMessage(((MethodSignature)point.getStaticPart().getSignature()).getMethod().getAnnotation(MqSender.class), object);
     }
 
     @AfterThrowing(
@@ -58,7 +55,9 @@ public class MqSenderAspect {
     }
 
     private void sendMessage(MqSender mqSender, Object object) {
-        if (mqSender.isAsync()) {
+
+        if(ObjectUtils.isNull(mqSender)){
+        } else if (mqSender.isAsync()) {
             this.asyncMqSendService.sendMessage(mqSender.exchange(), mqSender.routingKey(), object);
         } else {
             this.mqSendService.sendMessage(mqSender.exchange(), mqSender.routingKey(), object);

@@ -1,10 +1,11 @@
 package com.learning.rabbitmq.config.properties;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -15,6 +16,10 @@ import java.util.List;
  **/
 @Component
 @ConfigurationProperties(prefix = "learning.cloud.rabbit")
+@ConditionalOnProperty(
+        value = "learning.cloud.rabbit.enable",
+        havingValue = "true"
+)
 @Data
 public class RabbitProperty {
     /**
@@ -26,12 +31,12 @@ public class RabbitProperty {
     /**
      * 用户名
      */
-    private String username;
+    private String username = "";
 
     /**
      * 密码
      */
-    private String password;
+    private String password = "";
 
     /**
      * 虚拟主机地址
@@ -39,17 +44,52 @@ public class RabbitProperty {
     private String vhost = "/";
 
     /**
+     * 是否打印执行回执
+     */
+    private Boolean publisherReturns = true;
+
+    /**
      * 消费者配置信息
      */
-    private List<ConsumerProperty> consumer = new ArrayList<>();
+    private ConsumerProperty consumer;
 
     @Data
+    @Accessors(chain = true)
     public static class ConsumerProperty {
 
         /**
+         * 监听队列数组控制
+         */
+        private List<BindingProperty> bindingList;
+
+        /**
+         * 消费对象的全限定类名
+         */
+        private String handler;
+
+        /**
+         * 消费者自动扩展配置
+         */
+        private AutoExpand autoExpand = new AutoExpand();
+
+        /**
+         * 消费者重试配置
+         */
+        private RetryProperties retry = new RetryProperties();
+
+        /**
+         * 连接池配置
+         */
+        private ThreadPoolProperty pool;
+    }
+
+    @Data
+    @Accessors(chain = true)
+    public static class BindingProperty {
+        /**
          * 队列名
          */
-        private String queue;
+        private String queueName;
 
         /**
          * 交换机名
@@ -59,31 +99,17 @@ public class RabbitProperty {
         /**
          * 路由 key
          */
-        private String routing;
-
-        /**
-         * 消费者自动扩展配置
-         */
-        private ConsumerAutoExpand consumerAutoExpand;
-
-        /**
-         * 消费者重试配置
-         */
-        private RetryProperties retry;
+        private String routing = "#";
     }
 
     @Data
-    public static class ConsumerAutoExpand {
+    @Accessors(chain = true)
+    public static class AutoExpand {
 
         /**
          * 是否启用
          */
         private boolean enable = true;
-
-        /**
-         * 消费对象的全限定类名
-         */
-        private String handler;
 
         /**
          * 核心消费者线程数
@@ -102,7 +128,40 @@ public class RabbitProperty {
     }
 
     @Data
+    @Accessors(chain = true)
     public static class RetryProperties {
+
+        /**
+         * 是否启用重试
+         */
+        private boolean enable = false;
+
+        /**
+         * 重试时间间隔
+         */
+        private long initialInterval = 1000L;
+
+        /**
+         * 重试时间间隔增长系数
+         */
+        private double multiplier = 2.0D;
+
+        /**
+         * 重试最大时间间隔
+         */
+        private long maxInterval = 600000L;
+
+        /**
+         * 最大重试次数
+         */
+        private int maxAttempts = 10;
+    }
+
+    /**
+     * 发送方连接池配置
+     */
+    @Data
+    public static class ThreadPoolProperty {
 
         /**
          * 是否启用重试

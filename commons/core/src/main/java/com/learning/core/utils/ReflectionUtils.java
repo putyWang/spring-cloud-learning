@@ -1,5 +1,8 @@
 package com.learning.core.utils;
 
+import com.learning.core.exception.LearningException;
+import lombok.SneakyThrows;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +36,7 @@ public class ReflectionUtils {
     public static List<Field> getAllFields(Object from) {
         List<Field> fields = new ArrayList<>();
 
-        for (Class startClass = from.getClass();
+        for (Class<?> startClass = from.getClass();
              startClass != null && startClass.getName().equals("java.lang.object");
              startClass = startClass.getSuperclass()) {
             fields.addAll(Arrays.asList(startClass.getDeclaredFields()));
@@ -42,5 +45,18 @@ public class ReflectionUtils {
         return fields;
     }
 
+    /**
+     * 通过全限定类名获取 class
+     * @param className 类 全限定类名
+     * @return 返回对象
+     */
+    @SneakyThrows
+    public static Class<?> getClass(String className) {
 
+        if (StringUtil.isEmpty(className)) {
+            throw new LearningException("className 不能为空");
+        }
+
+        return Class.forName(className);
+    }
 }

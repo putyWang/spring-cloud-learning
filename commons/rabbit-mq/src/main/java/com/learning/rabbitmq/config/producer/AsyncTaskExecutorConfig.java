@@ -1,8 +1,11 @@
 package com.learning.rabbitmq.config.producer;
 
+import com.learning.rabbitmq.config.properties.RabbitProperty;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.stereotype.Component;
 
 import java.util.concurrent.ThreadPoolExecutor;
 
@@ -12,6 +15,8 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @Date: 2024-06-17
  * @Version V1.0
  **/
+@ConditionalOnBean(RabbitProperty.class)
+@Component
 public class AsyncTaskExecutorConfig {
     /**
      * 线程池前缀

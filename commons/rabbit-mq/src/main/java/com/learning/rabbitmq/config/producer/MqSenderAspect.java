@@ -4,6 +4,7 @@ import com.learning.core.utils.ObjectUtils;
 import com.learning.rabbitmq.annotation.MqSender;
 import com.learning.rabbitmq.service.AsyncMqSendService;
 import com.learning.rabbitmq.service.MqSendService;
+import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterReturning;
@@ -24,10 +25,9 @@ import java.lang.annotation.Annotation;
  **/
 @Aspect
 @Log4j2
+@AllArgsConstructor
 public class MqSenderAspect {
-    @Autowired
-    private AsyncMqSendService asyncMqSendService;
-    @Autowired
+
     private MqSendService mqSendService;
 
     @Pointcut("@annotation(com.learning.rabbitmq.annotation.MqSender)")
@@ -49,16 +49,15 @@ public class MqSenderAspect {
             pointcut = "mqSenderCut()",
             throwing = "exception"
     )
-    public void afterThrowing(Exception exception) throws Throwable {
-        log.error("mqSenderCut() is throw a exception");
-        throw exception;
+    public void afterThrowing(Exception exception) {
+        log.error("mqSenderCut() is throw a exception", exception);
     }
 
     private void sendMessage(MqSender mqSender, Object object) {
 
         if(ObjectUtils.isNull(mqSender)){
         } else if (mqSender.isAsync()) {
-            this.asyncMqSendService.sendMessage(mqSender.exchange(), mqSender.routingKey(), object);
+            this.mqSendService.sendMessageAsync(mqSender.exchange(), mqSender.routingKey(), object);
         } else {
             this.mqSendService.sendMessage(mqSender.exchange(), mqSender.routingKey(), object);
         }

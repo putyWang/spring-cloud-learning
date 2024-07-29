@@ -43,7 +43,7 @@ public class MqSendService {
      */
     @Async("rabbitMqTaskExecutor")
     public void sendMessageAsync(BaseMqMessage mqMessage) {
-        this.sendMessage(mqMessage);
+        sendMessage(mqMessage);
     }
 
     /**
@@ -55,6 +55,6 @@ public class MqSendService {
      */
     @Async("rabbitMqTaskExecutor")
     public void sendMessageAsync(String exchange, String routingKey, Object message) {
-        this.sendMessage(exchange, routingKey, message);
+        sendMessage(exchange, routingKey, message);
     }
 }

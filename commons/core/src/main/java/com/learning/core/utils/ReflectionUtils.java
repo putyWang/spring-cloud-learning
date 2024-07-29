@@ -2,6 +2,7 @@ package com.learning.core.utils;
 
 import com.learning.core.exception.LearningException;
 import lombok.SneakyThrows;
+import lombok.extern.log4j.Log4j2;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ import java.util.List;
 /**
  * 反射相关工具类
  */
+@Log4j2
 public class ReflectionUtils {
 
     /**
@@ -58,5 +60,15 @@ public class ReflectionUtils {
         }
 
         return Class.forName(className);
+    }
+
+    /**
+     * 通过全限定类名获取 class
+     * @param className 类 全限定类名
+     * @return 返回对象
+     */
+    @SneakyThrows
+    public static<T> T newInstance(String className) {
+        return (T) getClass(className).newInstance();
     }
 }

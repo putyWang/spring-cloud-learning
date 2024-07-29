@@ -20,6 +20,7 @@ import java.nio.charset.StandardCharsets;
  **/
 @Log4j2
 public class MqMessageConverter extends SimpleMessageConverter {
+
     private static final ObjectMapper OBJECTMAPPER = new ObjectMapper();
 
     @Override

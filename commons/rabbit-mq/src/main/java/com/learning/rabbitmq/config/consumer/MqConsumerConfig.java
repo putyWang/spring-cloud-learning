@@ -7,9 +7,9 @@ import com.learning.core.utils.StringUtil;
 import com.learning.rabbitmq.annotation.MqListener;
 import com.learning.rabbitmq.config.properties.RabbitProperty;
 import com.learning.rabbitmq.converter.MqMessageConverter;
+import com.learning.rabbitmq.domain.ExchangeTypeEnum;
 import org.jetbrains.annotations.NotNull;
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.*;
 import org.springframework.amqp.rabbit.config.RetryInterceptorBuilder;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
 import org.springframework.amqp.rabbit.core.RabbitAdmin;
@@ -52,10 +52,7 @@ public class MqConsumerConfig {
      * @return
      */
     @Bean
-    @ConditionalOnProperty(
-            value = "learning.cloud.rabbit.consumer.enable",
-            havingValue = "true"
-    )
+    @ConditionalOnBean(ConnectionFactory.class)
     public RabbitAdmin rabbitAdmin(ConnectionFactory connectionFactory, RabbitProperty rabbitProperty) {
         // 1 创建 rabbitAdmin
         RabbitAdmin rabbitAdmin = new RabbitAdmin(connectionFactory);
@@ -107,19 +104,35 @@ public class MqConsumerConfig {
         }
         // 2.3 设置绑定
         consumer.getBindingList().forEach(binding -> {
-            if(StringUtil.isEmpty(binding.getQueueName())) {
+            QueueProperty queue = binding.getQueue();
+            if(ObjectUtils.isNull(queue) || StringUtil.isEmpty(queue.getName())) {
                 throw new RuntimeException("queues may not be empty");
             } else {
-                Queue name = new Queue(binding.getQueueName());
-                rabbitAdmin.declareQueue(name);
-                messageContainer.addQueues(name);
+                Queue queue1 = new Queue(queue.getName(), queue.isDurable(), false, queue.isAutoDelete());
+                rabbitAdmin.declareQueue(queue1);
+                messageContainer.addQueues(queue1);
             }
 
-            if(StringUtil.isEmpty(binding.getExchange())) {
+            ExchangeProperty exchange = binding.getExchange();
+
+            if(ObjectUtils.isNull(exchange) || StringUtil.isEmpty(exchange.getName())) {
                 throw new RuntimeException("exchange may not be empty");
             } else {
+                // 设置交换机
+                switch (ExchangeTypeEnum.valueOf(exchange.getType())) {
+                    case DIRECT :
+                        rabbitAdmin.declareExchange(new DirectExchange(exchange.getName(), exchange.isDurable(), exchange.isAutoDelete()));
+                        break;
+                    case FANOUT :
+                        rabbitAdmin.declareExchange(new FanoutExchange(exchange.getName(), exchange.isDurable(), exchange.isAutoDelete()));
+                        break;
+                    default :
+                        rabbitAdmin.declareExchange(new TopicExchange(exchange.getName(), exchange.isDurable(), exchange.isAutoDelete()));
+                        break;
+                }
+                // 添加绑定关系
                 rabbitAdmin.declareBinding(
-                        new Binding(binding.getQueueName(), Binding.DestinationType.QUEUE, binding.getExchange(), binding.getRouting(), null)
+                        new Binding(queue.getName(), Binding.DestinationType.QUEUE, exchange.getName(), binding.getRouting(), null)
                 );
             }
         });
@@ -179,9 +192,11 @@ public class MqConsumerConfig {
         return new ConsumerProperty()
                 // 1 设置 binding 信息
                 .setBindingList(Collections.singletonList(
-                        new BindingProperty().setQueueName(mqListener.queue())
-                                .setExchange(mqListener.exchange())
-                                .setRouting(mqListener.routingKey())
+                        new BindingProperty().setQueue(
+                                new QueueProperty(mqListener.queueName(), mqListener.durable(), mqListener.autoDelete())
+                        ).setExchange(
+                                new ExchangeProperty(mqListener.exchangeType().name(), mqListener.exchange(), mqListener.durable(), mqListener.autoDelete())
+                        ).setRouting(mqListener.routingKey())
                 ))
                 // 2 设置自动扩展配置
                 .setAutoExpand(

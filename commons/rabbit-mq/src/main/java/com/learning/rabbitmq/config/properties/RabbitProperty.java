@@ -1,6 +1,8 @@
 package com.learning.rabbitmq.config.properties;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -53,6 +55,36 @@ public class RabbitProperty {
      */
     private ConsumerProperty consumer;
 
+    /**
+     * 生产者者配置信息
+     */
+    private ProducerProperty producer;
+
+    @Data
+    @Accessors(chain = true)
+    public static class ProducerProperty {
+
+        /**
+         * 是否启用
+         */
+        private boolean enable = true;
+
+        /**
+         * 是否启用发送失败监听
+         */
+        private boolean mandatory = true;
+
+        /**
+         * 发送失败响应
+         */
+        private String returnCallback;
+
+        /**
+         * 连接池配置
+         */
+        private ThreadPoolProperty pool = new ThreadPoolProperty();
+    }
+
     @Data
     @Accessors(chain = true)
     public static class ConsumerProperty {
@@ -76,11 +108,6 @@ public class RabbitProperty {
          * 消费者重试配置
          */
         private RetryProperties retry = new RetryProperties();
-
-        /**
-         * 连接池配置
-         */
-        private ThreadPoolProperty pool;
     }
 
     @Data
@@ -89,17 +116,68 @@ public class RabbitProperty {
         /**
          * 队列名
          */
-        private String queueName;
+        private QueueProperty queue;
 
         /**
          * 交换机名
          */
-        private String exchange;
+        private ExchangeProperty exchange;
 
         /**
          * 路由 key
          */
         private String routing = "#";
+    }
+
+    @Data
+    @Accessors(chain = true)
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class QueueProperty {
+        /**
+         * 名称
+         */
+        private String name;
+
+        /**
+         * 是否持久化
+         */
+        private boolean durable = true;
+
+        /**
+         * 是否自动删除
+         */
+        private boolean autoDelete = false;
+    }
+
+    @Data
+    @Accessors(chain = true)
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ExchangeProperty{
+
+        /**
+         * 主题类型
+         * TOPIC
+         * FANOUT
+         * DIRECT
+         */
+        private String type = "TOPIC";
+
+        /**
+         * 名称
+         */
+        private String name;
+
+        /**
+         * 是否持久化
+         */
+        private boolean durable = false;
+
+        /**
+         * 是否自动删除
+         */
+        private boolean autoDelete = false;
     }
 
     @Data
@@ -164,28 +242,38 @@ public class RabbitProperty {
     public static class ThreadPoolProperty {
 
         /**
-         * 是否启用重试
+         * 线程池前缀
          */
-        private boolean enable = false;
+        private String prefix = "rabbitmq-taskExecutor-";
 
         /**
-         * 重试时间间隔
+         * 核心线程数
          */
-        private long initialInterval = 1000L;
+        private int core = 1;
 
         /**
-         * 重试时间间隔增长系数
+         * 最大线程数
          */
-        private double multiplier = 2.0D;
+        private int max = 10;
 
         /**
-         * 重试最大时间间隔
+         * 队列容量
          */
-        private long maxInterval = 600000L;
+        private int queueCapacity = 1000;
 
         /**
-         * 最大重试次数
+         * 活跃时间
          */
-        private int maxAttempts = 10;
+        private int keepLiva = 10;
+
+        /**
+         * 是否允许核心线程超时
+         */
+        private Boolean allowTimeOut = false;
+
+        /**
+         * 是否等待所有任务结束后再结束
+         */
+        private Boolean completeOnShutdown = false;
     }
 }

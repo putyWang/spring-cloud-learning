@@ -1,8 +1,7 @@
-package com.learning.rabbitmq.config.producer;
+package com.learning.rabbitmq.aspect;
 
 import com.learning.core.utils.ObjectUtils;
 import com.learning.rabbitmq.annotation.MqSender;
-import com.learning.rabbitmq.service.AsyncMqSendService;
 import com.learning.rabbitmq.service.MqSendService;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -12,9 +11,6 @@ import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.lang.annotation.Annotation;
 
 /**
  * @ClassName: MqSenderAspect
@@ -54,8 +50,8 @@ public class MqSenderAspect {
     }
 
     private void sendMessage(MqSender mqSender, Object object) {
-
         if(ObjectUtils.isNull(mqSender)){
+            log.error("MqSender 为空");
         } else if (mqSender.isAsync()) {
             this.mqSendService.sendMessageAsync(mqSender.exchange(), mqSender.routingKey(), object);
         } else {

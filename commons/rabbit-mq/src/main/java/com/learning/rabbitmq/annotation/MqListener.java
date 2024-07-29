@@ -1,5 +1,7 @@
 package com.learning.rabbitmq.annotation;
 
+import com.learning.rabbitmq.domain.ExchangeTypeEnum;
+
 import java.lang.annotation.*;
 
 /**
@@ -16,7 +18,13 @@ import java.lang.annotation.*;
 public @interface MqListener {
     String exchange();
 
-    String queue();
+    ExchangeTypeEnum exchangeType() default ExchangeTypeEnum.TOPIC;
+
+    String queueName();
+
+    boolean durable() default true;
+
+    boolean autoDelete() default false;
 
     String routingKey() default "#";
 

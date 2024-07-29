@@ -26,7 +26,6 @@ public class RabbitMqService {
      */
     private static final ObjectMapper OBJECTMAPPER = new ObjectMapper();
 
-    @Getter
     private final RabbitTemplate rabbitTemplate;
 
     public void sendMessage(BaseMqMessage baseMqMessage) {
@@ -38,7 +37,7 @@ public class RabbitMqService {
     }
 
     public void sendMessage(String exchange, String routingKey, Object message) {
-        this.rabbitTemplate.setReceiveTimeout(1L);
+        rabbitTemplate.setReceiveTimeout(1L);
 
         if (message == null) {
             throw new RuntimeException("invalid mqMessage is null");

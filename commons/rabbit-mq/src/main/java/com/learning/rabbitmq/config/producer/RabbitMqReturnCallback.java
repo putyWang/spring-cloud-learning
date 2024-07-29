@@ -1,4 +1,4 @@
-package com.learning.rabbitmq.strategy;
+package com.learning.rabbitmq.config.producer;
 
 import lombok.extern.log4j.Log4j2;
 import org.springframework.amqp.core.ReturnedMessage;

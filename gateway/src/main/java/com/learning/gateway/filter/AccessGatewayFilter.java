@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.alicp.jetcache.Cache;
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.CreateCache;
-import com.learning.core.model.UserContext;
+import com.learning.core.domain.model.UserContext;
 import com.learning.core.utils.StringUtils;
 import com.learning.core.utils.TokenUtil;
 import lombok.extern.slf4j.Slf4j;

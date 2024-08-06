@@ -1,6 +1,6 @@
 package com.learning.web.except;
 
-import com.learning.core.enums.ApiCode;
+import com.learning.core.domain.enums.ApiCode;
 
 /**
  * 异常构造类

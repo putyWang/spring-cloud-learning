@@ -2,8 +2,7 @@ package com.learning.security.service;
 
 import cn.hutool.core.util.ArrayUtil;
 import com.learning.security.model.LearningUser;
-import com.learning.core.constants.*;
-import com.learning.core.model.UserContext;
+import com.learning.core.domain.model.UserContext;
 import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.core.Ordered;

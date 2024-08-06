@@ -2,7 +2,7 @@ package com.learning.security.aspect;
 
 import cn.hutool.core.util.StrUtil;
 import com.learning.security.annotation.IgnoreAuth;
-import com.learning.core.constants.SecurityConstants;
+import com.learning.core.domain.constants.SecurityConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;

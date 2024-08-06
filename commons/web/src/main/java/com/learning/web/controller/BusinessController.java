@@ -1,6 +1,6 @@
 package com.learning.web.controller;
 
-import com.learning.core.model.UserContext;
+import com.learning.core.domain.model.UserContext;
 import com.learning.web.model.dto.BaseDto;
 import com.learning.web.model.entity.BaseEntity;
 import org.apache.shiro.SecurityUtils;

@@ -1,10 +1,8 @@
 package com.learning.system.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.learning.core.model.RoleModel;
+import com.learning.core.domain.model.RoleModel;
 import com.learning.system.mapper.UserRoleMapper;
-import com.learning.system.model.dto.RoleDto;
 import com.learning.system.model.dto.UserRoleDto;
 import com.learning.system.model.entity.UserRoleEntity;
 import com.learning.system.service.UserRoleService;

@@ -1,7 +1,7 @@
 package com.learning.web.config.mybatis;
 
 import com.baomidou.mybatisplus.core.handlers.MetaObjectHandler;
-import com.learning.core.model.UserContext;
+import com.learning.core.domain.model.UserContext;
 import org.apache.ibatis.reflection.MetaObject;
 
 import java.util.Date;

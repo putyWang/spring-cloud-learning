@@ -1,6 +1,6 @@
 package com.learning.system.service;
 
-import com.learning.core.model.UserContext;
+import com.learning.core.domain.model.UserContext;
 import com.learning.system.model.dto.LoginDto;
 
 /**

@@ -7,7 +7,7 @@ import cn.hutool.crypto.Padding;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.symmetric.AES;
 import com.learning.auth.config.properties.AuthSecurityConfigProperties;
-import com.learning.core.constants.SecurityConstants;
+import com.learning.core.domain.constants.SecurityConstants;
 import com.learning.core.servlet.RepeatBodyRequestWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

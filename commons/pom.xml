@@ -23,6 +23,7 @@
         <module>rabbit-mq</module>
         <module>redis</module>
         <module>validation</module>
+        <module>distributed-transaction</module>
     </modules>
 
     <properties>

@@ -1,7 +1,7 @@
 package com.learning.system.controller;
 
 
-import com.learning.core.annotation.Module;
+import com.learning.core.domain.annotation.Module;
 import com.learning.system.model.dto.UserDto;
 import com.learning.system.model.entity.UserEntity;
 import com.learning.system.service.UserService;

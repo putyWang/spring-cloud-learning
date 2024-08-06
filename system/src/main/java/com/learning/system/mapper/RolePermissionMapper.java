@@ -1,6 +1,6 @@
 package com.learning.system.mapper;
 
-import com.learning.core.model.RoleModel;
+import com.learning.core.domain.model.RoleModel;
 import com.learning.system.model.entity.RolePermissionEntity;
 import com.learning.web.mapper.RootMapper;
 import org.apache.ibatis.annotations.CacheNamespace;

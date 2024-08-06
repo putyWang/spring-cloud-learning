@@ -1,6 +1,6 @@
 package com.learning.auth.oAuth2.core;
 
-import com.learning.core.constants.SecurityConstants;
+import com.learning.core.domain.constants.SecurityConstants;
 import com.learning.security.model.LearningUser;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenClaimsContext;
 import org.springframework.security.oauth2.server.authorization.token.OAuth2TokenClaimsSet;

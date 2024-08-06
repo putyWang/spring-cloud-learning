@@ -2,7 +2,7 @@ package com.learning.auth.oAuth2.sms;
 
 import com.learning.auth.oAuth2.base.OAuth2ResourceAuthenticationBaseConverter;
 import com.learning.auth.utils.OAuth2EndpointUtils;
-import com.learning.core.constants.SecurityConstants;
+import com.learning.core.domain.constants.SecurityConstants;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.OAuth2ErrorCodes;

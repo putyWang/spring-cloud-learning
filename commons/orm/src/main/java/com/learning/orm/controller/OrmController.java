@@ -3,7 +3,7 @@ package com.learning.orm.controller;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.IdWorker;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.learning.core.model.ApiResult;
+import com.learning.core.domain.model.ApiResult;
 import com.learning.core.utils.StringUtil;
 import com.learning.orm.config.properties.OrmProperties;
 import com.learning.orm.dto.TableInfoDto;

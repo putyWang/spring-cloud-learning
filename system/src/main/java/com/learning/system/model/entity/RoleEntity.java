@@ -1,7 +1,7 @@
 package com.learning.system.model.entity;
 
 import com.baomidou.mybatisplus.annotation.TableName;
-import com.learning.core.annotation.Unique;
+import com.learning.core.domain.annotation.Unique;
 import com.learning.web.model.entity.AdditionEntity;
 import lombok.Data;
 import lombok.EqualsAndHashCode;

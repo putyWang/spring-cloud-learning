@@ -1,7 +1,7 @@
 package com.learning.auth.oAuth2.sms;
 
 import com.learning.auth.oAuth2.base.OAuth2ResourceAuthenticationBaseProvider;
-import com.learning.core.constants.SecurityConstants;
+import com.learning.core.domain.constants.SecurityConstants;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;

@@ -1,6 +1,6 @@
 package com.learning.system.model.dto;
 
-import com.learning.core.annotation.Unique;
+import com.learning.core.domain.annotation.Unique;
 import com.learning.web.model.dto.BaseDto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;

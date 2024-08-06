@@ -1,6 +1,6 @@
 package com.learning.core.utils;
 
-import com.learning.core.constants.AsciiStrCache;
+import com.learning.core.domain.constants.AsciiStrCache;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -21,7 +21,6 @@ public class CharacterUtils {
     private static final char SBC_CHAR_UPPERCASE_END = 'Ｚ';
     private static final char SBC_CHAR_LOWERCASE_START = 'ａ';
     private static final char SBC_CHAR_LOWERCASE_END = 'ｚ';
-    private static Logger logger = LoggerFactory.getLogger(CharacterUtils.class);
 
     public CharacterUtils() {
     }

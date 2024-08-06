@@ -1,7 +1,7 @@
 package com.learning.system.controller;
 
-import com.learning.core.annotation.Module;
-import com.learning.core.model.UserContext;
+import com.learning.core.domain.annotation.Module;
+import com.learning.core.domain.model.UserContext;
 import com.learning.system.model.dto.LoginDto;
 import com.learning.system.service.SysService;
 import io.swagger.v3.oas.annotations.Operation;

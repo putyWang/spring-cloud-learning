@@ -1,6 +1,6 @@
 package com.learning.system.service.impl;
 
-import com.learning.core.model.UserContext;
+import com.learning.core.domain.model.UserContext;
 import com.learning.system.model.dto.LoginDto;
 import com.learning.system.service.SysService;
 import org.apache.shiro.SecurityUtils;

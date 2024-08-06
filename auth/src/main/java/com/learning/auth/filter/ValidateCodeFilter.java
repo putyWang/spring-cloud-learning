@@ -2,8 +2,8 @@ package com.learning.auth.filter;
 
 import cn.hutool.core.util.StrUtil;
 import com.learning.auth.config.properties.AuthSecurityConfigProperties;
-import com.learning.core.constants.SecurityConstants;
-import com.learning.core.constants.CacheConstants;
+import com.learning.core.domain.constants.SecurityConstants;
+import com.learning.core.domain.constants.CacheConstants;
 import com.learning.core.exception.ValidateCodeException;
 import com.learning.core.utils.SpringContextHolder;
 import com.learning.core.utils.WebUtils;

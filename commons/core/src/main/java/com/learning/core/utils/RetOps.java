@@ -1,8 +1,8 @@
 package com.learning.core.utils;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.learning.core.enums.ApiCode;
-import com.learning.core.model.ApiResult;
+import com.learning.core.domain.enums.ApiCode;
+import com.learning.core.domain.model.ApiResult;
 
 import java.util.Arrays;
 import java.util.Objects;

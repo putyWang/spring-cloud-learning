@@ -1,8 +1,8 @@
 package com.learning.system.config;
 
 import com.learning.core.config.shiro.CommonRealm;
-import com.learning.core.model.RoleModel;
-import com.learning.core.model.UserContext;
+import com.learning.core.domain.model.RoleModel;
+import com.learning.core.domain.model.UserContext;
 import com.learning.core.utils.CollectionUtils;
 import com.learning.core.utils.CommonBeanUtil;
 import com.learning.core.utils.StringUtils;

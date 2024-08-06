@@ -1,8 +1,8 @@
 package com.learning.auth.service.feignService;
 
-import com.learning.core.constants.SecurityConstants;
-import com.learning.core.model.ApiResult;
-import com.learning.core.model.OauthClientDetails;
+import com.learning.core.domain.constants.SecurityConstants;
+import com.learning.core.domain.model.ApiResult;
+import com.learning.core.domain.model.OauthClientDetails;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 

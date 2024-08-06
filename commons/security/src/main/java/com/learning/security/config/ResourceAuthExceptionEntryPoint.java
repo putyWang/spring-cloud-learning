@@ -1,9 +1,9 @@
 package com.learning.security.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.learning.core.enums.ApiCode;
-import com.learning.core.model.ApiResult;
-import com.learning.core.constants.CommonConstants;
+import com.learning.core.domain.enums.ApiCode;
+import com.learning.core.domain.model.ApiResult;
+import com.learning.core.domain.constants.CommonConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.springframework.context.MessageSource;

@@ -1,6 +1,6 @@
 package com.learning.system.service.impl;
 
-import com.learning.core.model.RoleModel;
+import com.learning.core.domain.model.RoleModel;
 import com.learning.core.utils.CollectionUtils;
 import com.learning.system.model.dto.RolePermissionDto;
 import com.learning.system.model.entity.RolePermissionEntity;

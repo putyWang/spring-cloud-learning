@@ -3,7 +3,7 @@ package com.learning.security.config;
 import cn.hutool.extra.spring.SpringUtil;
 import com.learning.security.model.LearningUser;
 import com.learning.security.service.CustomUserDetailService;
-import com.learning.core.constants.SecurityConstants;
+import com.learning.core.domain.constants.SecurityConstants;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.core.Ordered;

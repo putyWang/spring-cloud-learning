@@ -1,11 +1,9 @@
 package com.learning.core.exception;
 
-import com.learning.core.enums.ApiCode;
+import com.learning.core.domain.enums.ApiCode;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-
-import java.util.Arrays;
 
 /**
  * @author WangWei

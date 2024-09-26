@@ -19,7 +19,9 @@ public class SyncInvoke {
      * @param body 请求体
      * @param header 请求头
      */
-    public <T> void syncInvoke(CallBackResultHandler<?> resultHandler, T body, Map<String, String> header) {
+    public <T> void syncInvoke(String handlerName, T body, Map<String, String> header) {
 
     }
+
+
 }

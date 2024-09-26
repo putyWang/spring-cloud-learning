@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.learning.system.mapper.UserRoleMapper">
-    <select id="selectRoleByUserId" resultType="com.learning.core.model.RoleModel">
+    <select id="selectRoleByUserId" resultType="com.learning.core.domain.model.RoleModel">
         select b.id roleId, b.role_name `name`, b.role_code `code`
         FROM sys_user_role a
         LEFT JOIN sys_role b

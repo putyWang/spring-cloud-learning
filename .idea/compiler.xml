@@ -7,17 +7,21 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="core" />
         <module name="temp" />
-        <module name="security" />
-        <module name="system" />
         <module name="job-schedule (1)" />
         <module name="job-schedule" />
         <module name="auth" />
-        <module name="web" />
         <module name="orm" />
+        <module name="redis" />
+        <module name="core" />
+        <module name="rabbit-mq" />
+        <module name="security" />
+        <module name="system" />
+        <module name="web" />
+        <module name="distributed-transaction" />
         <module name="job" />
         <module name="gateway" />
+        <module name="validation" />
         <module name="file-storage" />
       </profile>
     </annotationProcessing>

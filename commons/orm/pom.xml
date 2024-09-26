@@ -30,6 +30,13 @@
             <artifactId>core</artifactId>
             <version>0.0.1</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/com.github.jsqlparser/jsqlparser -->
+        <!-- jsqlparser sql 解析器 -->
+        <dependency>
+            <groupId>com.github.jsqlparser</groupId>
+            <artifactId>jsqlparser</artifactId>
+            <version>4.9</version>
+        </dependency>
         <!-- mybatis-plus  -->
         <dependency>
             <groupId>org.apache.shardingsphere</groupId>

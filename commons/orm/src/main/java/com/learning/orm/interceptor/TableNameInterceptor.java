@@ -1,5 +1,6 @@
 package com.learning.orm.interceptor;
 
+import com.learning.orm.core.parse.select.PlainSelectParse;
 import lombok.SneakyThrows;
 import net.sf.jsqlparser.parser.CCJSqlParserUtil;
 import net.sf.jsqlparser.schema.Table;
@@ -561,16 +562,8 @@ public class TableNameInterceptor {
                 "ORDER BY\n" +
                 "\tda.DXDRQ DESC";
         Statement statement = CCJSqlParserUtil.parse(insertSql);
-        if (statement instanceof Select) {
-            Select select = (Select) statement;
-            ParenthesedSelect fromItem = (ParenthesedSelect)select.getPlainSelect().getFromItem();
-            SetOperationList setOperationList = fromItem.getSelect().getSetOperationList();
-            for (Select select1: setOperationList.getSelects()) {
-                PlainSelect plainSelect = select1.getPlainSelect();
-                Table table = (Table)plainSelect.getFromItem();
-                table.withName(table.getName() + 2002);
-            }
-            System.err.println(select);
+        if (statement instanceof PlainSelect) {
+            new PlainSelectParse((PlainSelect) statement, "").parse();
         }
     }
 }

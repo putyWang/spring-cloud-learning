@@ -3,8 +3,6 @@ package com.learning.orm.core.parse.item.expression;
 import com.learning.orm.core.model.FieldModel;
 import com.learning.orm.core.parse.util.ExpressionParseUtil;
 import net.sf.jsqlparser.expression.BinaryExpression;
-import net.sf.jsqlparser.expression.WhenClause;
-import net.sf.jsqlparser.expression.operators.conditional.AndExpression;
 
 import java.util.List;
 

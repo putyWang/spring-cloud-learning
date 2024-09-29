@@ -5,7 +5,6 @@ import com.learning.orm.core.parse.util.ExpressionParseUtil;
 import net.sf.jsqlparser.expression.CaseExpression;
 import net.sf.jsqlparser.expression.WhenClause;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**

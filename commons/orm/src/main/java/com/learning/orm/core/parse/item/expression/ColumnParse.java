@@ -4,7 +4,6 @@ import com.learning.orm.core.model.FieldModel;
 import net.sf.jsqlparser.schema.Column;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**

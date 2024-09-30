@@ -19,7 +19,7 @@ public class ColumnParse implements ExpressionParse<Column> {
         fieldList.add(
                 new FieldModel()
                         .setColumnName(column.getColumnName())
-                        .setTableName(column.getTable().getName())
+                        .setTableName(column.getTable() == null ? null : column.getTable().getName())
         );
         return fieldList;
     }

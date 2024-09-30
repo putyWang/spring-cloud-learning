@@ -4,6 +4,7 @@ import com.learning.orm.core.model.FieldModel;
 import com.learning.orm.core.parse.item.expression.BinaryExpressionParse;
 import com.learning.orm.core.parse.item.expression.CaseExpressionParse;
 import com.learning.orm.core.parse.item.expression.ColumnParse;
+import com.learning.orm.core.parse.item.expression.ParenthesisParse;
 import net.sf.jsqlparser.expression.*;
 import net.sf.jsqlparser.schema.Column;
 
@@ -37,6 +38,8 @@ public interface ExpressionParseUtil {
             return new CaseExpressionParse().parse((CaseExpression) expression, alias);
         } else if (expression instanceof BinaryExpression) {
             return new BinaryExpressionParse().parse((BinaryExpression) expression, alias);
+        } else if (expression instanceof Parenthesis) {
+            return new ParenthesisParse().parse((Parenthesis) expression, alias);
         } else if (expression instanceof LongValue || expression instanceof StringValue) {
             return new ArrayList<>();
         } else {

@@ -1,7 +1,7 @@
 package com.learning.file.storage;
 
 import cn.hutool.core.util.URLUtil;
-import com.learning.core.utils.StringUtils;
+import com.learning.core.utils.StringUtil;
 import com.learning.file.storage.aspect.chain.DeleteAspectChain;
 import com.learning.file.storage.aspect.chain.ExistsAspectChain;
 import com.learning.file.storage.aspect.FileStorageAspect;
@@ -12,6 +12,7 @@ import com.learning.file.storage.model.*;
 import com.learning.file.storage.recorder.FileRecorder;
 import com.learning.file.storage.storage.FileStorage;
 import lombok.Data;
+import lombok.experimental.Accessors;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -28,6 +29,7 @@ import java.util.function.Predicate;
  * 对外暴露接口
  */
 @Data
+@Accessors(chain = true)
 public class FileStorageService {
 
     private FileStorageService self;
@@ -38,7 +40,7 @@ public class FileStorageService {
     /**
      * 文件存储器列表
      */
-    private CopyOnWriteArrayList<FileStorage> fileStorageList;
+    private CopyOnWriteArrayList<FileStorage> fileStorageList = new CopyOnWriteArrayList<>();
     /**
      * 文件存储属性
      */
@@ -76,11 +78,11 @@ public class FileStorageService {
 
         for (FileStorage fileStorageService : fileStorageList) {
 
-            if (StringUtils.equals(properties.getDefaultPlatform(), fileStorageService.getPlatform())) {
+            if (StringUtil.equals(properties.getDefaultPlatform(), fileStorageService.getPlatform())) {
                 defaultStorage = fileStorageService;
             }
 
-            if (StringUtils.equals(platform, fileStorageService.getPlatform())) {
+            if (StringUtil.equals(platform, fileStorageService.getPlatform())) {
                 cur = fileStorageService;
                 break;
             }
@@ -161,7 +163,9 @@ public class FileStorageService {
      */
     public boolean delete(FileInfo fileInfo, Predicate<FileInfo> predicate) {
         if (fileInfo == null) return true;
-        if (predicate != null && !predicate.test(fileInfo)) return false;
+        if (predicate != null && !predicate.test(fileInfo)) {
+            return false;
+        }
         FileStorage fileStorage = getFileStorage(fileInfo.getPlatform());
         if (fileStorage == null) throw new FileStorageException("没有找到对应的存储平台！");
 

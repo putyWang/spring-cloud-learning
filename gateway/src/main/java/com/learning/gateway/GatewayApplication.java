@@ -14,8 +14,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication()
 @EnableDiscoveryClient
 @EnableFeignClients
-@EnableMethodCache(basePackages = "com.learning.gateway")
-@EnableCreateCacheAnnotation
 public class GatewayApplication {
 
     public static void main(String[] args) {

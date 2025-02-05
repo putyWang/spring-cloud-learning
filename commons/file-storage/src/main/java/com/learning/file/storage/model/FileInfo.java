@@ -5,7 +5,7 @@ import cn.hutool.core.io.file.FileNameUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import com.learning.core.utils.CommonBeanUtil;
-import com.learning.core.utils.StringUtils;
+import com.learning.core.utils.StringUtil;
 import com.learning.file.storage.exception.FileStorageException;
 import lombok.Data;
 import org.springframework.web.multipart.MultipartFile;
@@ -113,14 +113,14 @@ public class FileInfo implements Serializable {
         fileInfo.setSize(file.getSize());
         fileInfo.setOriginalFilename(file.getOriginalFilename());
         fileInfo.setExt(FileNameUtil.getSuffix(file.getOriginalFilename()));
-        fileInfo.setFilename(StringUtils.isNotBlank(pre.getSaveFilename()) ? pre.getSaveFilename() :
+        fileInfo.setFilename(StringUtil.isNotBlank(pre.getSaveFilename()) ? pre.getSaveFilename() :
                 IdUtil.objectId() + (StrUtil.isEmpty(fileInfo.getExt()) ? StrUtil.EMPTY : "." + fileInfo.getExt()));
 
         // 3.设置缩略图信息
         byte[] thumbnailBytes = pre.getThumbnailBytes();
         if (thumbnailBytes != null) {
             fileInfo.setThSize((long) thumbnailBytes.length);
-            if (StringUtils.isNotBlank(pre.getSaveThFilename())) {
+            if (StringUtil.isNotBlank(pre.getSaveThFilename())) {
                 fileInfo.setThFilename(pre.getSaveThFilename() + pre.getThumbnailSuffix());
             } else {
                 fileInfo.setThFilename(fileInfo.getFilename() + pre.getThumbnailSuffix());

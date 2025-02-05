@@ -21,13 +21,13 @@ public class ServiceAssert {
 
     public static void state(boolean expression, String message) {
         if (!expression) {
-            throw new ServiceException(message);
+            throw new RuntimeException(message);
         }
     }
 
     public static void state(boolean expression, Supplier<String> messageSupplier) {
         if (!expression) {
-            throw new ServiceException(nullSafeGet(messageSupplier));
+            throw new RuntimeException(nullSafeGet(messageSupplier));
         }
     }
 
@@ -39,13 +39,13 @@ public class ServiceAssert {
 
     public static void isTrue(boolean expression, String message) {
         if (!expression) {
-            throw new ServiceException(message);
+            throw new RuntimeException(message);
         }
     }
 
     public static void isTrue(boolean expression, Supplier<String> messageSupplier) {
         if (!expression) {
-            throw new ServiceException(nullSafeGet(messageSupplier));
+            throw new RuntimeException(nullSafeGet(messageSupplier));
         }
     }
 
@@ -57,13 +57,13 @@ public class ServiceAssert {
 
     public static void isNull(@Nullable Object object, String message) {
         if (object != null) {
-            throw new ServiceException(message);
+            throw new RuntimeException(message);
         }
     }
 
     public static void isNull(@Nullable Object object, Supplier<String> messageSupplier) {
         if (object != null) {
-            throw new ServiceException(nullSafeGet(messageSupplier));
+            throw new RuntimeException(nullSafeGet(messageSupplier));
         }
     }
 
@@ -75,13 +75,13 @@ public class ServiceAssert {
 
     public static void notNull(@Nullable Object object, String message) {
         if (object == null) {
-            throw new ServiceException(message);
+            throw new RuntimeException(message);
         }
     }
 
     public static void notNull(@Nullable Object object, Supplier<String> messageSupplier) {
         if (object == null) {
-            throw new ServiceException(nullSafeGet(messageSupplier));
+            throw new RuntimeException(nullSafeGet(messageSupplier));
         }
     }
 
@@ -93,13 +93,13 @@ public class ServiceAssert {
 
     public static void hasLength(@Nullable String text, String message) {
         if (!StringUtils.hasLength(text)) {
-            throw new ServiceException(message);
+            throw new RuntimeException(message);
         }
     }
 
     public static void hasLength(@Nullable String text, Supplier<String> messageSupplier) {
         if (!StringUtils.hasLength(text)) {
-            throw new ServiceException(nullSafeGet(messageSupplier));
+            throw new RuntimeException(nullSafeGet(messageSupplier));
         }
     }
 
@@ -111,13 +111,13 @@ public class ServiceAssert {
 
     public static void hasText(@Nullable String text, String message) {
         if (!StringUtils.hasText(text)) {
-            throw new ServiceException(message);
+            throw new RuntimeException(message);
         }
     }
 
     public static void hasText(@Nullable String text, Supplier<String> messageSupplier) {
         if (!StringUtils.hasText(text)) {
-            throw new ServiceException(nullSafeGet(messageSupplier));
+            throw new RuntimeException(nullSafeGet(messageSupplier));
         }
     }
 
@@ -129,13 +129,13 @@ public class ServiceAssert {
 
     public static void doesNotContain(@Nullable String textToSearch, String substring, String message) {
         if (StringUtils.hasLength(textToSearch) && StringUtils.hasLength(substring) && textToSearch.contains(substring)) {
-            throw new ServiceException(message);
+            throw new RuntimeException(message);
         }
     }
 
     public static void doesNotContain(@Nullable String textToSearch, String substring, Supplier<String> messageSupplier) {
         if (StringUtils.hasLength(textToSearch) && StringUtils.hasLength(substring) && textToSearch.contains(substring)) {
-            throw new ServiceException(nullSafeGet(messageSupplier));
+            throw new RuntimeException(nullSafeGet(messageSupplier));
         }
     }
 
@@ -149,13 +149,13 @@ public class ServiceAssert {
 
     public static void notEmpty(@Nullable Object[] array, String message) {
         if (ObjectUtils.isEmpty(array)) {
-            throw new ServiceException(message);
+            throw new RuntimeException(message);
         }
     }
 
     public static void notEmpty(@Nullable Object[] array, Supplier<String> messageSupplier) {
         if (ObjectUtils.isEmpty(array)) {
-            throw new ServiceException(nullSafeGet(messageSupplier));
+            throw new RuntimeException(nullSafeGet(messageSupplier));
         }
     }
 
@@ -173,7 +173,7 @@ public class ServiceAssert {
             for(int var4 = 0; var4 < var3; ++var4) {
                 Object element = var2[var4];
                 if (element == null) {
-                    throw new ServiceException(message);
+                    throw new RuntimeException(message);
                 }
             }
         }
@@ -188,7 +188,7 @@ public class ServiceAssert {
             for(int var4 = 0; var4 < var3; ++var4) {
                 Object element = var2[var4];
                 if (element == null) {
-                    throw new ServiceException(nullSafeGet(messageSupplier));
+                    throw new RuntimeException(nullSafeGet(messageSupplier));
                 }
             }
         }
@@ -203,13 +203,13 @@ public class ServiceAssert {
 
     public static void notEmpty(@Nullable Collection<?> collection, String message) {
         if (CollectionUtils.isEmpty(collection)) {
-            throw new ServiceException(message);
+            throw new RuntimeException(message);
         }
     }
 
     public static void notEmpty(@Nullable Collection<?> collection, Supplier<String> messageSupplier) {
         if (CollectionUtils.isEmpty(collection)) {
-            throw new ServiceException(nullSafeGet(messageSupplier));
+            throw new RuntimeException(nullSafeGet(messageSupplier));
         }
     }
 
@@ -221,13 +221,13 @@ public class ServiceAssert {
 
     public static void notEmpty(@Nullable Map<?, ?> map, String message) {
         if (CollectionUtils.isEmpty(map)) {
-            throw new ServiceException(message);
+            throw new RuntimeException(message);
         }
     }
 
     public static void notEmpty(@Nullable Map<?, ?> map, Supplier<String> messageSupplier) {
         if (CollectionUtils.isEmpty(map)) {
-            throw new ServiceException(nullSafeGet(messageSupplier));
+            throw new RuntimeException(nullSafeGet(messageSupplier));
         }
     }
 
@@ -294,7 +294,7 @@ public class ServiceAssert {
             result = result + "Object of class [" + className + "] must be an instance of " + type;
         }
 
-        throw new ServiceException(result);
+        throw new RuntimeException(result);
     }
 
     private static void assignableCheckFailed(Class<?> superType, @Nullable Class<?> subType, @Nullable String msg) {
@@ -313,7 +313,7 @@ public class ServiceAssert {
             result = result + subType + " is not assignable to " + superType;
         }
 
-        throw new ServiceException(result);
+        throw new RuntimeException(result);
     }
 
     private static boolean endsWithSeparator(String msg) {

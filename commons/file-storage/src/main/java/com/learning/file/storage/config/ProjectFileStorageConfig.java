@@ -9,8 +9,8 @@ import com.learning.file.storage.storage.FileStorage;
 import com.learning.file.storage.recorder.impl.DefaultFileRecorder;
 import com.learning.file.storage.storage.impl.LocalFileStorage;
 import com.learning.file.storage.storage.impl.MinIOFileStorage;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -19,8 +19,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
 import java.util.Objects;
@@ -31,13 +29,12 @@ import java.util.stream.Collectors;
 @Configuration
 @EnableConfigurationProperties(ProjectFileStorageProperties.class)
 @ConditionalOnMissingBean(FileStorageService.class)
-public class ProjectFileStorageConfig implements WebMvcConfigurer {
+@RequiredArgsConstructor
+public class ProjectFileStorageConfig {
 
-    @Autowired
-    private ProjectFileStorageProperties properties;
+    private final ProjectFileStorageProperties properties;
 
-    @Autowired
-    private ApplicationContext applicationContext;
+    private final ApplicationContext applicationContext;
 
     /**
      * 判断是否没有引入指定 Class
@@ -48,18 +45,6 @@ public class ProjectFileStorageConfig implements WebMvcConfigurer {
             return false;
         } catch (ClassNotFoundException e) {
             return true;
-        }
-    }
-
-    /**
-     * 配置本地存储的访问地址
-     */
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        for (ProjectFileStorageProperties.Local local : properties.getLocal()) {
-            if (local.getEnableAccess()) {
-                registry.addResourceHandler(local.getPathPatterns()).addResourceLocations("file:" + local.getBasePath());
-            }
         }
     }
 
@@ -86,14 +71,12 @@ public class ProjectFileStorageConfig implements WebMvcConfigurer {
     @ConditionalOnClass(name = "io.minio.MinioClient")
     public List<MinIOFileStorage> minioFileStorageList() {
         return properties.getMinio().stream().map(minio -> {
-            if (!minio.getEnableStorage()) return null;
+            if (! minio.getEnableStorage()) {
+                return null;
+            }
             log.info("加载存储平台：{}", minio.getPlatform());
-            MinIOFileStorage storage = new MinIOFileStorage();
+            MinIOFileStorage storage = new MinIOFileStorage(minio.getAccessKey(), minio.getSecretKey(), minio.getEndPoint(), minio.getBucketName());
             storage.setPlatform(minio.getPlatform());
-            storage.setAccessKey(minio.getAccessKey());
-            storage.setSecretKey(minio.getSecretKey());
-            storage.setEndPoint(minio.getEndPoint());
-            storage.setBucketName(minio.getBucketName());
             storage.setDomain(minio.getDomain());
             storage.setBasePath(minio.getBasePath());
             return storage;
@@ -115,16 +98,14 @@ public class ProjectFileStorageConfig implements WebMvcConfigurer {
      */
     @Bean(name = "ProjectFileStorageService")
     public FileStorageService fileStorageService(FileRecorder fileRecorder,
-                                                 List<List<? extends FileStorage>> fileStorageLists,
+                                                 List<? extends FileStorage> fileStorageList,
                                                  List<FileStorageAspect> aspectList) {
         this.initDetect();
-        FileStorageService service = new FileStorageService();
-        service.setFileStorageList(new CopyOnWriteArrayList<>());
-        fileStorageLists.forEach(service.getFileStorageList()::addAll);
-        service.setFileRecorder(fileRecorder);
-        service.setProperties(properties);
-        service.setAspectList(new CopyOnWriteArrayList<>(aspectList));
-        return service;
+        return new FileStorageService()
+                .setFileStorageList(new CopyOnWriteArrayList<>(fileStorageList))
+                .setFileRecorder(fileRecorder)
+                .setProperties(properties)
+                .setAspectList(new CopyOnWriteArrayList<>(aspectList));
     }
 
     /**

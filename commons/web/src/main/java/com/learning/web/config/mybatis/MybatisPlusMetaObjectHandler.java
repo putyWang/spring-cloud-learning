@@ -59,6 +59,6 @@ public class MybatisPlusMetaObjectHandler implements MetaObjectHandler {
      * @return
      */
     public Long getUserId() {
-        return ((UserContext) SecurityUtils.getSubject().getPrincipal()).getUserId();
+        return 1L;
     }
 }

@@ -1,6 +1,6 @@
 package com.learning.file.storage.storage;
 
-import com.learning.core.utils.StringUtils;
+import com.learning.core.utils.StringUtil;
 import com.learning.file.storage.exception.FileStorageException;
 import com.learning.file.storage.model.FileInfo;
 import com.learning.file.storage.model.UploadPretreatment;
@@ -141,7 +141,7 @@ public abstract class FileStorage {
      */
     public void downloadTh(FileInfo fileInfo, Consumer<InputStream> consumer) {
         updateInfo(fileInfo);
-        if (StringUtils.isBlank(fileInfo.getThFilename())) {
+        if (StringUtil.isBlank(fileInfo.getThFilename())) {
             throw new FileStorageException("缩略图文件下载失败，文件不存在！fileInfo：" + fileInfo);
         }
         try (InputStream in = downloadFile(fileInfo.getBasePath() + fileInfo.getPath() + fileInfo.getThFilename())) {

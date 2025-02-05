@@ -77,7 +77,6 @@ public abstract class BaseController<T extends BaseEntity, D extends BaseDto> {
      */
     @GetMapping("/list")
     @Operation(summary = "展示所有数据", description = "展示所有数据")
-    @Permission(value = "query", notes = "查询")
     public ApiResult<List<D>> list() {
 
         List<T> list = getService().list();
@@ -94,7 +93,6 @@ public abstract class BaseController<T extends BaseEntity, D extends BaseDto> {
      */
     @GetMapping("/{id}")
     @Operation(summary = "查看详情", description = "查看详情")
-    @Permission(value = "detail", notes = "查看详情")
     public ApiResult<D> selectById(@PathVariable long id) {
         T result = getService().getById(id);
 
@@ -118,7 +116,6 @@ public abstract class BaseController<T extends BaseEntity, D extends BaseDto> {
      */
     @PostMapping("insert")
     @Operation(summary = "新增数据", description = "新增数据")
-    @Permission(value = "insert", notes = "新增数据")
     public ApiResult<Boolean> insert(@RequestBody @Validated D dto) {
 
         if (dto == null) {
@@ -139,7 +136,6 @@ public abstract class BaseController<T extends BaseEntity, D extends BaseDto> {
      */
     @PostMapping("/insert/batch")
     @Operation(summary = "批量新增数据", description = "批量新增数据")
-    @Permission(value = "insert", notes = "新增数据")
     public ApiResult<Boolean> insertBatch(@RequestBody @Validated ArrayList<D> list) {
         if (CollectionUtils.isEmpty(list)) {
             throw ExceptionBuilder.build("参数为空");
@@ -159,7 +155,6 @@ public abstract class BaseController<T extends BaseEntity, D extends BaseDto> {
      */
     @PostMapping("/update")
     @Operation(summary = "更新数据", description = "更新数据")
-    @Permission(value = "update", notes = "更新数据")
     public ApiResult<Boolean> update(@RequestBody @Validated D dto) {
         T entity = getEntity();
         CommonBeanUtil.copyAndFormat(entity, dto);
@@ -174,7 +169,6 @@ public abstract class BaseController<T extends BaseEntity, D extends BaseDto> {
      */
     @PostMapping("/delete/{id}")
     @Operation(summary = "删除数据", description = "删除数据")
-    @Permission(value = "delete", notes = "删除数据")
     public ApiResult deleteBatch(@RequestBody List<Serializable> ids) {
         getService().deleteBatch(ids);
 

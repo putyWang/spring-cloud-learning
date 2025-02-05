@@ -1,0 +1,53 @@
+
+C
+java:S5411u"(Use a primitive boolean expression here.(ŠÇö’úÿÿÿÿ
+E
+java:S37409"/Provide the parametrized type for this generic.(·‘Æä
+J
+java:S3740="/Provide the parametrized type for this generic.(š‘ËÖüÿÿÿÿ
+J
+java:S3740@"/Provide the parametrized type for this generic.(ı¼òâÿÿÿÿÿ
+E
+java:S3740H"/Provide the parametrized type for this generic.(Éİ©½
+E
+java:S3740L"/Provide the parametrized type for this generic.(ßÃ¾”
+E
+java:S3740_"/Provide the parametrized type for this generic.(Éİ©½
+E
+java:S3740c"/Provide the parametrized type for this generic.(ßÃ¾”
+F
+java:S3740Ã"/Provide the parametrized type for this generic.(¯şªÁ
+K
+java:S3740Î"/Provide the parametrized type for this generic.(¤É¤ƒûÿÿÿÿ
+F
+java:S3740Ó"/Provide the parametrized type for this generic.(‚÷÷³
+F
+java:S3740İ"/Provide the parametrized type for this generic.(ßâÑ“
+E
+java:S3740è"/Provide the parametrized type for this generic.(‡ãêo
+`
+java:S1192¼"IDefine a constant instead of duplicating this literal ";sqlend;" 6 times.(ÍñŞË
+r
+java:S1192Q"WDefine a constant instead of duplicating this literal "sqlSource.boundSql.sql" 3 times.(‰—ıÑùÿÿÿÿ
+
+java:S1186·"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(ÜÆÚÚıÿÿÿÿ
+m
+java:S37761"RRefactor this method to reduce its Cognitive Complexity from 30 to the 15 allowed.(ş±­ ûÿÿÿÿ
+c
+java:S3252Y"MUse static access with "cn.hutool.core.collection.CollUtil" for "isNotEmpty".( Àé³
+c
+java:S3252p"MUse static access with "cn.hutool.core.collection.CollUtil" for "isNotEmpty".( Àé³
+V
+java:S1161²":Add the "@Override" annotation above this method signature(ü¥Ñşÿÿÿÿ
+i
+java:S3776º"RRefactor this method to reduce its Cognitive Complexity from 87 to the 15 allowed.(ÛªĞ«
+d
+java:S1871‹"MThis branch's code block is the same as the block for the branch on line 187.(å¥‡
+J
+java:S1905É"3Remove this unnecessary cast to "ParameterMapping".(¯›±
+W
+java:S1119Õ";Refactor the code to remove this label and the need for it.(¾´ßåÿÿÿÿÿ
+á
+java:S65411"ÅA "Brain Method" was detected. Refactor it to reduce at least one of the following metrics: LOC from 71 to 64, Complexity from 17 to 14, Nesting Level from 3 to 2, Number of Variables from 25 to 6.(ş±­ ûÿÿÿÿ
+İ
+java:S6541º"ÅA "Brain Method" was detected. Refactor it to reduce at least one of the following metrics: LOC from 78 to 64, Complexity from 25 to 14, Nesting Level from 9 to 2, Number of Variables from 17 to 6.(ÛªĞ«

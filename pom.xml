@@ -16,7 +16,9 @@
         <module>gateway</module>
         <module>temp</module>
         <module>system</module>
-        <module>job-schedule</module>
+        <module>skywalking-threadpool-plugin</module>
+        <module>test</module>
+        <module>test1</module>
     </modules>
 
     <properties>
@@ -78,15 +80,15 @@
             <artifactId>spring-cloud-starter</artifactId>
         </dependency>
         <!--注册中心-->
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-alibaba-nacos-discovery</artifactId>-->
+<!--        </dependency>-->
         <!--配置中心-->
-        <dependency>
-            <groupId>com.alibaba.cloud</groupId>
-            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.alibaba.cloud</groupId>-->
+<!--            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>-->
+<!--        </dependency>-->
         <!--Redis缓存-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

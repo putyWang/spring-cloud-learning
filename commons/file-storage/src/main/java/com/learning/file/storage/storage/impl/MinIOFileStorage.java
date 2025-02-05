@@ -1,12 +1,14 @@
 package com.learning.file.storage.storage.impl;
 
 import com.learning.core.utils.HttpUtils;
+import com.learning.core.utils.StringUtil;
+import com.learning.file.storage.exception.FileStorageException;
 import com.learning.file.storage.model.FileInfo;
 import com.learning.file.storage.storage.FileStorage;
 import io.minio.*;
+import io.minio.http.Method;
 import io.minio.messages.Item;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.MediaTypeFactory;
 
 import java.io.InputStream;
@@ -14,24 +16,16 @@ import java.io.InputStream;
 /**
  * MinIO 存储
  */
-@Getter
-@Setter
+@Log4j2
 public class MinIOFileStorage extends FileStorage {
 
-    private String accessKey;
-    private String secretKey;
-    private String endPoint;
+    private MinioClient client;
+
     private String bucketName;
 
     public MinIOFileStorage(String accessKey, String secretKey, String endPoint, String bucketName) {
-        this.bucketName = bucketName;
-        this.accessKey = accessKey;
-        this.secretKey = secretKey;
-        this.endPoint = endPoint;
-    }
-
-    private MinioClient getClient(){
         try {
+            this.bucketName = bucketName;
             // 1.获取 minio 链接
             MinioClient client = MinioClient.builder()
                     .endpoint(endPoint)
@@ -46,15 +40,15 @@ public class MinIOFileStorage extends FileStorage {
                         .bucket(bucketName)
                         .build());
             }
-            return client;
+            this.client = client;
         } catch (Exception e) {
-            throw new RuntimeException("minioClient创建失败", e);
+            throw new FileStorageException("minioClient创建失败", e);
         }
     }
 
     @Override
     public boolean uploadFile(String newFileKey, InputStream inputStream) throws Exception {
-        getClient().putObject(
+        client.putObject(
                 PutObjectArgs.builder()
                         .bucket(bucketName)
                         .stream(inputStream, inputStream.available(), -1)
@@ -68,7 +62,7 @@ public class MinIOFileStorage extends FileStorage {
 
     @Override
     public boolean deleteFile(String fileKey) throws Exception {
-        getClient().removeObject(
+        client.removeObject(
                 RemoveObjectArgs.builder()
                         .bucket(bucketName)
                         .object(fileKey)
@@ -80,7 +74,7 @@ public class MinIOFileStorage extends FileStorage {
 
     @Override
     public boolean fileExists(String fileKey) throws Exception {
-        Iterable<Result<Item>> myObjects = getClient().listObjects(
+        Iterable<Result<Item>> myObjects = client.listObjects(
                 ListObjectsArgs.builder()
                         .bucket(bucketName)
                         .build()
@@ -96,17 +90,33 @@ public class MinIOFileStorage extends FileStorage {
     }
 
     @Override
-    public InputStream downloadFile(String fileKey) throws Exception {
-        return getClient().getObject(
+    public InputStream downloadFile(String fileName) throws Exception {
+        return client.getObject(
                 GetObjectArgs.builder()
                         .bucket(bucketName)
-                        .object(fileKey)
+                        .object(fileName)
                         .build());
     }
 
     @Override
     public void updateUrl(FileInfo fileInfo) {
-        fileInfo.setUrl(this.getDomain() + fileInfo.getBasePath() + fileInfo.getPath() + fileInfo.getFilename());
-        fileInfo.setThUrl(this.getDomain() + fileInfo.getBasePath() + fileInfo.getPath() + fileInfo.getThFilename());
+        try {
+            fileInfo.setUrl(client.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
+                    .method(Method.GET)
+                    .bucket(bucketName)
+                    .object(fileInfo.getFilename())
+                    .build())
+            );
+            if(StringUtil.isNoneBlank(fileInfo.getThFilename())) {
+                fileInfo.setThUrl(client.getPresignedObjectUrl(GetPresignedObjectUrlArgs.builder()
+                        .method(Method.GET)
+                        .bucket(bucketName)
+                        .object(fileInfo.getThFilename())
+                        .build())
+                );
+            }
+        } catch (Exception e) {
+            log.error("文件访问地址设置有误", e);
+        }
     }
 }

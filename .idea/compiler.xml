@@ -6,6 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="server" />
         <module name="temp" />
         <module name="job-schedule (1)" />
         <module name="job-schedule" />
@@ -13,13 +14,13 @@
         <module name="test" />
         <module name="auth" />
         <module name="orm" />
-        <module name="test1" />
         <module name="redis" />
         <module name="core" />
         <module name="rabbit-mq" />
         <module name="security" />
         <module name="system" />
         <module name="web" />
+        <module name="domain" />
         <module name="job" />
         <module name="gateway" />
         <module name="validation" />

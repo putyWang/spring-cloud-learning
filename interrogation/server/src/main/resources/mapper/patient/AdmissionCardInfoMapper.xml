@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.learning.interrogation.server.mapper.patient.AdmissionCardInfoMapper">
+
+	<!--我的卡列表-->
+	<select id="checkPatientIDCardIsExist" resultType="int">
+		SELECT count(jzk.CBM)
+		FROM
+			TB_WLYL_JZKXX jzk
+			LEFT JOIN TB_WLYL_YHJZRXXGL gl ON gl.CJZRBM = jzk.CJZRBM
+		WHERE
+			gl.CYHZHID = #{yhbm}
+		  AND jzk.CJGBM = #{jgbm}
+		  AND jzk.IKZT = 1
+	</select>
+</mapper>

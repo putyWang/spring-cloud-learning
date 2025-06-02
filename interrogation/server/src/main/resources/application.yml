@@ -1,0 +1,45 @@
+server:
+  port: 8086
+  servlet:
+    context-path: /interrogation
+spring:
+  application:
+    name: test
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.3.51:3306/internet_hospital
+    username: root
+    password: 123456
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      # 监控配置
+      stat-view-servlet:
+        enabled: true
+        url-pattern: /druid/*
+        # 允许所有 IP 访问（生产环境需谨慎）
+        allow: "192.168.3.60"
+        # 是否允许重置统计数据
+        reset-enable: false
+      filter:
+        stat:
+          # 开启 SQL 监控
+          enabled: true
+          # 慢 SQL 记录
+          log-slow-sql: true
+          slow-sql-millis: 1000
+      max-active: 300
+  redis:
+    host: 192.168.3.51
+    port: 6321
+liteflow:
+  rule-source: lite_flow/*_flow.xml
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+logging:
+  level:
+    com:
+      alibaba:
+        druid: debug

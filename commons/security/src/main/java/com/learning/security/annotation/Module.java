@@ -6,6 +6,7 @@ import java.lang.annotation.*;
 
 /**
  * 权限控制类注解
+ * @author root
  */
 @Target(ElementType.TYPE)
 @Documented

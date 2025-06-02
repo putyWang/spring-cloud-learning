@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.learning.interrogation.server.mapper.patient.InformationPatientMapper">
+	<resultMap id="PatientUserDto" type="com.learning.interrogation.domain.dto.PatientUserDTO" autoMapping="true">
+		<id property="CJZRBM" column="CJZRBM"/>
+		<collection property="relationUserList" ofType="com.learning.interrogation.domain.po.patient.PatientConnectionPO">
+			<result property="CYHZHID" column="CYHZHID"/>
+			<result property="CGXBM" column="CGXBM"/>
+		</collection>
+	</resultMap>
+
+	<select id="getPriorityPatient" resultType="com.learning.interrogation.domain.vo.PatientExtendVO">
+	SELECT
+		JZRXX.CJZRBM,
+		JZRXX.CJZRTX,
+		JZRXX.CJZRXM,
+		JZRXX.CJZRSFZH,
+		JZRXX.CJZRSJ,
+		JZRXX.CXBBM,
+		JZRXX.CXBMC,
+		JZRXX.CMZBM,
+		JZRXX.CMZMC,
+		JZRXX.DCJSJ,
+		JZRXX.DXGSJ,
+		JZRXX.CHZZSY,
+		JZRXX.CZYBM,
+		JZRXX.CZYMC,
+		JZRXX.CSDZBM,
+		JZRXX.CSDZMC,
+		JZRXX.CSQDZBM,
+		JZRXX.CSQDZMC,
+		JZRXX.CQDZBM,
+		JZRXX.CQDZMC,
+		JZRXX.CXDZBM,
+		JZRXX.CXDZMC,
+		JZRXX.CCDZBM,
+		JZRXX.CMPH,
+		JZRXX.CCDZMC,
+		JZRXX.DCSNY,
+		JZRXX.CZJLX,
+		JZRXX.CZJLXMC,
+		JZRXX.CHYMC,
+		JZRXX.CHYBM,
+		JZRXX.CHJXXDZ,
+		JZRXX.CJHRXM,
+		JZRXX.CJHRLXFS,
+		JZRXX.CJHRSFZH,
+		JZRXX.CJHRNL,
+		YHJZRXXGL.CYHBM,
+		YHJZRXXGL.CGXBM,
+		YHJZRXXGL.DXGSJ AS connectionDXGSJ,
+		YHJZRXXGL.DCJSJ AS connectionDCJSJ,
+		YHJZRXXGL.CYHZHID,
+		YHJZRXXGL.ISFMR,
+		YHJZRXXGL.CJHRLXFS,
+		YHJZRXXGL.CJHRSFZH,
+		YHJZRXXGL.CJHRXM
+	FROM
+		TB_WLYL_JZRXX AS JZRXX
+		LEFT JOIN TB_WLYL_YHJZRXXGL AS YHJZRXXGL ON JZRXX.CJZRBM = YHJZRXXGL.CJZRBM
+	WHERE
+		YHJZRXXGL.CYHZHID = #{userId}
+		ORDER BY ISFMR DESC,CGXBM ASC
+	LIMIT 1, 1
+	</select>
+
+	<select id="getPriorityPatientPhone" resultType="java.lang.String">
+	SELECT
+		JZRXX.CJZRSJ
+	FROM
+		TB_WLYL_JZRXX AS JZRXX
+		LEFT JOIN TB_WLYL_YHJZRXXGL AS YHJZRXXGL ON JZRXX.CJZRBM = YHJZRXXGL.CJZRBM
+	WHERE
+		YHJZRXXGL.CYHZHID = #{userId}
+	ORDER BY ISFMR DESC,CGXBM ASC
+	LIMIT 1, 1
+	</select>
+
+	<select id="listPatientWithUserId" resultMap="PatientUserDto">
+		SELECT
+			jzr.*,
+			gl.CYHZHID as CYHZHID,
+			gl.CGXBM as CGXBM
+		FROM
+		TB_WLYL_JZRXX jzr
+		LEFT JOIN TB_WLYL_YHJZRXXGL gl ON jzr.CJZRBM = gl.CJZRBM
+		<if test="ew != null">
+			${ew.customSqlSegment}
+		</if>
+	</select>
+</mapper>

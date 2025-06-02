@@ -4,6 +4,9 @@ import com.learning.core.domain.enums.ApiCode;
 
 import java.lang.annotation.*;
 
+/**
+ * @author root
+ */
 @Target(ElementType.FIELD)
 @Documented
 @Retention(RetentionPolicy.RUNTIME)

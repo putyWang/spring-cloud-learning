@@ -18,7 +18,7 @@
         <module>system</module>
         <module>skywalking-threadpool-plugin</module>
         <module>test</module>
-        <module>test1</module>
+        <module>interrogation</module>
     </modules>
 
     <properties>

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE flow PUBLIC  "liteflow" "https://liteflow.cc/liteflow.dtd">
+<flow>
+    <chain name="add_patient">
+        THEN(
+            addPatientValid, addPatientInfo, patientRelationAdd,
+            IF(isSelf, addSelfPatientInfo),
+            SWITCH(obtainCardType).to(
+                THEN(obtainCardInfo, addCardRelation).id("addCard")
+            )
+        );
+    </chain>
+</flow>

@@ -4,6 +4,7 @@ import java.lang.annotation.*;
 
 /**
  * 方法权限注解
+ * @author root
  */
 @Target(ElementType.METHOD)
 @Documented

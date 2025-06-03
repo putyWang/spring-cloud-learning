@@ -15,6 +15,7 @@
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <skywalking.version>9.3.0</skywalking.version>
+        <drools.version>7.69.0.Final</drools.version>
     </properties>
 
     <dependencies>
@@ -72,6 +73,24 @@
             <groupId>dev.miku</groupId>
             <artifactId>r2dbc-mysql</artifactId>
             <version>0.8.2.RELEASE</version>
+        </dependency>
+        <!-- Drools 核心库 -->
+        <dependency>
+            <groupId>org.drools</groupId>
+            <artifactId>drools-core</artifactId>
+            <version>${drools.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.drools</groupId>
+            <artifactId>drools-compiler</artifactId>
+            <version>${drools.version}</version>
+        </dependency>
+        <!-- 集成 Spring -->
+        <dependency>
+            <groupId>org.kie</groupId>
+            <artifactId>kie-spring</artifactId>
+            <version>${drools.version}
+            </version>
         </dependency>
     </dependencies>
 

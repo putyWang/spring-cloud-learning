@@ -20,6 +20,7 @@
         <module name="security" />
         <module name="system" />
         <module name="web" />
+        <module name="distributed-transaction" />
         <module name="domain" />
         <module name="job" />
         <module name="gateway" />
